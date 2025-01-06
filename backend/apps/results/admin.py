@@ -1,10 +1,9 @@
-from django.contrib import admin
-from django.contrib.auth.models import Group
-
+from utils.admin import BaseAdmin, admin
 from .models import TakenCourse, Result
 
 
-class ScoreAdmin(admin.ModelAdmin):
+@admin.register(TakenCourse)
+class TakenCourseAdmin(BaseAdmin):
     list_display = [
         "student",
         "course",
@@ -19,5 +18,6 @@ class ScoreAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(TakenCourse, ScoreAdmin)
-admin.site.register(Result)
+@admin.register(Result)
+class ResultAdmin(BaseAdmin):
+    pass

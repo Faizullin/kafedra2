@@ -1,9 +1,9 @@
+from django.conf import settings
+from django.conf.urls.i18n import i18n_patterns
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
 from django.views import defaults as default_views
-from django.conf.urls.i18n import i18n_patterns
 from django.views.i18n import JavaScriptCatalog
 
 admin.site.site_header = "Dj-LMS Admin"
@@ -14,13 +14,12 @@ urlpatterns = [
 ]
 
 urlpatterns += i18n_patterns(
-    # path("jsi18n/", JavaScriptCatalog.as_view(), name="javascript-catalog"),
-    # path("", include("apps.core.urls")),
-    # path("jet/", include("jet.urls", "jet")),  # Django JET URLS
-    # path(
-    #     "jet/dashboard/", include("jet.dashboard.urls", "jet-dashboard")
-    # ),  # Django JET dashboard URLS
-    # path("accounts_/", include("apps.accounts.urls")),
+    path("jsi18n/", JavaScriptCatalog.as_view(), name="javascript-catalog"),
+    path("jet/", include("jet.urls", "jet")),  # Django JET URLS
+    path(
+        "jet/dashboard/", include("jet.dashboard.urls", "jet-dashboard")
+    ),  # Django JET dashboard URLS
+    path("", include("apps.accounts.urls")),
     # path("programs/", include("apps.courses.urls")),
     # path("results/", include("apps.results.urls")),
     # path("search/", include("apps.search.urls")),
@@ -29,10 +28,13 @@ urlpatterns += i18n_patterns(
     # path("accounts_/api/", include("apps.accounts.api.urls", namespace="accounts_-api")),
 )
 
-
 if settings.DEBUG:
+    import debug_toolbar
+
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+    urlpatterns += path('__debug__/', include(debug_toolbar.urls)),
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit

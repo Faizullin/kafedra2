@@ -131,7 +131,11 @@ class BaseAdmin(admin.ModelAdmin):
         #     qs = self.model.objects.all()
         # else:
         #     qs = self.model.objects.all()
-        qs = self.model.global_objects.all()
+
+        if show_all and self.has_soft_delete:
+            qs = self.model.global_objects.all()
+        else:
+            qs = self.model.objects.all()
         ordering = self.get_ordering(request)
         if ordering:
             qs = qs.order_by(*ordering)

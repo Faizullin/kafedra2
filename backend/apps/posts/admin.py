@@ -10,6 +10,7 @@ class PostAdmin(BaseAdmin):
     list_filter = ("publication_status", 'category')
     search_fields = ['title', 'content']
     prepopulated_fields = {'slug': ('title',)}
+    raw_id_fields = ('author',)
 
 
 # @admin.register(PostComment)

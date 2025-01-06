@@ -1,17 +1,24 @@
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash, get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
+# to generate pdf from template we need the following
+from django.http import HttpResponse
 from django.http.response import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import update_session_auth_hash
-from django.views.generic import CreateView, ListView
-from django.db.models import Q
+from django.template.loader import get_template  # to get template which render as pdf
+# from xhtml2pdf import pisa
+from django.template.loader import (
+    render_to_string,
+)  # to render a template into a string
 from django.utils.decorators import method_decorator
-from django.contrib.auth.forms import PasswordChangeForm
+from django.views.generic import CreateView
 from django_filters.views import FilterView
-from apps.core.models import Session, Semester
+
 from apps.courses.models import Course
 from apps.results.models import TakenCourse
 from .decorators import admin_required
+from .filters import LecturerFilter, StudentFilter
 from .forms import (
     StaffAddForm,
     StudentAddForm,
@@ -19,21 +26,14 @@ from .forms import (
     ParentAddForm,
     ProgramUpdateForm,
 )
-from .models import User, Student, Parent
-from .filters import LecturerFilter, StudentFilter
+from .models import Student
 
-# to generate pdf from template we need the following
-from django.http import HttpResponse
-from django.template.loader import get_template  # to get template which render as pdf
-from xhtml2pdf import pisa
-from django.template.loader import (
-    render_to_string,
-)  # to render a template into a string
+UserModel = get_user_model()
 
 
 def validate_username(request):
     username = request.GET.get("username", None)
-    data = {"is_taken": User.objects.filter(username__iexact=username).exists()}
+    data = {"is_taken": UserModel.objects.filter(username__iexact=username).exists()}
     return JsonResponse(data)
 
 
@@ -93,7 +93,7 @@ def profile(request):
         }
         return render(request, "accounts/profile.html", context)
     else:
-        staff = User.objects.filter(is_lecturer=True)
+        staff = UserModel.objects.filter(is_lecturer=True)
         return render(
             request,
             "accounts/profile.html",
@@ -132,7 +132,7 @@ def profile_single(request, id):
         is_current_semester=True, session=current_session
     ).first()
 
-    user = User.objects.get(pk=id)
+    user = UserModel.objects.get(pk=id)
     """
     If download_pdf exists, instead of calling render_to_pdf directly, 
     pass the context dictionary built for the specific user type 
@@ -286,7 +286,6 @@ def staff_add_view(request):
         email = request.POST.get("email")
 
         if form.is_valid():
-
             form.save()
             messages.success(
                 request,
@@ -313,7 +312,7 @@ def staff_add_view(request):
 @login_required
 @admin_required
 def edit_staff(request, pk):
-    instance = get_object_or_404(User, is_lecturer=True, pk=pk)
+    instance = get_object_or_404(UserModel, is_lecturer=True, pk=pk)
     if request.method == "POST":
         form = ProfileUpdateForm(request.POST, request.FILES, instance=instance)
         full_name = instance.get_full_name
@@ -339,7 +338,6 @@ def edit_staff(request, pk):
 @method_decorator([login_required, admin_required], name="dispatch")
 class LecturerFilterView(FilterView):
     filterset_class = LecturerFilter
-    queryset = User.objects.filter(is_lecturer=True)
     template_name = "accounts/lecturer_list.html"
     paginate_by = 10  # if pagination is desired
 
@@ -348,10 +346,13 @@ class LecturerFilterView(FilterView):
         context["title"] = "Lecturers"
         return context
 
+    def get_queryset(self):
+        return UserModel.objects.filter(is_lecturer=True)
+
 
 # lecturers list pdf
 def render_lecturer_pdf_list(request):
-    lecturers = User.objects.filter(is_lecturer=True)
+    lecturers = UserModel.objects.filter(is_lecturer=True)
     template_path = "pdf/lecturer_list.html"
     context = {"lecturers": lecturers}
     response = HttpResponse(
@@ -380,7 +381,7 @@ def render_lecturer_pdf_list(request):
 @login_required
 @admin_required
 def delete_staff(request, pk):
-    lecturer = get_object_or_404(User, pk=pk)
+    lecturer = get_object_or_404(UserModel, pk=pk)
     full_name = lecturer.get_full_name
     lecturer.delete()
     messages.success(request, "Lecturer " + full_name + " has been deleted.")
@@ -499,7 +500,6 @@ def delete_student(request, pk):
 @login_required
 @admin_required
 def edit_student_program(request, pk):
-
     instance = get_object_or_404(Student, student_id=pk)
     user = get_object_or_404(User, pk=pk)
     if request.method == "POST":
@@ -509,7 +509,7 @@ def edit_student_program(request, pk):
             form.save()
             messages.success(request, message=full_name + " program has been updated.")
             url = (
-                "/accounts_/profile/" + user.id.__str__() + "/detail/"
+                    "/accounts_/profile/" + user.id.__str__() + "/detail/"
             )  # Botched job, must optimize
             return redirect(to=url)
         else:
@@ -527,10 +527,9 @@ def edit_student_program(request, pk):
 
 
 class ParentAdd(CreateView):
-    model = Parent
+    model = UserModel
     form_class = ParentAddForm
     template_name = "accounts/parent_form.html"
-
 
 # def parent_add(request):
 #     if request.method == 'POST':

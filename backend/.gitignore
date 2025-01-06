@@ -6,6 +6,7 @@ __pycache__/
 # C extensions
 *.so
 
+
 # Distribution / packaging
 .Python
 build/
@@ -150,3 +151,12 @@ media/result_sheet/*
 # Custom
 dump.rdb
 *.DS_Store
+
+
+
+**/migrations/*
+!**/migrations/__init__.py
+
+
+gmail_client_secret.json
+gmail_client_token.pickle

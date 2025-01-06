@@ -1,8 +1,10 @@
 from django.contrib import admin
-from .models import Student, UserModel
+
+from utils.admin import BaseAdmin
+from .models import Student, UserModel, Professor, UserProfile
 
 
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(BaseAdmin):
     list_display = [
         "get_full_name",
         "username",
@@ -27,4 +29,18 @@ class UserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(UserModel, UserAdmin)
-admin.site.register(Student)
+
+
+@admin.register(Student)
+class StudentAdmin(BaseAdmin):
+    pass
+
+
+@admin.register(Professor)
+class ProfessorAdmin(BaseAdmin):
+    pass
+
+
+@admin.register(UserProfile)
+class UserProfileAdmin(BaseAdmin):
+    pass

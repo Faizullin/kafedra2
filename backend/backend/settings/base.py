@@ -55,6 +55,7 @@ PROJECT_APPS = [
     "apps.assignments",
     "apps.posts",
     "apps.reviews",
+    "apps.pages",
 ]
 
 # Combine all apps
@@ -72,6 +73,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "backend.urls"
+
 
 TEMPLATES = [
     {
@@ -164,15 +166,15 @@ USE_TZ = True
 public_root = root.path('public/')
 MEDIA_ROOT = public_root('media')
 MEDIA_URL = env.str('MEDIA_URL', default='media/')
-STATIC_ROOT = public_root('static')
+# STATIC_ROOT = public_root('static')
 STATIC_URL = env.str('STATIC_URL', default='static/')
 
-# https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
-STATICFILES_FINDERS = [
-    "django.contrib.staticfiles.finders.FileSystemFinder",
-    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-]
-
+# print(str(public_root('static')))
+# STATICFILES_DIRS = [
+#     str(public_root('static')),
+#     # "/var/www/static/",
+# ]
+STATICFILES_DIRS = (str(public_root('static')),)
 
 # -----------------------------------
 # E-mail configuration
@@ -201,20 +203,20 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 LOGOUT_REDIRECT_URL = FRONTEND_APP_BASE_URL + "/"
-LOGIN_URL = FRONTEND_APP_BASE_URL + "/auth/login"
+# LOGIN_URL = FRONTEND_APP_BASE_URL + "/auth/login"
 
-# -----------------------------------
-# DRF setup
-
-REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
-    ],
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.BasicAuthentication",
-    ],
-}
+# # -----------------------------------
+# # DRF setup
+#
+# REST_FRAMEWORK = {
+#     "DEFAULT_PERMISSION_CLASSES": [
+#         "rest_framework.permissions.IsAuthenticated",
+#     ],
+#     "DEFAULT_AUTHENTICATION_CLASSES": [
+#         "rest_framework.authentication.SessionAuthentication",
+#         "rest_framework.authentication.BasicAuthentication",
+#     ],
+# }
 
 # -----------------------------------
 # Strip payment config
@@ -236,13 +238,13 @@ LECTURER_ID_PREFIX = env.str("LECTURER_ID_PREFIX", "lec")
 #     SECURE_SSL_REDIRECT = False
 #     SESSION_COOKIE_SECURE = False
 
-# # CELERY SETINGS
+# CELERY SETTINGS
 
-# CELERY_BROKER_URL = env.str('CELERY_BROKER_URL', None)
-# CELERY_ACCEPT_CONTENT = ['application/json']
-# CELERY_RESULT_SERIALIZER = 'json'
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_TIMEZONE = TIME_ZONE
+CELERY_BROKER_URL = env.str('CELERY_BROKER_URL', None)
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
 # CELERY_RESULT_BACKEND = env.str('CELERY_RESULT_BACKEND', None)
 
 # CELERY_BEAT_SCHEDULE = {
@@ -254,12 +256,14 @@ LECTURER_ID_PREFIX = env.str("LECTURER_ID_PREFIX", "lec")
 
 # SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 # SESSION_CACHE_ALIAS = "default"
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django_redis.cache.RedisCache',
-#         'LOCATION': CELERY_BROKER_URL,
-#         'OPTIONS': {
-#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-#         }
-#     }
-# }
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': CELERY_BROKER_URL,
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+X_FRAME_OPTIONS = "SAMEORIGIN"

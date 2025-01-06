@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 
-from apps.accounts import AdminGroup, DeveloperGroup, StaffGroup
+from apps.accounts.groups import AdminGroup, DeveloperGroup, StaffGroup
 
 User = get_user_model()
 

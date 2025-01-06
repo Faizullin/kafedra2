@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
-from apps.core.models import ActivityLog
+from apps.activities.models import ActivityLog
 from apps.courses.models import Program
 
 

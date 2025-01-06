@@ -1,12 +1,16 @@
 from django import forms
-from django.db import transaction
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.forms import (
     UserCreationForm,
     UserChangeForm,
 )
-from django.contrib.auth.forms import PasswordResetForm
+from django.db import transaction
+
 from apps.courses.models import Program
-from .models import User, Student, Parent, RELATION_SHIP, LEVEL, GENDERS
+from .models import Student, RELATION_SHIP, LEVEL, GenderChoice
+
+UserModel = get_user_model()
 
 
 class StaffAddForm(UserCreationForm):
@@ -102,7 +106,7 @@ class StaffAddForm(UserCreationForm):
     )
 
     class Meta(UserCreationForm.Meta):
-        model = User
+        model = UserModel
 
     @transaction.atomic()
     def save(self, commit=True):
@@ -175,7 +179,7 @@ class StudentAddForm(UserCreationForm):
 
     gender = forms.CharField(
         widget=forms.Select(
-            choices=GENDERS,
+            choices=GenderChoice.choices,
             attrs={
                 "class": "browser-default custom-select form-control",
             },
@@ -239,7 +243,7 @@ class StudentAddForm(UserCreationForm):
     #         raise forms.ValidationError("Email has taken, try another email address. ")
 
     class Meta(UserCreationForm.Meta):
-        model = User
+        model = UserModel
 
     @transaction.atomic()
     def save(self, commit=True):
@@ -297,7 +301,7 @@ class ProfileUpdateForm(UserChangeForm):
 
     gender = forms.CharField(
         widget=forms.Select(
-            choices=GENDERS,
+            choices=GenderChoice.choices,
             attrs={
                 "class": "browser-default custom-select form-control",
             },
@@ -325,7 +329,7 @@ class ProfileUpdateForm(UserChangeForm):
     )
 
     class Meta:
-        model = User
+        model = UserModel
         fields = [
             "first_name",
             "last_name",
@@ -333,7 +337,7 @@ class ProfileUpdateForm(UserChangeForm):
             "email",
             "phone",
             "address",
-            "picture",
+            "avatar",
         ]
 
 
@@ -354,7 +358,7 @@ class ProgramUpdateForm(UserChangeForm):
 class EmailValidationOnForgotPassword(PasswordResetForm):
     def clean_email(self):
         email = self.cleaned_data["email"]
-        if not User.objects.filter(email__iexact=email, is_active=True).exists():
+        if not UserModel.objects.filter(email__iexact=email, is_active=True).exists():
             msg = "There is no user registered with the specified E-mail address. "
             self.add_error("email", msg)
             return email
@@ -470,7 +474,7 @@ class ParentAddForm(UserCreationForm):
     #         raise forms.ValidationError("Email has taken, try another email address. ")
 
     class Meta(UserCreationForm.Meta):
-        model = User
+        model = UserModel
 
     @transaction.atomic()
     def save(self):

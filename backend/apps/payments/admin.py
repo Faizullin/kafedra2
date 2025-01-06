@@ -1,3 +1,7 @@
-from django.contrib import admin
+from utils.admin import BaseAdmin, admin
+from .models import Invoice
 
-# Register your models here.
+
+@admin.register(Invoice)
+class InvoiceAdmin(BaseAdmin):
+    pass
