@@ -1,0 +1,91 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<div class="container section-top">
+	<div class="row">
+		<div class="col-12 text-center">
+			<ul class="breadcrumb breadcrumb-custom">
+				<li class="breadcrumb-item">
+					<a href="{% url 'post' %}">Post Top</a>
+				</li>
+				<li class="breadcrumb-item">
+					<a href="{% url 'category_view' post_post.category %}">{{ post_post.category }}</a>
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">{{ post_post.title }}</li>
+			</ul>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<img src="{{ post_image.image.url }}" class="post_post_img" alt="post post header image:{{ post_image.image.name }}">
+            <div class="pr-4 pl-4 mb-4 mt-4">
+                <div class="pr-4 pl-4 mb-4 mt-4">
+                    <h2 class="card-title">{{ post_post.title }}</h2>
+                    <span class="card-text text-muted mt-2">
+                        {{ post_post.author }} | {{ post_post.created_on }}
+                    </span>
+                    {% if request.user.is_superuser %}
+                        <span class="ml-2">
+                            <a href="{% url 'edit_post' post_post.pk %}" class="post_edit">Edit</a> | 
+                            <a href="{% url 'delete_post' post_post.pk %}" class="post_delete">Delete</a>
+                        </span>
+                    {% endif %}
+                </div>
+                <div class="mt-2">
+                    <div class="card-text">{{ post_post.content|linebreaks }}</div>
+                </div>
+                <hr>
+                <div class="post-comment-section">
+                    <div class="mb-3">
+                        {% if not post_post.comments.all %}
+                            <h3>No Comments yet for this post.</h3>
+                        {% else %}
+                            <h2>{{ post_post.comments.count }} Comments</h2>
+                            {% for comment in post_post.comments.all %}
+                                <div class="users-comment mt-2">
+                                    <div>
+                                        <div class="comment-name">{{ comment.comment_title }}</div>
+                                        <div class="comment-date">{{ comment.created_on }}</div>
+                                    </div>
+                                    <div class="mt-3 mb-2">
+                                        <span class="comment-line"></span>
+                                        <span class="ml-2">{{ comment.post_comment }}</span>
+                                    </div>
+                                    <div>
+                                        {% if user.is_authenticated %}
+                                            {% if user.name == comment.user_id %}
+                                                <a href="{% url 'delete_comment' comment.pk %}" class="product_delete">Delete Comment</a>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <hr>
+                    {% if user.is_authenticated %}
+                        <div class="post-comment-form">
+                            <h3>Leave a Comment</h3>
+                            <form method="POST" action="{% url 'post_view' post_post.slug %}">
+                                {% csrf_token %}
+                                {{ comment_form|crispy }}
+                                <button class="btn btn-colour-1" action="submit" aria-label="Post Comment Submit Button">Submit Comment</button>
+                            </form>
+                            <div class="mt-4">
+                                <a href="{% url 'category_view' post_post.category|lower %}">
+                                    <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to Category
+                                </a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="mt-4">
+                            <p>To leave a comment, please 
+                                <a href="{% url 'account_login' %}">log in.</a>
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+version: '3'
+services:
+    backend:
+        container_name: kafedra-backend-1
+        build:
+            context: ./backend
+            dockerfile: Dockerfile.prod
+        restart: always
+        command: python3 manage.py runserver 0.0.0.0:8000 --settings=backend.settings.prod
+        volumes:
+            - static_data:/app/public/static
+            - media_data:/app/public/media
+            - model_data:/app/model_data
+        env_file:
+            - ./.env
+        ports:
+            - "8000:8000"
+        depends_on:
+            - redis
+            - db
+    nginx:
+        container_name: kafedra-nginx-1
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile.prod
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - /etc/letsencrypt:/etc/letsencrypt
+            - ./frontend/dist:/app/frontend/dist
+            - ./frontend-admin/dist:/app/frontend-admin/dist
+            - static_data:/app/public/static
+            - media_data:/app/public/media
+        depends_on:
+            - backend
+    redis:
+        container_name: kafedra-redis-1
+        restart: unless-stopped
+        image: redis:alpine
+        expose:
+            - 6379
+    db:
+        container_name: kafedra-db-1
+        image: postgres:13-alpine
+        restart: always
+        volumes:
+            - postgres_data:/var/lib/postgresql/data/
+        env_file:
+            - ./.env
+
+
+volumes:
+    postgres_data:
+    static_data:
+    media_data:
+    model_data:

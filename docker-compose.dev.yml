@@ -1,0 +1,64 @@
+version: '3.8'
+services:
+    backend:
+        container_name: kafedra-backend-1
+        build:
+            context: ./backend
+            dockerfile: Dockerfile.dev
+        restart: always
+        command: python3 manage.py runserver 0.0.0.0:8000 --settings=backend.settings.local
+        volumes:
+            - ./backend:/app
+            - static_data:/app/public/static
+            - media_data:/app/public/media
+        env_file:
+            - ./.env
+        ports:
+            - "8000:8000"
+        depends_on:
+            - redis
+            - db
+    # nginx:
+    #     build:
+    #         context: ./nginx
+    #         dockerfile: Dockerfile.dev
+    #     ports:
+    #         - "80:80"
+    #     depends_on:
+    #         - backend
+    #     volumes:
+    #         - /etc/letsencrypt:/etc/letsencrypt
+    #         - ./frontend/dist:/app/frontend/dist
+    #         - ./frontend-admin/dist:/app/frontend-admin/dist
+    redis:
+        container_name: kafedra-redis-1
+        restart: unless-stopped
+        image: redis:alpine
+        expose:
+            - 6379
+    db:
+        container_name: kafedra-db-1
+        image: postgres:13-alpine
+        restart: always
+        volumes:
+            - postgres_data:/var/lib/postgresql/data/
+        env_file:
+            - ./.env
+    # celery:
+    #     container_name: kafedra-celery-1
+    #     build:
+    #         context: ./backend
+    #         dockerfile: Dockerfile.dev
+    #     command: celery -A backend.celery worker -l INFO
+    #     volumes:
+    #         - ./backend:/app
+    #     env_file:
+    #         - ./.env
+    #     depends_on:
+    #         - backend
+    #         - redis
+
+volumes:
+    postgres_data:
+    static_data:
+    media_data:
