@@ -14,7 +14,7 @@
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="jdk" jdkName="Remote Python 3.11.4 Docker (sha256:0f58ae6cb970930d612912fc76e12f7f8bffa1957f230187b87003770ce39dd8)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Remote Python 3.11.4 Docker (sha256:ba9b080eeb84aee172c1d796dc1f29936d4b78bd46af2a6df0f54c95f1fddbea)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">

@@ -20,7 +20,7 @@ urlpatterns += i18n_patterns(
         "jet/dashboard/", include("jet.dashboard.urls", "jet-dashboard")
     ),  # Django JET dashboard URLS
     path("", include("apps.accounts.urls")),
-    # path("programs/", include("apps.courses.urls")),
+    path("", include("apps.courses.urls")),
     # path("results/", include("apps.results.urls")),
     # path("search/", include("apps.search.urls")),
     # path("quiz/", include("apps.quiz.urls")),

@@ -4,8 +4,8 @@ from .views import *
 
 urlpatterns = [
     # Program urls
-    path("", ProgramFilterView.as_view(), name="programs"),
-    path("<int:pk>/detail/", program_detail, name="program_detail"),
+    path("courses/", CourseListView.as_view(), name="course-list"),
+    path("courses/<int:pk>/detail/", program_detail, name="program_detail"),
     path("add/", program_add, name="add_program"),
     path("<int:pk>/edit/", program_edit, name="edit_program"),
     path("<int:pk>/delete/", program_delete, name="program_delete"),

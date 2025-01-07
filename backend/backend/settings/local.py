@@ -24,3 +24,9 @@ if DEBUG:
 # if DEBUG:
 #     CORS_ALLOW_ALL_ORIGINS = True
 #     CORS_ALLOW_CREDENTIALS = True
+
+COMPRESS_ROOT = BASE_DIR / 'static'
+
+COMPRESS_ENABLED = True
+
+STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)

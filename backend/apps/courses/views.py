@@ -9,8 +9,6 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 from django_filters.views import FilterView
 
-from apps.accounts.models import User, Student
-from apps.core.models import Session, Semester
 from apps.results.models import TakenCourse
 from apps.accounts.decorators import lecturer_required, student_required
 from .forms import (
@@ -26,9 +24,9 @@ from .models import Program, Course, CourseAllocation, Upload, UploadVideo
 
 
 @method_decorator([login_required, lecturer_required], name="dispatch")
-class ProgramFilterView(FilterView):
-    filterset_class = ProgramFilter
-    template_name = "course/program_list.html"
+class CourseListView(FilterView):
+    filterset_class = CourseFilter
+    template_name = "course/course_list.html.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
