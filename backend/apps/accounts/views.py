@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
+from django.core.exceptions import PermissionDenied
 # to generate pdf from template we need the following
 from django.http import HttpResponse
 from django.http.response import JsonResponse
@@ -15,7 +16,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import CreateView
 from django_filters.views import FilterView
 
-from apps.courses.models import Course
+from apps.courses.models import Course, AcademicSemester, ClassRoom
 from apps.results.models import TakenCourse
 from .decorators import admin_required
 from .filters import LecturerFilter, StudentFilter
@@ -26,7 +27,7 @@ from .forms import (
     ParentAddForm,
     ProgramUpdateForm,
 )
-from .models import Student
+from .models import Student, Professor
 
 UserModel = get_user_model()
 
@@ -55,22 +56,22 @@ def register(request):
 @login_required
 def profile(request):
     """Show profile of any user that fire out the request"""
-    current_session = Session.objects.filter(is_current_session=True).first()
-    current_semester = Semester.objects.filter(
-        is_current_semester=True, session=current_session
+    current_semester = AcademicSemester.objects.filter(
+        is_current_semester=True,
     ).first()
 
-    if request.user.is_lecturer:
-        courses = Course.objects.filter(
-            allocated_course__lecturer__pk=request.user.id
+    if request.user.is_professor:
+        classrooms = ClassRoom.objects.filter(
+            prof=request.user.professor
         ).filter(semester=current_semester)
+
         return render(
             request,
             "accounts/profile.html",
             {
                 "title": request.user.get_full_name,
-                "courses": courses,
-                "current_session": current_session,
+                "classrooms": classrooms,
+                # "current_session": current_session,
                 "current_semester": current_semester,
             },
         )
@@ -93,6 +94,7 @@ def profile(request):
         }
         return render(request, "accounts/profile.html", context)
     else:
+        raise PermissionDenied
         staff = UserModel.objects.filter(is_lecturer=True)
         return render(
             request,

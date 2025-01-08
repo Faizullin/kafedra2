@@ -27,12 +27,12 @@
 			</p>
 		</div>
 		{% url 'home' as hom %} {% url 'dashboard' as dash %} {% url 'profile' as prof %}
-		{% url 'lecturer_list' as lec %}
-		{% url 'student_list' as stu %} {% url 'course_allocation_view' as cav %}
-		{% url 'programs' as pro %} {% url 'session_list' as sess %} {% url 'semester_list' as sem %}
-		{% url 'add_score' as ascore %} {% url 'grade_results' as vr %}{% url 'ass_results' as ar %}
-		{% url 'course_registration' as cr %} {% url 'edit_profile' as ep %} {% url 'change_password' as cp %}
-		{% url 'quiz_progress' as qpr %} {% url 'quiz_marking' as qce %} {% url 'user_course_list' as ucl %}
+{#		{% url 'lecturer_list' as lec %}#}
+{#		{% url 'student_list' as stu %} {% url 'course_allocation_view' as cav %}#}
+{#		{% url 'programs' as pro %} {% url 'session_list' as sess %} {% url 'semester_list' as sem %}#}
+{#		{% url 'add_score' as ascore %} {% url 'grade_results' as vr %}{% url 'ass_results' as ar %}#}
+{#		{% url 'course_registration' as cr %} {% url 'edit_profile' as ep %} {% url 'change_password' as cp %}#}
+{#		{% url 'quiz_progress' as qpr %} {% url 'quiz_marking' as qce %} {% url 'user_course_list' as ucl %}#}
 		{% url 'admin_panel' as admin_p %}
 		
 
@@ -68,53 +68,53 @@
 			</li>
 			{% endif %}
 
-			{% if request.user.is_superuser or request.user.is_lecturer %}
-			<li class="{% if request.path == pro %}active{% endif %}">
-				<a href="{% url 'programs' %}"><i class="fas fa-book-open"></i>{% trans 'Programs & Courses' %}</a>
-			</li>
-			{% endif %}
+{#			{% if request.user.is_superuser or request.user.is_lecturer %}#}
+{#			<li class="{% if request.path == pro %}active{% endif %}">#}
+{#				<a href="{% url 'programs' %}"><i class="fas fa-book-open"></i>{% trans 'Programs & Courses' %}</a>#}
+{#			</li>#}
+{#			{% endif %}#}
 
-			{% if request.user.is_superuser or request.user.is_lecturer %}
-			<li class="{% if request.path == qce %}active{% endif %}">
-				<a href="{% url 'quiz_marking' %}"><i class="fas fa-check-double"></i>{% trans 'Complete Exams' %}</a>
-			</li>
-			{% endif %}
+{#			{% if request.user.is_superuser or request.user.is_lecturer %}#}
+{#			<li class="{% if request.path == qce %}active{% endif %}">#}
+{#				<a href="{% url 'quiz_marking' %}"><i class="fas fa-check-double"></i>{% trans 'Complete Exams' %}</a>#}
+{#			</li>#}
+{#			{% endif %}#}
 
-			{% if request.user.is_superuser %}
-			<li class="{% if request.path == qpr %}active{% endif %}">
-				<a href="{% url 'quiz_progress' %}"><i class="fas fa-record-vinyl"></i>{% trans 'Quiz Progress Rec' %}</a>
-			</li>
-			<li class="{% if request.path == cav %}active{% endif %}">
-				<a href="{% url 'course_allocation_view' %}"><i class="fas fa-tasks"></i>{% trans 'Course Allocation' %}</a>
-			</li>
-			<li class="{% if request.path == sess %}active{% endif %}">
-				<a href="{% url 'session_list' %}"><i class="fas fa-calendar-week"></i>{% trans 'Manage Session' %}</a>
-			</li>
-			<li class="{% if request.path == sem %}active{% endif %}">
-				<a href="{% url 'semester_list' %}"><i class="fas fa-calendar-alt"></i>{% trans 'Manage Semester' %}</a>
-			</li>
-			{% endif %}
-
-			{% if request.user.is_lecturer %}
-			<li class="{% if request.path == ascore %}active{% endif %}">
-				<a href="{% url 'add_score' %}"><i class="fas fa-table"></i>{% trans 'Manage Score' %}</a>
-			</li>
-			{% endif %}
-
-			{% if request.user.is_student %}
-			<li class="{% if request.path == qpr %}active{% endif %}">
-				<a href="{% url 'quiz_progress' %}"><i class="fas fa-record-vinyl"></i>{% trans 'Quiz Progress Rec' %}</a>
-			</li>
-			<li class="{% if request.path == vr %}active{% endif %}">
-				<a href="{% url 'grade_results' %}"><i class="fa fa-spell-check"></i>{% trans 'Grade Results' %}</a>
-			</li>
-			<li class="{% if request.path == ar %}active{% endif %}">
-				<a href="{% url 'ass_results' %}"><i class="fa fa-list-ol"></i> {% trans 'Assesment Results' %}</a>
-			</li>
-			<li class="{% if request.path == cr %}active{% endif %}">
-				<a href="{% url 'course_registration' %}"><i class="fas fa-plus"></i>{% trans 'Add' %} &amp;{% trans 'Drop Course' %}</a>
-			</li>
-			{% endif %}
+{#			{% if request.user.is_superuser %}#}
+{#			<li class="{% if request.path == qpr %}active{% endif %}">#}
+{#				<a href="{% url 'quiz_progress' %}"><i class="fas fa-record-vinyl"></i>{% trans 'Quiz Progress Rec' %}</a>#}
+{#			</li>#}
+{#			<li class="{% if request.path == cav %}active{% endif %}">#}
+{#				<a href="{% url 'course_allocation_view' %}"><i class="fas fa-tasks"></i>{% trans 'Course Allocation' %}</a>#}
+{#			</li>#}
+{#			<li class="{% if request.path == sess %}active{% endif %}">#}
+{#				<a href="{% url 'session_list' %}"><i class="fas fa-calendar-week"></i>{% trans 'Manage Session' %}</a>#}
+{#			</li>#}
+{#			<li class="{% if request.path == sem %}active{% endif %}">#}
+{#				<a href="{% url 'semester_list' %}"><i class="fas fa-calendar-alt"></i>{% trans 'Manage Semester' %}</a>#}
+{#			</li>#}
+{#			{% endif %}#}
+{##}
+{#			{% if request.user.is_lecturer %}#}
+{#			<li class="{% if request.path == ascore %}active{% endif %}">#}
+{#				<a href="{% url 'add_score' %}"><i class="fas fa-table"></i>{% trans 'Manage Score' %}</a>#}
+{#			</li>#}
+{#			{% endif %}#}
+{##}
+{#			{% if request.user.is_student %}#}
+{#			<li class="{% if request.path == qpr %}active{% endif %}">#}
+{#				<a href="{% url 'quiz_progress' %}"><i class="fas fa-record-vinyl"></i>{% trans 'Quiz Progress Rec' %}</a>#}
+{#			</li>#}
+{#			<li class="{% if request.path == vr %}active{% endif %}">#}
+{#				<a href="{% url 'grade_results' %}"><i class="fa fa-spell-check"></i>{% trans 'Grade Results' %}</a>#}
+{#			</li>#}
+{#			<li class="{% if request.path == ar %}active{% endif %}">#}
+{#				<a href="{% url 'ass_results' %}"><i class="fa fa-list-ol"></i> {% trans 'Assesment Results' %}</a>#}
+{#			</li>#}
+{#			<li class="{% if request.path == cr %}active{% endif %}">#}
+{#				<a href="{% url 'course_registration' %}"><i class="fas fa-plus"></i>{% trans 'Add' %} &amp;{% trans 'Drop Course' %}</a>#}
+{#			</li>#}
+{#			{% endif %}#}
 			<br />
 			<p class="ml-3">&RightArrow; Others</p>
 			<li class="{% if request.path == ep %}active{% endif %}">

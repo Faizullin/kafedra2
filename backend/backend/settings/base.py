@@ -202,7 +202,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
-LOGOUT_REDIRECT_URL = FRONTEND_APP_BASE_URL + "/"
+# LOGOUT_REDIRECT_URL = FRONTEND_APP_BASE_URL + "/"
 # LOGIN_URL = FRONTEND_APP_BASE_URL + "/auth/login"
 
 # # -----------------------------------

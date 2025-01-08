@@ -125,6 +125,7 @@ class CustomUser(AbstractUser, SoftDeleteModel):
     )
     avatar = AvatarField(null=True, blank=True,)
     is_student = models.BooleanField(default=False)
+    is_professor = models.BooleanField(default=False)
 
     def delete(self, *args, **kwargs):
         print("delete", self.avatar.path, conf.default_avatar_image)
@@ -192,10 +193,7 @@ class Student(AbstractTimestampedModel):
 
 
 class Professor(AbstractTimestampedModel):
-    user = models.OneToOneField(UserModel, on_delete=models.CASCADE)
-
-
-
+    user = models.OneToOneField(UserModel, on_delete=models.CASCADE, related_name="professor")
     
     class Meta:
         ordering = ("-id",)

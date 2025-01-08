@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator
 from django.db import models
@@ -139,6 +138,7 @@ class ClassRoom(models.Model):
         blank=True,
     )
     occupied_sits = models.IntegerField(blank=True, null=True, default=0)
+    semester = models.ForeignKey(AcademicSemester, null=True, blank=True, on_delete=models.SET_NULL, default=None)
 
     def __str__(self):
         return "{}) {}".format(self.pk, self.name)
@@ -153,10 +153,10 @@ class ClassRoom(models.Model):
         return "{}%".format(float(percentage))
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """
-        Before we Save any data in the class room lets check to see if there are open sits
+        Before we Save any data in the classroom lets check to see if there are open sits
 
         :param force_insert:
         :param force_update:
@@ -172,22 +172,16 @@ class ClassRoom(models.Model):
             super(ClassRoom, self).save()
 
 
-# class ClassRoomAllocation(models.Model):
-#     lecturer = models.ForeignKey(
-#         settings.AUTH_USER_MODEL,
-#         on_delete=models.CASCADE,
-#         related_name=_("allocated_lecturer"),
-#     )
-#     courses = models.ManyToManyField(ClassRoom, related_name=_("allocated_course"))
-#     # session = models.ForeignKey(
-#     #     "core.Session", on_delete=models.CASCADE, blank=True, null=True
-#     # )
-#
-#     def __str__(self):
-#         return self.lecturer.get_full_name
-#
-#     def get_absolute_url(self):
-#         return reverse("edit_allocated_course", kwargs={"pk": self.pk})
+class ClassRoomAllocation(models.Model):
+    lecturer = models.ForeignKey(
+        Professor,
+        on_delete=models.CASCADE,
+        related_name=_("allocated_lecturer"),
+    )
+    rooms = models.ManyToManyField(ClassRoom, blank=True)
+    # session = models.ForeignKey(
+    #     "core.Session", on_delete=models.CASCADE, blank=True, null=True
+    # )
 
 
 class Upload(models.Model):
@@ -322,7 +316,6 @@ def log_delete(sender, instance, **kwargs):
             f"The video '{instance.title}' of the course '{instance.course}' has been deleted."
         )
     )
-
 
 # class CourseOffer(models.Model):
 #     _("""NOTE: Only department head can offer semester courses""")

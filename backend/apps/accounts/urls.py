@@ -35,19 +35,19 @@ from .views import (
 
 urlpatterns = [
     path("", include("django.contrib.auth.urls")),
-    path("admin_panel/", admin_panel, name="admin_panel"),
-    path("profile/", profile, name="profile"),
-    path("profile/<int:id>/detail/", profile_single, name="profile_single"),
-    path("setting/", profile_update, name="edit_profile"),
-    path("change_password/", change_password, name="change_password"),
-    path("lecturers/", LecturerFilterView.as_view(), name="lecturer_list"),
-    path("lecturer/add/", staff_add_view, name="add_lecturer"),
-    path("staff/<int:pk>/edit/", edit_staff, name="staff_edit"),
-    path("lecturers/<int:pk>/delete/", delete_staff, name="lecturer_delete"),
-    path("students/", StudentListView.as_view(), name="student_list"),
-    path("student/add/", student_add_view, name="add_student"),
-    path("student/<int:pk>/edit/", edit_student, name="student_edit"),
-    path("students/<int:pk>/delete/", delete_student, name="student_delete"),
+    path("accounts/admin_panel/", admin_panel, name="admin_panel"),
+    path("accounts/profile/", profile, name="profile"),
+    path("accounts/profile/<int:id>/detail/", profile_single, name="profile_single"),
+    path("accounts/setting/", profile_update, name="edit_profile"),
+    path("accounts/change_password/", change_password, name="change_password"),
+    path("accounts/lecturers/", LecturerFilterView.as_view(), name="lecturer_list"),
+    path("accounts/lecturer/add/", staff_add_view, name="add_lecturer"),
+    path("accounts/staff/<int:pk>/edit/", edit_staff, name="staff_edit"),
+    path("accounts/lecturers/<int:pk>/delete/", delete_staff, name="lecturer_delete"),
+    path("accounts/students/", StudentListView.as_view(), name="student_list"),
+    path("accounts/student/add/", student_add_view, name="add_student"),
+    path("accounts/student/<int:pk>/edit/", edit_student, name="student_edit"),
+    path("accounts/students/<int:pk>/delete/", delete_student, name="student_delete"),
     path(
         "edit_student_program/<int:pk>/",
         edit_student_program,
@@ -63,6 +63,9 @@ urlpatterns = [
     path(
         "create_students_pdf_list/", render_student_pdf_list, name="student_list_pdf"
     ),  # new
+
+
+
     # path('add-student/', StudentAddView.as_view(), name='add_student'),
     # path('programs/courses/delete/<int:pk>/', course_delete, name='delete_course'),
     # Setting urls
