@@ -5,7 +5,7 @@ from rest_framework import serializers
 from apps.attachments.models import Attachment
 
 
-class AttachmentSerializer(serializers.ModelSerializer):
+class BaseAttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attachment
         fields = (
@@ -14,7 +14,7 @@ class AttachmentSerializer(serializers.ModelSerializer):
             "file")
 
 
-class AttachmentUploadSerializer(serializers.Serializer):
+class BaseAttachmentUploadSerializer(serializers.Serializer):
     file = serializers.FileField()
     content_type = serializers.SlugRelatedField(
         queryset=ContentType.objects.all(),
@@ -40,17 +40,3 @@ class AttachmentUploadSerializer(serializers.Serializer):
             if width > max_width or height > max_height:
                 raise serializers.ValidationError(f"Image dimensions exceed {max_width}x{max_height} pixels.")
         return data
-
-
-class AttachmentActionSerializer(serializers.Serializer):
-    content_type = serializers.SlugRelatedField(
-        queryset=ContentType.objects.all(),
-        slug_field='model',
-    )
-    object_id = serializers.IntegerField()
-    attachment_type = serializers.ChoiceField(choices=[('thumbnail_image', 'Thumbnail'), ('file', 'File')])
-    to_model_field_name = serializers.CharField(required=False, default=None)
-    action = serializers.CharField()
-    obj_id = serializers.PrimaryKeyRelatedField(
-        queryset=Attachment.objects.all(),
-    )

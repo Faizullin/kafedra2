@@ -8,7 +8,7 @@ def get_storage_class():
     return import_string(
         getattr(
             settings,
-            'EDITORJS_STORAGE_BACKEND',
+            'EDITOR_STORAGE_BACKEND',
             'django.core.files.storage.DefaultStorage',
         )
     )()

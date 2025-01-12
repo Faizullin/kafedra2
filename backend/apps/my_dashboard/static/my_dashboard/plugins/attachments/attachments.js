@@ -37,6 +37,7 @@ $(document).ready(function () {
             open: false,
             currentAttachmentSelection: null,
             currentAttachmentValue: null,
+            onSelect: null,
         },
         delete: {
             isLoading: false,
@@ -44,7 +45,7 @@ $(document).ready(function () {
         upload: {
             isLoading: false,
             currentAttachmentFileValue: null,
-        }
+        },
     };
 
     class ThumbnailAttachmentWidget {
@@ -176,7 +177,7 @@ $(document).ready(function () {
         thumbnailAttachmentWidgetsList.push(item);
 
         const initialDisabled = item.input_el.data("initial-disabled");
-        if(!!initialDisabled) {
+        if (!!initialDisabled) {
             item.upload_btn_el.attr("disabled", true);
             item.remove_btn_el.attr("disabled", true);
             item.attachment_btn_el.attr("disabled", true);
@@ -213,7 +214,7 @@ $(document).ready(function () {
                     const icon_class = FILE_TYPES_ICONS[selectedExtensionIconKey];
                     let icon_html = (`<i class="${icon_class}"></i>`);
                     if (selectedExtensionIconKey === "image") {
-                        icon_html = `<img src="${el.file}" alt="${el.alt}" />`
+                        icon_html = `<img src="${el.file}" alt="${el.alt}" class="img-fluid" />`
                     }
                     html += (
                         `<div class="col-lg-3 col-xl-2">
@@ -249,6 +250,7 @@ $(document).ready(function () {
         attachmentsState.modal.currentInputWidgetBaseId = null;
         attachmentsState.modal.useSelectAttachment = false;
         attachmentsState.modal.currentAttachmentSelection = null;
+        attachmentsState.modal.onSelect = null;
         attachmentsState.modal = Object.assign(attachmentsState.modal, config);
         if (attachmentsState.modal.useSelectAttachment) {
             attachments_list_grid_el.addClass("use-selection");
@@ -258,6 +260,9 @@ $(document).ready(function () {
             selection_confirm_btn_el.attr("disabled", false);
         }
         attachments_list_modal_el.modal("show");
+        if (!attachmentsState.modal.useSelectAttachment) {
+            selection_confirm_btn_el.css("display", "none");
+        }
     }
 
     function closeAttachmentsModal(config = {}) {
@@ -280,6 +285,26 @@ $(document).ready(function () {
             useSelectAttachment: true,
             currentInputWidgetBaseId: baseId,
             currentAttachmentSelection: null,
+            onSelect: function (attachment_obj) {
+                const widget_item = thumbnailAttachmentWidgetsList.find(function (item) {
+                    return item.widget_id_base === attachmentsState.modal.currentInputWidgetBaseId;
+                });
+                fetchActionRelatedObject({
+                    attachment_type: "thumbnail_image",
+                    to_model_field_name: "thumbnail",
+                    action: "attach_related_single",
+                    obj_id: attachment_obj.id,
+                }, {
+                    success: function (response) {
+                        const data = attachment_obj;
+                        if (!data.url) {
+                            data.url = data.file;
+                        }
+                        widget_item.setInputValue(data);
+                        closeAttachmentsModal();
+                    }
+                });
+            },
         });
         loadAttachments({}, {
             success: function (response, data_list) {
@@ -292,24 +317,7 @@ $(document).ready(function () {
             console.error("currentAttachmentSelection not selected yet.");
             return;
         }
-        const widget_item = thumbnailAttachmentWidgetsList.find(function (item) {
-            return item.widget_id_base === attachmentsState.modal.currentInputWidgetBaseId;
-        });
-        fetchActionRelatedObject({
-            attachment_type: "thumbnail_image",
-            to_model_field_name: "thumbnail",
-            action: "attach_related_single",
-            obj_id: attachmentsState.modal.currentAttachmentSelection.id,
-        }, {
-            success: function (response) {
-                const data = attachmentsState.modal.currentAttachmentSelection;
-                if (!data.url) {
-                    data.url = data.file;
-                }
-                widget_item.setInputValue(data);
-                closeAttachmentsModal();
-            }
-        });
+        attachmentsState.modal.onSelect(attachmentsState.modal.currentAttachmentSelection);
     });
     attachments_list_modal_el.on('hidden.bs.modal', function () {
         attachmentsState.modal = {
@@ -317,6 +325,7 @@ $(document).ready(function () {
             currentInputWidgetBaseId: null,
             open: false,
             currentAttachmentSelection: null,
+            onSelect: null,
         };
     });
 
@@ -499,4 +508,16 @@ $(document).ready(function () {
             });
         });
     });
+    $(`.attachments-modal-open-btn`).on("click", function () {
+        openAttachmentsModal();
+        loadAttachments();
+    });
+
+    class AttachmentModalManager {
+        openAttachmentsModal = openAttachmentsModal;
+        loadAttachments = loadAttachments;
+        closeAttachmentsModal = closeAttachmentsModal;
+    }
+
+    window.attachment_modal_manager = new AttachmentModalManager();
 });

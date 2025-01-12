@@ -26,8 +26,11 @@
                                     {% endif %}
                                 </h5>
                                 <div>
+                                    <button class="attachments-modal-open-btn btn btn-outline-secondary">
+                                        {% trans "Attachments" %}
+                                    </button>
                                     <button id="save-content-btn" class="btn btn-primary">
-                                        Save
+                                        {% trans "Save" %}
                                     </button>
                                 </div>
                             </div>
@@ -51,13 +54,58 @@
             </div>
         </div>
     </section>
+
+    <div id="attachments-list-modal"
+         class="modal fade" tabindex="-1" role="dialog" aria-labelledby="attachments-list-modal-title"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title h4" id="attachments-list-modal-title">Attachments</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="attachments-list">
+                        <div class="card-box">
+                            <div class="row">
+                                <div class="m-b-30">
+                                    <div class="d-flex justify-content-between">
+                                        <h4 class="header-title">Attachments</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div
+                                                class="dropzone upload-dropzone mt-4 border-dashed rounded-2 min-h-0"></div>
+                                        <div class="text-center m-t-20">
+                                            <button class="upload-btn btn btn-primary">Upload Now</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="selection-confirm-btn btn btn-primary">
+                                    Select
+                                </button>
+                            </div>
+                            <div class="row attachments-list-grid">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
 
-{% block stylesheets %}
-    <style>
 
-    </style>
-{% endblock stylesheets %}
+{% block stylesheets %}
+    {% if not disable_attachments %}
+        <link rel="stylesheet" href="https://dashboardkit.io/assets/css/plugins/dropzone.min.css"/>
+        <link rel="stylesheet" href="{% static 'my_dashboard/plugins/attachments/attachments.css' %}">
+        <link rel="stylesheet" href="{% static 'my_dashboard/plugins/editor/attachment-image.css' %}">
+    {% endif %}
+{% endblock %}
+
 
 {% block javascript %}
     <script>
@@ -68,9 +116,39 @@
             to_model_field_name: "{{ editor.to_model_field_name }}",
         };
     </script>
+
+    {% if not disable_attachments %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"
+                integrity="sha512-U2WE1ktpMTuRBPoCFDzomoIorbOyUv0sP8B+INA3EzNAhehbzED1rOJg6bCqPf/Tuposxb5ja/MAUnC8THSbLQ=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script>
+            Dropzone.autoDiscover = false;
+            const attachmentsData = {
+                content_type: "{{ attachments.content_type }}",
+                object_id: "{{ attachments.object_id }}",
+                listApiUrl: "{% url 'my_dashboard-api:attachments-list-api' %}",
+                upload: {
+                    apiUrl: "{% url 'my_dashboard-api:attachments-upload-api' %}",
+                },
+                action: {
+                    apiUrl: "{% url 'my_dashboard-api:attachments-action-api' %}",
+                },
+                row: {
+                    delete: {
+                        apiUrl: "{% url 'my_dashboard-api:attachments-delete-api' %}"
+                    }
+                }
+            }
+        </script>
+        <script src="{% static 'my_dashboard/plugins/attachments/attachments.js' %}"></script>
+    {% endif %}
     {% for source in editor.media.js %}
         <script src="{{ source }}"></script>
     {% endfor %}
+
+    <script src="{% static 'my_dashboard/plugins/editor/attachment-image.js' %}"></script>
+
+
 
     <script>
         /**
@@ -126,6 +204,7 @@
                              */
                             uploadByFile(file) {
                                 const formData = new FormData();
+                                console.log(editorData);
                                 formData.append('file', file);
                                 formData.append('content_type', editorData.content_type);
                                 formData.append('object_id', editorData.object_id);
@@ -186,6 +265,15 @@
                             }
                         }
                     },
+                });
+            }
+            if (!isDisabled(config, "MyAttachmentImage")) {
+                tools.MyAttachmentImage = extractToolConfig(config, "MyAttachmentImage", {
+                    class: MyAttachmentImage,
+                    inlineToolbar: true,
+                    config: {
+                        placeholder: 'Paste image URL'
+                    }
                 });
             }
 
@@ -301,6 +389,9 @@
                     console.error('Failed to save data:', error);
                 });
             });
+
+
+            $(".ce-popover-item[item-name=Image]");
         });
     </script>
 {% endblock %}

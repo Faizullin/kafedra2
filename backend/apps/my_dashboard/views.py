@@ -151,7 +151,7 @@ class BaseUpdateView(LoginRequiredMixin, UpdateView):
 class PostListView(BaseListView):
     template_name = "dashboard/pages/posts/posts_list.html"
     page_model = Post
-    page_list_url = reverse_lazy("resources-posts-list")
+    page_list_url = reverse_lazy("my_dashboard:resources-posts-list")
     page_create_url = reverse_lazy("my_dashboard:posts-add")
     page_update_url = reverse_lazy("my_dashboard:posts-edit", pk=0)
     page_list_api_url = reverse_lazy("my_dashboard-api:posts-list-api")
@@ -161,7 +161,7 @@ class PostListView(BaseListView):
 class PostCreateView(BaseCreateView):
     model = Post
     form_class = PostForm
-    page_list_url = reverse_lazy("resources-posts-list")
+    page_list_url = reverse_lazy("my_dashboard:resources-posts-list")
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -178,7 +178,7 @@ class PostCreateView(BaseCreateView):
 class PostUpdateView(BaseUpdateView):
     model = Post
     form_class = PostForm
-    page_list_url = reverse_lazy("resources-posts-list")
+    page_list_url = reverse_lazy("my_dashboard:resources-posts-list")
 
     def get_success_message(self, obj):
         return get_default_update_success_message(obj.title, obj.id)
@@ -189,9 +189,10 @@ class PostUpdateView(BaseUpdateView):
 
 class PostEditContentView(DetailView):
     template_name = "dashboard/pages/posts/posts_edit_content.html"
+    queryset = Post.objects.all()
 
     def get_context_data(self, **kwargs):
-        context = self.get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
 
         js_src_list = [
             "https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest",
@@ -218,13 +219,14 @@ class PostEditContentView(DetailView):
 
         instance = context["object"]
         title = "{} {} [{}]".format(_("Edit"), _("Post"), str(instance.pk))
+        ct_type = ContentType.objects.get_for_model(instance)
         context.update({
             'title': title,
             'page_header_title': title,
             'card_header_title': "{} [{}]".format(instance.title, instance.pk),
             'breadcrumbs': [
                 {"label": _("Dashboard"), "url": resolve_url("my_dashboard:home")},
-                {"label": _("Posts"), "url": resolve_url("my_dashboard:posts-list")},
+                {"label": _("Posts"), "url": resolve_url("my_dashboard:resources-posts-list")},
                 {"label": title, "url": resolve_url("my_dashboard:posts-edit", pk=instance.pk)},
                 {"label": _("Edit Content"), "current": True},
             ],
@@ -233,10 +235,14 @@ class PostEditContentView(DetailView):
                     "js": js_src_list,
                     "css": (),
                 },
+                "content_type":ct_type.model,
+                "object_id": instance.pk,
+                "to_model_field_name": "content",
+                "value": instance.content,
             },
             "instance": instance,
             "attachments": {
-                "content_type": ContentType.objects.get_for_model(instance).model,
+                "content_type": ct_type.model,
                 "object_id": instance.pk,
             },
         })
