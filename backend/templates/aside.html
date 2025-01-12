@@ -26,7 +26,7 @@
 				</mark>
 			</p>
 		</div>
-		{% url 'home' as hom %} {% url 'dashboard' as dash %} {% url 'profile' as prof %}
+		{% url 'home' as hom %} {% url 'my_dashboard' as dash %} {% url 'profile' as prof %}
 {#		{% url 'lecturer_list' as lec %}#}
 {#		{% url 'student_list' as stu %} {% url 'course_allocation_view' as cav %}#}
 {#		{% url 'programs' as pro %} {% url 'session_list' as sess %} {% url 'semester_list' as sem %}#}
@@ -40,7 +40,7 @@
 		<ul>
 			{% if request.user.is_superuser %}
 			<li class="{% if request.path == dash %}active{% endif %}">
-				<a href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i>{% trans 'Dashboard' %}</a>
+				<a href="{% url 'my_dashboard' %}"><i class="fas fa-tachometer-alt"></i>{% trans 'Dashboard' %}</a>
 			</li>
 			{% endif %}
 			<li class="{% if request.path == hom %}active{% endif %}">

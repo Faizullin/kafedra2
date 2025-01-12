@@ -1,0 +1,87 @@
+{% extends "dashboard/layouts/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block content %}
+    <section class="pc-container">
+        <div class="pcoded-content">
+
+            {% include 'dashboard/includes/page-breadcrumb.html' %}
+
+            <div class="row">
+                {% include 'snippets/messages.html' %}
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5 class="mb-0">Post</h5>
+                                <div>
+                                    <button class="add-new-item-btn btn btn-primary">
+                                        Add New
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body table-border-style">
+                            <div class="table-responsive">
+                                <table id="posts-table" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Title</th>
+                                        <th>Created At</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- [ basic-table ] end -->
+            </div>
+        </div>
+    </section>
+{% endblock content %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.0/css/dataTables.bootstrap5.css">
+{% endblock stylesheets %}
+
+{% block javascript %}
+    <script>
+        var itemsListData = {
+            tableId: "posts-table",
+            listApiUrl: "{% url "my_dashboard-api:posts-list-api" %}",
+            columns: [
+                {data: 'id', name: "id"},
+                {data: 'title', name: "title"},
+                {data: 'created_at', name: "created_at"},
+            ],
+            actions: {
+                add: {
+                    redirectUrl: "{% url 'my_dashboard:posts-add' %}"
+                },
+                row: {
+                    edit: {
+                        redirectUrl: function (item) {
+                            const raw_url = "{% url 'my_dashboard:posts-edit' pk=0 %}";
+                            return raw_url.replace("0", item.id);
+                        }
+                    },
+                    delete: {
+                        apiUrl: "/"
+                    }
+                },
+            }
+        }
+    </script>
+    {% include 'dashboard/includes/items-list/scripts.html' %}
+{% endblock %}

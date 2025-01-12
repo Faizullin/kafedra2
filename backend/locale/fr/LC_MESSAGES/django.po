@@ -994,7 +994,7 @@ msgid "Display table"
 msgstr ""
 
 #: templates/core/dashboard.html:44
-msgid "Manage dashboard"
+msgid "Manage my_dashboard"
 msgstr ""
 
 #: templates/core/dashboard.html:72
@@ -1564,7 +1564,7 @@ msgid "Payment Succeed, You has been make payment successfuly."
 msgstr ""
 
 #: templates/payments/charge.html:25
-msgid "Redirect to your dashboard in"
+msgid "Redirect to your my_dashboard in"
 msgstr ""
 
 #: templates/payments/coinbase.html:3 templates/payments/coinbase.html:8

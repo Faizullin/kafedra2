@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.fields import GenericRelation
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.db.models.signals import pre_save, post_save, post_delete
@@ -11,6 +12,7 @@ from utils.models import AbstractTimestampedModel, AbstractSlugModel
 from .utils import *
 from ..accounts.models import Professor
 from ..activities.models import ActivityLog
+from ..attachments.models import Attachment
 from ..posts.models import Category
 
 YEARS = (
@@ -82,6 +84,11 @@ class Course(AbstractTimestampedModel, AbstractSlugModel):
     semester = models.ForeignKey(AcademicSemester, null=True, blank=True, on_delete=models.SET_NULL)
     owner = models.ForeignKey(UserModel, null=True, blank=True, related_name='courses', on_delete=models.SET_NULL)
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
+
+    attachments = GenericRelation(Attachment)
+    thumbnail = models.ForeignKey(
+        Attachment, null=True, blank=True, on_delete=models.SET_NULL,
+    )
 
     def __str__(self):
         return '[{}] {}'.format(self.pk, self.title)

@@ -17,10 +17,11 @@ urlpatterns += i18n_patterns(
     path("jsi18n/", JavaScriptCatalog.as_view(), name="javascript-catalog"),
     path("jet/", include("jet.urls", "jet")),  # Django JET URLS
     path(
-        "jet/dashboard/", include("jet.dashboard.urls", "jet-dashboard")
-    ),  # Django JET dashboard URLS
+        "jet/my_dashboard/", include("jet.dashboard.urls", "jet-dashboard")
+    ),  # Django JET my_dashboard URLS
     path("", include("apps.accounts.urls")),
-    path("", include("apps.dashboard.urls")),
+    path("", include("apps.my_dashboard.urls", namespace="my_dashboard")),
+    path("", include("apps.my_dashboard.api.urls", namespace="my_dashboard-api")),
     # path("", include("apps.courses.urls")),
     # path("results/", include("apps.results.urls")),
     # path("search/", include("apps.search.urls")),
@@ -30,12 +31,12 @@ urlpatterns += i18n_patterns(
 )
 
 if settings.DEBUG:
-    import debug_toolbar
+    from debug_toolbar.toolbar import debug_toolbar_urls
 
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-    urlpatterns += path('__debug__/', include(debug_toolbar.urls)),
+    urlpatterns += debug_toolbar_urls()
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit

@@ -32,6 +32,7 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.forms"
 ]
 
 # Third party apps
@@ -56,6 +57,7 @@ PROJECT_APPS = [
     "apps.posts",
     "apps.reviews",
     "apps.pages",
+    "apps.my_dashboard",
 ]
 
 # Combine all apps
@@ -267,3 +269,5 @@ CACHES = {
 }
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
+
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'

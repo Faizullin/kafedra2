@@ -54,6 +54,9 @@ class Post(AbstractTimestampedModel, AbstractMetaModel, AbstractSlugModel, SoftD
     post_type = models.CharField(_("Post Type"), max_length=20)
 
     attachments = GenericRelation(Attachment)
+    thumbnail = models.ForeignKey(
+        Attachment, null=True, blank=True, on_delete=models.SET_NULL,
+    )
 
     def save(self, *args, **kwargs):
         if not self.slug:

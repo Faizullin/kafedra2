@@ -10,8 +10,8 @@ logger = get_task_logger(__name__)
 class SiteUrls:
     RESET_PASSWORD_CONFIRM_URL = settings.FRONTEND_APP_BASE_URL + \
                                  "/auth/password-reset/confirm"
-    PROFILE_URL = settings.FRONTEND_APP_BASE_URL + "/dashboard/profile"
-    DASHBOARD_URL = settings.FRONTEND_APP_BASE_URL + "/dashboard/"
+    PROFILE_URL = settings.FRONTEND_APP_BASE_URL + "/my_dashboard/profile"
+    DASHBOARD_URL = settings.FRONTEND_APP_BASE_URL + "/my_dashboard/"
     SITE_COMMAND = settings.SITE_COMMAND
     SITE_URL = settings.FRONTEND_APP_BASE_URL
 

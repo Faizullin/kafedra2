@@ -29,7 +29,7 @@
 			<button class="dropdown-item active" type="button">{% trans 'Display grid' %}</button>
 			<button class="dropdown-item" type="button">{% trans 'Display table' %}</button>
 			<hr>
-			<button class="dropdown-item" type="button">{% trans 'Manage dashboard' %}</button>
+			<button class="dropdown-item" type="button">{% trans 'Manage my_dashboard' %}</button>
 		</div>
 	</div>
 </div>
@@ -166,7 +166,7 @@
 
 <script src="{% url 'javascript-catalog' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="{% static 'js/dashboard.js' %}"></script>
+<script src="{% static 'js/my_dashboard.js' %}"></script>
 <script>
 	$('.fa-expand-alt').click(function () {
 		if ($(this).parent('.chart-wrap').parent('.col-md-6').hasClass('expand')) {
