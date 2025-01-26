@@ -29,6 +29,7 @@ class DashboardConfig(LmsDashboardConfig):
         self.login_view = get_class("dashboard.views", "LoginView")
 
         self.resources_app = apps.get_app_config("resources_dashboard")
+        self.attachments_app = apps.get_app_config("attachments_dashboard")
 
         # self.catalogue_app = apps.get_app_config("catalogue_dashboard")
         # self.reports_app = apps.get_app_config("reports_dashboard")
@@ -50,6 +51,7 @@ class DashboardConfig(LmsDashboardConfig):
         urls = [
             path("dashboard/", self.index_view.as_view(), name="index"),
             path("", include(self.resources_app.urls[0])),
+            path("", include(self.attachments_app.urls[0])),
             # path("catalogue/", include(self.catalogue_app.urls[0])),
             # path("reports/", include(self.reports_app.urls[0])),
             # path("orders/", include(self.orders_app.urls[0])),

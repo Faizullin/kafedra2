@@ -1,9 +1,6 @@
-# pylint: disable=W0201
-
 from django.apps import apps
 from django.conf import settings
 from django.urls import path, reverse_lazy
-from django.views.generic.base import RedirectView
 
 from .core.application import LmsConfig
 from .core.loading import get_class

@@ -144,13 +144,18 @@ class DashboardPermission:
 
 
         # my:
-
         "post": [
             "is_staff",
             "resources.add_post",
             "resources.change_post",
             "resources.view_post",
             "resources.delete_post",
+        ],
+        "attachment": [
+            "is_staff",
+            "attachments.upload_attachment",
+            "attachments.view_attachment",
+            "attachments.action_attachment",
         ],
     }
     # Staff

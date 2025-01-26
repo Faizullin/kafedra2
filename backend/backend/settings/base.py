@@ -320,6 +320,7 @@ INSTALLED_APPS = [
     # 'lms.apps.wishlists.apps.WishlistsConfig',
     'lms.apps.dashboard.apps.DashboardConfig',
     'lms.apps.dashboard.resources.apps.ResourcesDashboardConfig',
+    'lms.apps.dashboard.attachments.apps.AttachmentsDashboardConfig',
     # 'lms.apps.dashboard.reports.apps.ReportsDashboardConfig',
     # 'lms.apps.dashboard.users.apps.UsersDashboardConfig',
     # 'lms.apps.dashboard.orders.apps.OrdersDashboardConfig',
@@ -334,7 +335,7 @@ INSTALLED_APPS = [
     # 'lms.apps.dashboard.shipping.apps.ShippingDashboardConfig',
 
     # 3rd-party apps that Lms depends on
-    'widget_tweaks',
+    # 'widget_tweaks',
     'haystack',
     'treebeard',
     'sorl.thumbnail',
@@ -349,6 +350,8 @@ INSTALLED_APPS = [
 
     'django_celery_beat',
     'django_celery_results',
+    "crispy_forms",
+    "crispy_bootstrap5",
 ]
 
 # Add Lms's custom auth backend so users can sign in using their email
@@ -462,4 +465,9 @@ THUMBNAIL_DEFAULT_STORAGE_ALIAS = "default"
 # in tests/config.py
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
+
+
+
 AUTH_USER_MODEL = "accounts.CustomUser"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"

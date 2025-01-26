@@ -1,0 +1,113 @@
+{% extends "lms/dashboard/layouts/layout.html" %}
+{% load static %}
+{% load currency_filters %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    {% include 'lms/dashboard/includes/layout-vertical.html' %}
+
+    <!-- [ Main Content ] start -->
+    <div class="pc-container">
+        <div class="pc-content">
+            {% include 'lms/dashboard/includes/breadcrumb.html' %}
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h5 class="mb-0">
+                                    {{ card_header_title }}
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% crispy form %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- [ Main Content ] start -->
+
+
+    <div id="attachments-list-modal"
+         class="modal fade" tabindex="-1" role="dialog" aria-labelledby="attachments-list-modal-title"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title h4" id="attachments-list-modal-title">Attachments</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="attachments-list">
+                        <div class="card-box">
+                            <div class="row">
+                                <div class="m-b-30">
+                                    <div class="d-flex justify-content-between">
+                                        <h4 class="header-title"> {% trans 'Attachments' %}</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="dropzone upload-dropzone mt-4 border-dashed rounded-2 min-h-0"></div>
+                                        <div class="text-center m-t-20">
+                                            <button class="upload-btn btn btn-primary">Upload Now</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="selection-confirm-btn btn btn-primary">
+                                    Select
+                                </button>
+                            </div>
+                            <div class="row attachments-list-grid">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {% if not disable_attachments %}
+        <link rel="stylesheet" href="https://dashboardkit.io/assets/css/plugins/dropzone.min.css"/>
+        <link rel="stylesheet" href="{% static 'my-plugins/attachments/attachments.css' %}">
+    {% endif %}
+{% endblock %}
+
+{% block javascript %}
+    {% if not disable_attachments %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"
+                integrity="sha512-U2WE1ktpMTuRBPoCFDzomoIorbOyUv0sP8B+INA3EzNAhehbzED1rOJg6bCqPf/Tuposxb5ja/MAUnC8THSbLQ=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script>
+        </script>
+        <script src="{% static 'my-plugins/attachments/AttachmentModalManager.js' %}"></script>
+        <script src="{% static 'my-plugins/attachments/ThumbnailImageWidgetManager.js' %}"></script>
+        <script>
+            Dropzone.autoDiscover = false;
+            const attachmentsData = {
+                content_type: "{{ attachments.content_type }}",
+                object_id: "{{ attachments.object_id }}",
+                listApiUrl: "{% url 'dashboard:attachments-list-api' %}",
+                upload: {
+                    apiUrl: "{% url 'dashboard:attachments-upload-api' %}",
+                },
+                action: {
+                    apiUrl: "{% url 'dashboard:attachments-action-api' %}",
+                },
+            }
+            $(document).ready(function () {
+                const attachmentsManager = new AttachmentModalManager($("#attachments-list-modal"), attachmentsData);
+                new ThumbnailImageWidgetManager($(".thumbnail-attachment-container"), attachmentsData, attachmentsManager);
+            });
+        </script>
+
+    {% endif %}
+{% endblock %}
+

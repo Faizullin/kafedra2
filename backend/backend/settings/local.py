@@ -15,12 +15,27 @@ if DEBUG and DATABASES is None:
 #     DEV_REQUEST_DELAY = env.float('DEV_REQUEST_DELAY', 0.5)
 
 if DEBUG:
-    INSTALLED_APPS += ('debug_toolbar',)
-    MIDDLEWARE += 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    INSTALLED_APPS.append('debug_toolbar')
+    MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
     INTERNAL_IPS = [
         "127.0.0.1",
     ]
 
+
+    def show_toolbar(request):
+        return True
+
+
+    DEBUG_TOOLBAR_CONFIG = {
+        "SHOW_TOOLBAR_CALLBACK": show_toolbar,
+    }
+
 # if DEBUG:
 #     CORS_ALLOW_ALL_ORIGINS = True
 #     CORS_ALLOW_CREDENTIALS = True
+
+
+if DEBUG:
+    INSTALLED_APPS.append('django_filters')
+    INSTALLED_APPS.append('rest_framework')
+    INSTALLED_APPS.remove('django.contrib.staticfiles')

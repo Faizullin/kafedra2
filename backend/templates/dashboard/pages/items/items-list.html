@@ -67,12 +67,12 @@
             ],
             actions: {
                 add: {
-                    redirectUrl: "{% url 'my_dashboard:posts-add' %}"
+                    redirectUrl: "{% url 'dashboard:resources:posts-add' %}"
                 },
                 row: {
                     edit: {
                         redirectUrl: function (item) {
-                            const raw_url = "{% url 'my_dashboard:posts-edit' pk=0 %}";
+                            const raw_url = "{% url 'dashboard:resources:posts-edit' pk=0 %}";
                             return raw_url.replace("0", item.id);
                         }
                     },

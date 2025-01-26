@@ -3,6 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from rest_framework import generics
 from rest_framework.filters import SearchFilter, OrderingFilter
 
+from lms.apps.dashboard.editor.api.views import BaseContentEditorActionAPIView
 from lms.core.loading import get_model
 from .filters import CustomPagination
 from .serializers import PostSerializer
@@ -40,3 +41,7 @@ class ResourcesPostListAPIView(BaseListApiView):
     def get_queryset(self):
         queryset = Post.objects.all().prefetch_related('author', 'category', 'thumbnail')
         return queryset
+
+
+class ResourcesPostEditContentActionAPIView(BaseContentEditorActionAPIView):
+    pass

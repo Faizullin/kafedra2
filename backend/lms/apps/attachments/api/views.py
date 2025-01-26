@@ -1,17 +1,18 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import FieldDoesNotExist
+from django.db import models
 from django_filters import ModelChoiceFilter, NumberFilter
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from rest_framework import generics, status, pagination
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ..models import Attachment, models
+from lms.core.loading import get_model
 from utils.api_actions import BaseAction, BaseActionException
 from .serializers import BaseAttachmentSerializer, BaseAttachmentUploadSerializer
 
+Attachment = get_model("attachments", "Attachment")
 
 
 class BaseCustomPagination(pagination.PageNumberPagination):
@@ -74,7 +75,7 @@ class BaseAttachmentUploadAPIView(APIView):
                 return Response({"error": "`to_model_field_name` is required."}, status=status.HTTP_400_BAD_REQUEST)
             try:
                 related_field = model_class._meta.get_field(to_model_field_name)
-                if not (isinstance(related_field, models.ForeignKey) and related_field.related_model == Attachment):
+                if not (isinstance(related_field, models.ForeignKey)):
                     return Response({"error": "`to_model_field_name` is not correct field"},
                                     status=status.HTTP_400_BAD_REQUEST)
             except FieldDoesNotExist:
@@ -93,7 +94,7 @@ class BaseAttachmentUploadAPIView(APIView):
         return Response(BaseAttachmentSerializer(attachment_obj).data, status=status.HTTP_201_CREATED)
 
 
-class BaseFetachRelatedAndDeleteSingleAction(BaseAction):
+class BaseDetachRelatedAndDeleteSingleAction(BaseAction):
     name = "detach_related_and_delete_single"
 
     def apply(self, request):
@@ -110,7 +111,7 @@ class BaseFetachRelatedAndDeleteSingleAction(BaseAction):
         content_type, related_obj = self.get_content_type_obj_from_request(request)
         try:
             related_field = related_obj._meta.get_field(to_model_field_name)
-            if not (isinstance(related_field, models.TextField)):
+            if not (isinstance(related_field, models.ForeignKey) and related_field.related_model == Attachment):
                 raise BaseActionException("`to_model_field_name` is not correct field")
         except FieldDoesNotExist:
             raise BaseActionException("`to_model_field_name` is not correct field")
@@ -139,7 +140,7 @@ class BaseAttachRelatedSingleAction(BaseAction):
         content_type, related_obj = self.get_content_type_obj_from_request(request)
         try:
             related_field = related_obj._meta.get_field(to_model_field_name)
-            if not (isinstance(related_field, models.TextField)):
+            if not (isinstance(related_field, models.ForeignKey) and related_field.related_model == Attachment):
                 raise BaseActionException("`to_model_field_name` is not correct field")
         except FieldDoesNotExist:
             raise BaseActionException("`to_model_field_name` is not correct field")
@@ -160,7 +161,7 @@ class BaseDetachRelatedSingleAction(BaseAction):
         content_type, related_obj = self.get_content_type_obj_from_request(request)
         try:
             related_field = related_obj._meta.get_field(to_model_field_name)
-            if not (isinstance(related_field, models.TextField)):
+            if not (isinstance(related_field, models.ForeignKey) and related_field.related_model == Attachment):
                 raise BaseActionException("`to_model_field_name` is not correct field")
         except FieldDoesNotExist:
             raise BaseActionException("`to_model_field_name` is not correct field")
@@ -170,12 +171,29 @@ class BaseDetachRelatedSingleAction(BaseAction):
             "message": "Successfully saved content to {}.".format(related_obj),
         }
 
+class BaseDeleteSingleAction(BaseAction):
+    name = "delete_single"
+
+    def apply(self, request):
+        obj_id = request.data.get("obj_id", None)
+        if not obj_id:
+            raise BaseActionException("obj_id is required")
+        try:
+            obj = Attachment.objects.get(pk=request.data.get("obj_id"))
+        except Attachment.DoesNotExist:
+            raise BaseActionException("Attachment with this obj_id does not exist")
+        obj.delete()
+        return {
+            "message": "Successfully deleted.",
+        }
 
 class BaseAttachmentActionAPIView(APIView):
     def post(self, request, *args, **kwargs):
         available_actions = [
             BaseAttachRelatedSingleAction(),
             BaseDetachRelatedSingleAction(),
+            BaseDetachRelatedAndDeleteSingleAction(),
+            BaseDeleteSingleAction(),
         ]
         action = request.data.get('action', None)
         if action is None:

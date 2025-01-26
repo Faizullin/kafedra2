@@ -1,0 +1,82 @@
+{% extends "lms/dashboard/layouts/layout.html" %}
+{% load static %}
+{% load currency_filters %}
+{% load i18n %}
+
+{% block content %}
+    {% include 'lms/dashboard/includes/layout-vertical.html' %}
+
+    <!-- [ Main Content ] start -->
+    <div class="pc-container">
+        <div class="pc-content">
+            {% include 'lms/dashboard/includes/breadcrumb.html' %}
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card table-card">
+                        <div class="card-header">
+                            <div class="d-sm-flex align-items-center justify-content-between">
+                                <h5 class="mb-3 mb-sm-0">
+                                    {% translate 'Posts' %}
+                                </h5>
+                                <div class="d-inline-flex flex-wrap gap-2">
+                                    <button class="add-new-item-btn btn btn-primary">
+                                        {% trans 'Add' %}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body pt-3">
+                            <div class="table-responsive">
+                                <table id="data-items-table" class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Title</th>
+                                        <th>Created At</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- [ Main Content ] start -->
+{% endblock %}
+
+{% block javascript %}    
+    <script>
+        var itemsListData = {
+            tableId: "data-items-table",
+            listApiUrl: "{{ urls.listApi }}",
+            columns: [
+                {data: 'id', name: "id"},
+                {data: 'title', name: "title"},
+                {data: 'created_at', name: "created_at"},
+            ],
+            actions: {
+                add: {
+                    redirectUrl: "{{ urls.add }}"
+                },
+                row: {
+                    edit: {
+                        redirectUrl: function (item) {
+                            const raw_url = "{{ urls.edit }}";
+                            return raw_url.replace("0", item.id);
+                        }
+                    },
+                    delete: {
+                        apiUrl: "/"
+                    }
+                },
+            }
+        }
+    </script>
+    {% include 'lms/dashboard/includes/items-list/scripts.html' %}
+{% endblock %}

@@ -2,6 +2,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.files.images import get_image_dimensions
 from rest_framework import serializers
 
+from lms.core.loading import get_model
+
 Attachment = get_model("attachments", "Attachment")
 
 
