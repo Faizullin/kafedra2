@@ -1,7 +1,6 @@
 import subprocess
 import sys
 
-
 def run_command(command):
     """Helper function to run a shell command."""
     try:
@@ -11,6 +10,13 @@ def run_command(command):
         print(f"Error: {e}")
         sys.exit(1)
 
+def validate_environment(env):
+    if env not in ["dev", "prod"]:
+        print("Error: Environment must be 'dev' or 'prod'.")
+        sys.exit(1)
+
+def get_compose_file(env):
+    return f"../docker-compose.{env}.yml"
 
 def main():
     if len(sys.argv) < 3:
@@ -23,76 +29,77 @@ def main():
     additional_args = sys.argv[3:]  # Remaining arguments
 
     # Validate environment
-    if env not in ["dev", "prod"]:
-        print("Error: Environment must be 'dev' or 'prod'.")
-        sys.exit(1)
+    validate_environment(env)
 
-    # Set compose file
-    compose_file = f"../docker-compose.{env}.yml"
-
+    # Set compose file and other configurations
+    compose_file = get_compose_file(env)
     container_name = "kafedra-backend-1"
     settings_extension = "local" if env == "dev" else "prod"
 
-    actions = ["build", "collectstatic", "migrate",
-               "seed", "shell", "deploy", "run", "logs", "down", "remove_migrations_and_db"]
+    # Supported actions
+    actions = {
+        "build": lambda: run_command(f"docker-compose -f {compose_file} build {join_additional_args(additional_args)}"),
+
+        "collectstatic": lambda: run_command(
+            f"docker exec -it {container_name} python3 manage.py collectstatic --noinput --settings=backend.settings.{settings_extension}"
+        ),
+
+        "migrate": lambda: (
+            run_command(
+                f"docker exec -it {container_name} python3 manage.py makemigrations --settings=backend.settings.{settings_extension}"
+            ),
+            run_command(
+                f"docker exec -it {container_name} python3 manage.py migrate --settings=backend.settings.{settings_extension}"
+            ),
+        ),
+
+        "seed": lambda: run_command(
+            f"docker exec -it {container_name} python3 manage.py shell -c \"from seeding.seed import *;seed(False)\" --settings=backend.settings.{settings_extension}"
+        ),
+
+        "remove_migrations_and_db": lambda: run_command(
+            f"docker exec -it {container_name} python3 manage.py shell -c \"from seeding.remove_migrations_and_db import *;from seeding.seed import *;remove_migrations_and_db();seed(False)\" --settings=backend.settings.{settings_extension}"
+        ),
+
+        "shell": lambda: run_command(f"docker exec -it {container_name} sh"),
+
+        "django-shell": lambda: run_command(
+            f"docker exec -it {container_name} sh -c \"python3 manage.py shell --settings=backend.settings.{settings_extension}\""
+        ),
+
+        "deploy": lambda: (
+            run_command(f"docker-compose -f {compose_file} down {join_additional_args(additional_args)}"),
+            run_command(f"docker-compose -f {compose_file} pull {join_additional_args(additional_args)}"),
+            run_command(f"docker-compose -f {compose_file} up -d --build {join_additional_args(additional_args)}"),
+            print("Deployment complete!"),
+        ),
+
+        "run": lambda: (
+            run_command(f"docker-compose -f {compose_file} down {join_additional_args(additional_args)}"),
+            run_command(f"docker-compose -f {compose_file} up --build {join_additional_args(additional_args)}"),
+            print("Run complete!"),
+        ),
+
+        "logs": lambda: run_command(f"docker-compose -f {compose_file} logs {join_additional_args(additional_args)}"),
+
+        "down": lambda: (
+            run_command(f"docker-compose -f {compose_file} down {join_additional_args(additional_args)}"),
+            print("Containers stopped!"),
+        ),
+    }
+
+    # Validate action
     if action not in actions:
-        print(f"Error: Invalid action. Available actions: {','.join(actions)}")
+        print(f"Error: Invalid action. Available actions: {', '.join(actions.keys())}")
         sys.exit(1)
 
-    # Define actions
-    if action == "build":
-        print(f"Building for {env} environment...")
-        run_command(f"docker-compose -f {compose_file} build")
+    # Execute the action
+    print(f"Executing '{action}' for {env} environment...")
+    actions[action]()
 
-    elif action == "collectstatic":
-        print(f"Collecting static files for {env} environment...")
-        run_command(
-            f"docker exec -it {container_name} python3 manage.py collectstatic --noinput --settings=backend.settings.{settings_extension}")
-
-    elif action == "migrate":
-        print(f"Running migrations for {env} environment...")
-        run_command(
-            f"docker exec -it {container_name} python3 manage.py makemigrations --settings=backend.settings.{settings_extension}")
-        run_command(
-            f"docker exec -it {container_name} python3 manage.py migrate --settings=backend.settings.{settings_extension}")
-
-    elif action == "seed":
-        print(f"Seeding database for {env} environment...")
-        run_command(
-            f"docker exec -it {container_name} python3 manage.py shell -c \"from seeding.seed import *;seed(False)\" --settings=backend.settings.{settings_extension}")
-
-    elif action == "remove_migrations_and_db":
-        print(f"Seeding database for {env} environment...")
-        run_command(
-            f"docker exec -it {container_name} python3 manage.py shell -c \"from seeding.remove_migrations_and_db import *;from seeding.seed import *;remove_migrations_and_db();seed(False)\" --settings=backend.settings.{settings_extension}")
-
-    elif action == "shell":
-        print(f"Opening shell for {env} environment...")
-        run_command(f"docker exec -it {container_name} sh")
-
-    elif action == "deploy":
-        print(f"Deploying to {env} environment...")
-        run_command(f"docker-compose -f {compose_file} down")
-        run_command(f"docker-compose -f {compose_file} pull")
-        run_command(f"docker-compose -f {compose_file} up -d --build")
-        print("Deployment complete!")
-
-    elif action == "run":
-        print(f"Running to {env} environment...")
-        run_command(f"docker-compose -f {compose_file} down")
-        run_command(f"docker-compose -f {compose_file} up --build")
-        print("Run complete!")
-
-    elif action == "logs":
-        print(f"Running to {env} environment...")
-        run_command(f"docker-compose -f {compose_file} logs")
-
-    elif action == "down":
-        additional_args_str = " ".join(additional_args)
-        print(f"Stopping containers...")
-        run_command(f"docker-compose -f {compose_file} down {additional_args_str}")
-        print("Containers stopped!")
-
+def join_additional_args(args):
+    """Helper to join additional arguments for commands."""
+    return " ".join(args)
 
 if __name__ == "__main__":
     main()

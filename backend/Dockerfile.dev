@@ -1,34 +1,60 @@
 FROM python:3.11.4-slim-bullseye AS BASE
 
+# LABEL maintainer="info@optimum-web.com"
+
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+# start oscar settings
+
+# ENV DEBIAN_FRONTEND noninteractive
+# RUN apt-get update  && apt-get autoremove -y && apt-get --no-install-recommends -y install locales supervisor curl \
+#  gcc libpq5 git lsof procps net-tools libpq-dev uwsgi uwsgi-src uuid-dev libcap-dev
+
+# RUN apt-get update && apt-get -y install gcc libpq5 net-tools locales supervisor
+RUN apt-get update 
+RUN apt install -y netcat 
+
+# RUN locale-gen en_US.UTF-8 && dpkg-reconfigure locales
+# COPY locale.gen /etc/locale.gen
+# COPY default.locale /etc/default/locale
+# RUN locale -a
+
+# # compile uwsgi plugin for python3.6
+# RUN PYTHON=python3.6 uwsgi --build-plugin "/usr/src/uwsgi/plugins/python python36"
+# RUN mv python36_plugin.so /usr/lib/uwsgi/plugins/python36_plugin.so
+
+# RUN groupadd -r -g 2000 oscar; useradd -r -u 2000 -g 2000 -m -c "app account" -d /home/oscar -s /bin/bash oscar;
+
+# end oscar settings
+
 ENV HOME=/app
 RUN mkdir $HOME
-WORKDIR $HOME
 
-RUN mkdir $HOME/public
-RUN mkdir $HOME/public/static
-RUN mkdir $HOME/public/media
-RUN mkdir $HOME/logs
-RUN mkdir $HOME/logs/api
-RUN mkdir $HOME/logs/celery
+RUN groupadd -r django && useradd -r -g django django
 
-# install system dependencies
-RUN apt-get update && \
-    apt install -y gcc netcat \
-                python3-pip \
-                python3-opencv
-                
 RUN pip install --trusted-host pypi.python.org --upgrade pip
-
 COPY requirements.dev.txt $HOME/requirements.txt
 RUN pip install -r $HOME/requirements.txt
 
+COPY . $HOME
+RUN chown -R django $HOME
+
+# USER django
+
+WORKDIR $HOME
+
+# COPY wsgi.ini /app/sandbox/wsgi.ini
+# COPY oscar.conf /etc/supervisor/conf.d/oscar.conf
+# COPY settings.py /app/sandbox/settings.py
+
+
 COPY ./entrypoint.sh $HOME/entrypoint.sh
-RUN sed -i 's/\r$//g' $HOME/entrypoint.sh
-RUN chmod +x $HOME/entrypoint.sh
+# RUN sed -i 's/\r$//g' $HOME/entrypoint.sh
+# RUN chmod +x $HOME/entrypoint.sh
+
 
 COPY . .
+
 
 ENTRYPOINT ["sh", "./entrypoint.sh"]

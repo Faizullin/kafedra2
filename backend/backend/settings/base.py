@@ -1,263 +1,47 @@
-from datetime import timedelta
+import os
 
 import environ
-import os
-from celery.schedules import crontab
-from django.utils.translation import gettext_lazy as _
 
 root = environ.Path(__file__) - 3
 BASE_DIR = root()
 env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-DEBUG = env.bool('DEBUG', True)
-USE_HTTPS = env.bool('USE_HTTPS', False)
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
-FRONTEND_APP_BASE_URL = env.str('FRONTEND_APP_BASE_URL', 'http://localhost:5173')
-SITE_COMMAND = env.str('SITE_COMMAND', None)
+# Path helper
+
+DEBUG = env.bool('DEBUG', default=True)
+
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
+
 EMAIL_SERVICE_NAME = env.str("EMAIL_SERVICE_NAME", None)
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('SECRET_KEY', None)
+EMAIL_SUBJECT_PREFIX = '[Lms sandbox] '
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# Application definition
-
-DJANGO_APPS = [
-    "modeltranslation",  # Translation
-    "jet.dashboard",
-    "jet",
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "django.forms"
-]
-
-# Third party apps
-THIRD_PARTY_APPS = [
-    "crispy_forms",
-    "crispy_bootstrap5",
-    "rest_framework",
-    "django_filters",
-]
-
-# Custom apps
-PROJECT_APPS = [
-    "apps.accounts",
-    "apps.courses",
-    "apps.results",
-    "apps.search",
-    "apps.quiz",
-    "apps.payments",
-    "apps.attachments",
-    "apps.activities",
-    "apps.assignments",
-    "apps.posts",
-    "apps.reviews",
-    "apps.pages",
-    "apps.my_dashboard",
-]
-
-# Combine all apps
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
-
-MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django.middleware.locale.LocaleMiddleware",
-]
-
-ROOT_URLCONF = "backend.urls"
-
-
-TEMPLATES = [
-    {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "templates")],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-                # 'django.template.context_processors.i18n',
-                # 'django.template.context_processors.media',
-                # 'django.template.context_processors.static',
-                # 'django.template.context_processors.tz',
-            ],
-        },
-    },
-]
-
-WSGI_APPLICATION = "backend.wsgi.application"
-
-ASGI_APPLICATION = "backend.asgi.application"
-
-DATABASES = None
-if env.str("DB_USER", None) is not None and env.str("DB_PASSWORD", None) is not None:
-    DATABASES = {
-        'default': {
-            'ENGINE': env.str('DB_ENGINE'),
-            'NAME': env.str('DB_NAME'),
-            'USER': env.str('DB_USER'),
-            'PASSWORD': env.str('DB_PASSWORD'),
-            'HOST': env.str('DB_HOST'),
-            'PORT': env.str('DB_PORT'),
-        }
+# Use a Sqlite database by default
+DATABASES = {
+    'default': {
+        'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get('DB_NAME', root('db.sqlite')),
+        'USER': os.environ.get('DB_USER', None),
+        'PASSWORD': os.environ.get('DB_PASSWORD', None),
+        'HOST': os.environ.get('DB_HOST', None),
+        'PORT': os.environ.get('DB_PORT', None),
+        'ATOMIC_REQUESTS': True
     }
+}
 
-# https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-DEFAULT_AUTO_FIELD
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# Password validation
-# https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
-]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/2.2/topics/i18n/
-
-gettext = lambda s: s
-
-LANGUAGES = (
-    ("en", gettext("English")),
-    ("fr", gettext("French")),
-    ("es", gettext("Spanish")),
-    ("ru", gettext("Russia")),
-)
-
-LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
-
-MODELTRANSLATION_DEFAULT_LANGUAGE = "en"
-LANGUAGE_CODE = "en-us"
-
-TIME_ZONE = "UTC"
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
-
-public_root = root.path('public/')
-MEDIA_ROOT = public_root('media')
-MEDIA_URL = env.str('MEDIA_URL', default='media/')
-# STATIC_ROOT = public_root('static')
-STATIC_URL = env.str('STATIC_URL', default='static/')
-
-# print(str(public_root('static')))
-# STATICFILES_DIRS = [
-#     str(public_root('static')),
-#     # "/var/www/static/",
-# ]
-STATICFILES_DIRS = (str(public_root('static')),)
-
-# -----------------------------------
-# E-mail configuration
-
-
-if EMAIL_SERVICE_NAME == "GMAIL_OAUTH":
-    EMAIL_SEND_FROM_NAME = env.str("EMAIL_SEND_FROM_NAME", None)
-    EMAIL_BACKEND = 'gmailapi_backend.mail.GmailBackend'
-    GMAIL_API_CLIENT_ID = env.str("GMAIL_API_CLIENT_ID")
-    GMAIL_API_CLIENT_SECRET = env.str("GMAIL_API_CLIENT_SECRET")
-    GMAIL_API_REFRESH_TOKEN = env.str("GMAIL_API_REFRESH_TOKEN")
-elif env.str("EMAIL_HOST_USER", None) is not None:
-    EMAIL_SEND_FROM_NAME = env.str("EMAIL_SEND_FROM_NAME")
-    EMAIL_HOST = env.str("EMAIL_HOST")
-    EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
-    EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD")
-    EMAIL_PORT = env.str("EMAIL_PORT")
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_USE_TLS = True
-
-# -----------------------------------
-# crispy config
-
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
-
-AUTH_USER_MODEL = 'accounts.CustomUser'
-# LOGOUT_REDIRECT_URL = FRONTEND_APP_BASE_URL + "/"
-# LOGIN_URL = FRONTEND_APP_BASE_URL + "/auth/login"
-
-# # -----------------------------------
-# # DRF setup
-#
-# REST_FRAMEWORK = {
-#     "DEFAULT_PERMISSION_CLASSES": [
-#         "rest_framework.permissions.IsAuthenticated",
-#     ],
-#     "DEFAULT_AUTHENTICATION_CLASSES": [
-#         "rest_framework.authentication.SessionAuthentication",
-#         "rest_framework.authentication.BasicAuthentication",
-#     ],
+# CACHES = {
+#     'default': env.cache(default='locmemcache://'),
 # }
 
-# -----------------------------------
-# Strip payment config
-
-STRIPE_SECRET_KEY = env.str("STRIPE_SECRET_KEY", default="")
-STRIPE_PUBLISHABLE_KEY = env.str("STRIPE_PUBLISHABLE_KEY", default="")
-
-
-STUDENT_ID_PREFIX = env.str("STUDENT_ID_PREFIX", "ugr")
-LECTURER_ID_PREFIX = env.str("LECTURER_ID_PREFIX", "lec")
-
-
-
-
-# if USE_HTTPS:
-#     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-#     SECURE_SSL_REDIRECT = True
-# else:
-#     SECURE_SSL_REDIRECT = False
-#     SESSION_COOKIE_SECURE = False
-
-# CELERY SETTINGS
-
-CELERY_BROKER_URL = env.str('CELERY_BROKER_URL', None)
+# celery settings
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = 'django-db'
 CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_TIMEZONE = TIME_ZONE
-# CELERY_RESULT_BACKEND = env.str('CELERY_RESULT_BACKEND', None)
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = env('TIME_ZONE')
 
-# CELERY_BEAT_SCHEDULE = {
-#     "check_booking_payments": {
-#         "task": "bookings.tasks.check_booking_payments",
-#         "schedule": crontab(minute='*/10'),  # Run every 10 minutes ('*/10')
-#     }
-# }
-
-# SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-# SESSION_CACHE_ALIAS = "default"
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
@@ -268,6 +52,414 @@ CACHES = {
     }
 }
 
-X_FRAME_OPTIONS = "SAMEORIGIN"
+# Local time zone for this installation. Choices can be found here:
+# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
+# although not all choices may be available on all operating systems.
+# On Unix systems, a value of None will cause Django to use the same
+# timezone as the operating system.
+USE_TZ = True
+TIME_ZONE = env("TIME_ZONE")
 
-FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
+# Language code for this installation. All choices can be found here:
+# http://www.i18nguy.com/unicode/language-identifiers.html
+LANGUAGE_CODE = 'en-gb'
+
+# Includes all languages that have >50% coverage in Transifex
+# Taken from Django's default setting for LANGUAGES
+gettext_noop = lambda s: s
+LANGUAGES = (
+    ('ar', gettext_noop('Arabic')),
+    ('ca', gettext_noop('Catalan')),
+    ('cs', gettext_noop('Czech')),
+    ('da', gettext_noop('Danish')),
+    ('de', gettext_noop('German')),
+    ('en-gb', gettext_noop('British English')),
+    ('el', gettext_noop('Greek')),
+    ('es', gettext_noop('Spanish')),
+    ('fi', gettext_noop('Finnish')),
+    ('fr', gettext_noop('French')),
+    ('it', gettext_noop('Italian')),
+    ('ko', gettext_noop('Korean')),
+    ('nl', gettext_noop('Dutch')),
+    ('pl', gettext_noop('Polish')),
+    ('pt', gettext_noop('Portuguese')),
+    ('pt-br', gettext_noop('Brazilian Portuguese')),
+    ('ro', gettext_noop('Romanian')),
+    ('ru', gettext_noop('Russian')),
+    ('sk', gettext_noop('Slovak')),
+    ('uk', gettext_noop('Ukrainian')),
+    ('zh-cn', gettext_noop('Simplified Chinese')),
+)
+
+SITE_ID = 1
+
+# If you set this to False, Django will make some optimizations so as not
+# to load the internationalization machinery.
+USE_I18N = True
+
+# If you set this to False, Django will not format dates, numbers and
+# calendars according to the current locale
+USE_L10N = True
+
+# MY:
+public_root = root.path('public/')
+
+# Absolute path to the directory that holds media.
+# Example: "/home/media/media.lawrence.com/"
+MEDIA_ROOT = public_root("media")
+
+# URL that handles the media served from MEDIA_ROOT. Make sure to use a
+# trailing slash if there is a path component (optional in other cases).
+# Examples: "http://media.lawrence.com", "http://example.com/media/"
+MEDIA_URL = '/media/'
+
+STATIC_URL = '/static/'
+STATIC_ROOT = public_root('static')
+STATICFILES_DIRS = (
+    root('static/'),
+    # "lms/static_src",
+)
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/dev/ref/settings/#default-auto-field
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = env.str('SECRET_KEY', default='UajFCuyjDKmWHe29neauXzHi9eZoRXr6RMbT5JyAdPiACBP6Cra2')
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            root('templates'),
+        ],
+        'OPTIONS': {
+            # 'loaders': [
+            #     'django.template.loaders.filesystem.Loader',
+            #     'django.template.loaders.app_directories.Loader',
+            # ],
+            "loaders": [
+                (
+                    "django.template.loaders.cached.Loader",
+                    [
+                        "django.template.loaders.filesystem.Loader",
+                        "django.template.loaders.app_directories.Loader",
+                        # "path.to.custom.Loader",
+                    ],
+                ),
+            ],
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.request',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.contrib.messages.context_processors.messages',
+
+                # Lms specific
+                # 'lms.apps.search.context_processors.search_form',
+                # 'apps.search.context_processors.search_form',
+                # 'lms.apps.communication.notifications.context_processors.notifications',
+                # 'lms.apps.checkout.context_processors.checkout',
+                # 'lms.core.context_processors.metadata',
+            ],
+            'debug': DEBUG,
+        }
+    }
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+
+    # Allow languages to be selected
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.http.ConditionalGetMiddleware',
+    'django.middleware.common.CommonMiddleware',
+
+    # Ensure a valid basket is added to the request instance for every request
+    # 'lms.apps.basket.middleware.BasketMiddleware',
+]
+
+ROOT_URLCONF = 'backend.urls'
+
+# A sample logging configuration. The only tangible logging
+# performed by this configuration is to send an email to
+# the site admins on every HTTP 500 error.
+# See http://docs.djangoproject.com/en/dev/topics/logging for
+# more details on how to customize your logging configuration.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(message)s',
+        },
+        'simple': {
+            'format': '[%(asctime)s] %(message)s'
+        },
+    },
+    'root': {
+        'level': 'DEBUG',
+        'handlers': ['console'],
+    },
+    'handlers': {
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+    },
+    'loggers': {
+        'lms': {
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'lms.catalogue.import': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'lms.alerts': {
+            'handlers': ['null'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+
+        # Django loggers
+        'django': {
+            'handlers': ['null'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'django.db.backends': {
+            'level': 'WARNING',
+            'propagate': True,
+        },
+        'django.security.DisallowedHost': {
+            'handlers': ['null'],
+            'propagate': False,
+        },
+
+        # Third party
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sorl.thumbnail': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+    }
+}
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
+
+    'lms.config.LmsPortal',
+    # 'lms.apps.analytics.apps.AnalyticsConfig',
+    # 'lms.apps.checkout.apps.CheckoutConfig',
+    # 'lms.apps.address.apps.AddressConfig',
+    # 'lms.apps.shipping.apps.ShippingConfig',
+    # 'lms.apps.catalogue.gSUapps.CatalogueConfig',
+    # 'lms.apps.catalogue.reviews.apps.CatalogueReviewsConfig',
+    # 'lms.apps.communication.apps.CommunicationConfig',
+    # 'lms.apps.partner.apps.PartnerConfig',
+    # 'lms.apps.basket.apps.BasketConfig',
+    # 'lms.apps.payment.apps.PaymentConfig',
+    # 'lms.apps.offer.apps.OfferConfig',
+    # 'lms.apps.order.apps.OrderConfig',
+
+    # 'lms.apps.accounts.apps.AccountsConfig',
+    'apps.accounts.apps.AccountsConfig',
+    'lms.apps.attachments.apps.AttachmentConfig',
+    'lms.apps.posts.apps.PostsConfig',
+    'lms.apps.pages.apps.PagesConfig',
+    # 'lms.apps.voucher.apps.VoucherConfig',
+    # 'lms.apps.wishlists.apps.WishlistsConfig',
+    'lms.apps.dashboard.apps.DashboardConfig',
+    'lms.apps.dashboard.resources.apps.ResourcesDashboardConfig',
+    # 'lms.apps.dashboard.reports.apps.ReportsDashboardConfig',
+    # 'lms.apps.dashboard.users.apps.UsersDashboardConfig',
+    # 'lms.apps.dashboard.orders.apps.OrdersDashboardConfig',
+    # 'lms.apps.dashboard.catalogue.apps.CatalogueDashboardConfig',
+    # 'lms.apps.dashboard.offers.apps.OffersDashboardConfig',
+    # 'lms.apps.dashboard.partners.apps.PartnersDashboardConfig',
+    # 'lms.apps.dashboard.pages.apps.PagesDashboardConfig',
+    # 'lms.apps.dashboard.ranges.apps.RangesDashboardConfig',
+    # 'lms.apps.dashboard.reviews.apps.ReviewsDashboardConfig',
+    # 'lms.apps.dashboard.vouchers.apps.VouchersDashboardConfig',
+    # 'lms.apps.dashboard.communications.apps.CommunicationsDashboardConfig',
+    # 'lms.apps.dashboard.shipping.apps.ShippingDashboardConfig',
+
+    # 3rd-party apps that Lms depends on
+    'widget_tweaks',
+    'haystack',
+    'treebeard',
+    'sorl.thumbnail',
+    'easy_thumbnails',
+    'django_tables2',
+
+    # Django apps that the sandbox depends on
+    'django.contrib.sitemaps',
+
+    # 'apps.shipping.apps.ShippingConfig',
+    # 'apps.search.apps.SearchConfig',
+
+    'django_celery_beat',
+    'django_celery_results',
+]
+
+# Add Lms's custom auth backend so users can sign in using their email
+# address.
+AUTHENTICATION_BACKENDS = (
+    'lms.apps.accounts.auth_backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 9,
+        }
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+]
+
+LOGIN_REDIRECT_URL = '/'
+APPEND_SLASH = True
+
+# ====================
+# Messages contrib app
+# ====================
+
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
+}
+
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+# Woosh settings
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': root('whoosh_index'),
+        'INCLUDE_SPELLING': True,
+    },
+}
+
+# Here's a sample Haystack config for Solr 6.x (which is recommended)
+# HAYSTACK_CONNECTIONS = {
+#     'default': {
+#         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+#         'URL': 'http://127.0.0.1:8983/solr/sandbox',
+#         'ADMIN_URL': 'http://127.0.0.1:8983/solr/admin/cores',
+#         'INCLUDE_SPELLING': True,
+#     }
+# }
+
+
+# ==============
+# Lms settings
+# ==============
+from lms.defaults import *  # noqa
+
+# Meta
+# ====
+
+LMS_SHOP_TAGLINE = 'Sandbox'
+
+LMS_RECENTLY_VIEWED_PRODUCTS = 20
+LMS_ALLOW_ANON_CHECKOUT = True
+
+# Order processing
+# ================
+
+# Sample order/line status settings. This is quite simplistic. It's like you'll
+# want to override the set_status method on the order object to do more
+# sophisticated things.
+LMS_INITIAL_ORDER_STATUS = 'Pending'
+LMS_INITIAL_LINE_STATUS = 'Pending'
+
+# This dict defines the new order statuses than an order can move to
+LMS_ORDER_STATUS_PIPELINE = {
+    'Pending': ('Being processed', 'Cancelled',),
+    'Being processed': ('Complete', 'Cancelled',),
+    'Cancelled': (),
+    'Complete': (),
+}
+
+# This dict defines the line statuses that will be set when an order's status
+# is changed
+LMS_ORDER_STATUS_CASCADE = {
+    'Being processed': 'Being processed',
+    'Cancelled': 'Cancelled',
+    'Complete': 'Shipped',
+}
+
+# Sorl
+# ====
+
+THUMBNAIL_DEBUG = DEBUG
+THUMBNAIL_KEY_PREFIX = 'lms-sandbox'
+THUMBNAIL_KVSTORE = env(
+    'THUMBNAIL_KVSTORE',
+    default='sorl.thumbnail.kvstores.cached_db_kvstore.KVStore')
+THUMBNAIL_REDIS_URL = env('THUMBNAIL_REDIS_URL', default=None)
+
+# easy-thumbnail. See https://github.com/SmileyChris/easy-thumbnails/issues/641#issuecomment-2291098096
+THUMBNAIL_DEFAULT_STORAGE_ALIAS = "default"
+
+# Django 1.6 has switched to JSON serializing for security reasons, but it does not
+# serialize Models. We should resolve this by extending the
+# django/core/serializers/json.Serializer to have the `dumps` function. Also
+# in tests/config.py
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
+
+AUTH_USER_MODEL = "accounts.CustomUser"

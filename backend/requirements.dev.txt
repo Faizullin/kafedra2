@@ -16,7 +16,7 @@ drf-standardized-errors
 numpy
 Pillow
 PyJWT
-django-notifications-hq
+# django-notifications-hq
 django-debug-toolbar
 django-environ
 django-soft-delete
@@ -24,10 +24,20 @@ django-restful-admin
 requests
 django-debug-toolbar
 django-gmailapi-backend
-django-modeltranslation
+# django-modeltranslation
+django-parler
+django-rest-framework
 
 stripe==2.55.0
 django-crispy-forms
 crispy-bootstrap5
 django-jet-reboot==1.3.5
-django-compressor
+django-oscar[sorl-thumbnail]
+raven==5.32.0
+# supervisor
+easy-thumbnails
+sorl-thumbnail
+whitenoise
+django-haystack
+Whoosh
+pycountry

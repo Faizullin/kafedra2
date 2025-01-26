@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
 
 from apps.courses.models import Course, ClassRoom
 from utils.models import AbstractTimestampedModel, models
@@ -16,3 +17,11 @@ class Assignment(AbstractTimestampedModel):
     submission_requirements = models.TextField(help_text="Requirements for submission.", blank=True)
 
     owner = models.ForeignKey(UserModel, null=True, blank=True, on_delete=models.SET_NULL)
+
+    class Meta:
+        verbose_name = _("Assignment")
+        verbose_name_plural = _("Assignments")
+
+    def __str__(self):
+        return "[{}] {}".format(self.pk, self.title)
+

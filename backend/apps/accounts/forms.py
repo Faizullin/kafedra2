@@ -1,5 +1,4 @@
 from django import forms
-from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.forms import (
     UserCreationForm,
@@ -7,7 +6,8 @@ from django.contrib.auth.forms import (
 )
 from django.db import transaction
 
-from apps.courses.models import Program
+# from apps.courses.models import Program
+from lms.core.compat import get_user_model
 from .models import Student, RELATION_SHIP, LEVEL, GenderChoice
 
 UserModel = get_user_model()
@@ -195,13 +195,13 @@ class StudentAddForm(UserCreationForm):
         ),
     )
 
-    program = forms.ModelChoiceField(
-        queryset=Program.objects.all(),
-        widget=forms.Select(
-            attrs={"class": "browser-default custom-select form-control"}
-        ),
-        label="Program",
-    )
+    # program = forms.ModelChoiceField(
+    #     queryset=Program.objects.all(),
+    #     widget=forms.Select(
+    #         attrs={"class": "browser-default custom-select form-control"}
+    #     ),
+    #     label="Program",
+    # )
 
     email = forms.EmailField(
         widget=forms.TextInput(
@@ -342,17 +342,17 @@ class ProfileUpdateForm(UserChangeForm):
 
 
 class ProgramUpdateForm(UserChangeForm):
-    program = forms.ModelChoiceField(
-        queryset=Program.objects.all(),
-        widget=forms.Select(
-            attrs={"class": "browser-default custom-select form-control"}
-        ),
-        label="Program",
-    )
+    # program = forms.ModelChoiceField(
+    #     queryset=Program.objects.all(),
+    #     widget=forms.Select(
+    #         attrs={"class": "browser-default custom-select form-control"}
+    #     ),
+    #     label="Program",
+    # )
 
     class Meta:
         model = Student
-        fields = ["program"]
+        fields = []
 
 
 class EmailValidationOnForgotPassword(PasswordResetForm):

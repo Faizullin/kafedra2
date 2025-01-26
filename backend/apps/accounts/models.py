@@ -1,17 +1,13 @@
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
-from django.contrib.auth.models import AbstractUser, UserManager
-from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from django.db.models import Q
-from PIL import Image
 from django_softdelete.models import SoftDeleteModel
 
 # from apps.courses.models import Program
 from utils.models import AbstractTimestampedModel
 from .fields import AvatarField, conf
-from .validators import ASCIIUsernameValidator
-
 
 # LEVEL_COURSE = "Level courses"
 BACHELOR_DEGREE = _("Bachelor")
@@ -117,13 +113,12 @@ class CustomUser(AbstractUser, SoftDeleteModel):
     #     except:
     #         pass
 
-
     approval_status = models.CharField(
         max_length=10,
         choices=UserApprovalStatus.choices,
         default=UserApprovalStatus.PENDING,
     )
-    avatar = AvatarField(null=True, blank=True,)
+    avatar = AvatarField(null=True, blank=True, )
     is_student = models.BooleanField(default=False)
     is_professor = models.BooleanField(default=False)
 
@@ -165,14 +160,17 @@ class UserProfile(AbstractTimestampedModel, SoftDeleteModel):
 
 class Student(AbstractTimestampedModel):
     user = models.OneToOneField(UserModel, on_delete=models.CASCADE)
+
     # id_number = models.CharField(max_length=20, unique=True, blank=True)
-#     level = models.CharField(max_length=25, choices=LEVEL, null=True)
-#     program = models.ForeignKey(Program, on_delete=models.CASCADE, null=True)
-#
-#     objects = StudentManager()
-#
+    #     level = models.CharField(max_length=25, choices=LEVEL, null=True)
+    #     program = models.ForeignKey(Program, on_delete=models.CASCADE, null=True)
+    #
+    #     objects = StudentManager()
+    #
     class Meta:
         ordering = ("-id",)
+
+
 #
 #     def __str__(self):
 #         return self.student.get_full_name
@@ -194,10 +192,9 @@ class Student(AbstractTimestampedModel):
 
 class Professor(AbstractTimestampedModel):
     user = models.OneToOneField(UserModel, on_delete=models.CASCADE, related_name="professor")
-    
+
     class Meta:
         ordering = ("-id",)
-
 
 # class Parent(models.Model):
 #     """

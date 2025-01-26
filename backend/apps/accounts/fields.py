@@ -4,7 +4,7 @@ from io import StringIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 
-from apps.attachments.utils import get_default_filename
+from lms.apps.attachments.utils import get_default_filename
 
 try:
     from PIL import Image
@@ -61,4 +61,3 @@ class AvatarField(models.ImageField):
             new_data = InMemoryUploadedFile(content, None, file_name, 'profile-avatars/' + conf.save_format,
                                             len(content.getvalue()), None)
             super(AvatarField, self).save_form_data(instance, new_data)
-

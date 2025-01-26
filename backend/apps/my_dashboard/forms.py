@@ -4,10 +4,11 @@ from django import forms
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext_lazy as _
 
+from apps.assignments.models import Assignment
 from apps.courses.models import Course, Program
 from apps.posts.models import Post
+from apps.quiz.models import QuestionGroup, Question, Quiz
 from .fields import ThumbnailAttachmentField
-from ..assignments.models import Assignment
 
 
 class BaseForm(forms.ModelForm):
@@ -151,6 +152,50 @@ class AssignmentForm(BaseForm):
                 Column('submission_requirements', css_class='col-md-6 mb-3'),
                 Column('course', css_class='col-md-6 mb-3'),
                 Column('classroom', css_class='col-md-6 mb-3'),
+                Column(Submit('submit', _('Save'), css_class='btn btn-primary'), ),
+            ),
+        )
+
+
+class QuizForm(BaseForm):
+    class Meta:
+        model = Quiz
+        fields = ['title', ]
+
+    def get_crisply_layout(self, *args, **kwargs):
+        return Layout(
+            Row(
+                Column('title', css_class='col-md-6 mb-3'),
+                Column(Submit('submit', _('Save'), css_class='btn btn-primary'), ),
+            ),
+        )
+
+
+class QuestionGroupForm(BaseForm):
+    class Meta:
+        model = QuestionGroup
+        fields = ['title', 'parent']
+
+    def get_crisply_layout(self, *args, **kwargs):
+        return Layout(
+            Row(
+                Column('title', css_class='col-md-6 mb-3'),
+                Column('parent', css_class='col-md-6 mb-3'),
+                Column(Submit('submit', _('Save'), css_class='btn btn-primary'), ),
+            ),
+        )
+
+
+class QuestionForm(BaseForm):
+    class Meta:
+        model = Question
+        fields = ['title', 'text']
+
+    def get_crisply_layout(self, *args, **kwargs):
+        return Layout(
+            Row(
+                Column('title', css_class='col-md-6 mb-3'),
+                Column('text', css_class='col-md-6 mb-3'),
                 Column(Submit('submit', _('Save'), css_class='btn btn-primary'), ),
             ),
         )

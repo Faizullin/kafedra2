@@ -12,8 +12,9 @@ from apps.accounts.models import Student
 from apps.activities.models import ActivityLog
 from apps.courses.models import Course, Program
 from apps.posts.models import Post
-from .forms import PostForm, CourseForm, ProgramForm, AssignmentForm
+from .forms import PostForm, CourseForm, ProgramForm, AssignmentForm, QuizForm
 from ..assignments.models import Assignment
+from ..quiz.models import Quiz
 
 UserModel = get_user_model()
 
@@ -35,6 +36,7 @@ def get_default_update_success_message(name, id):
 
 
 class BaseListView(LoginRequiredMixin, TemplateView):
+    template_name = "dashboard/pages/items/items-list.html"
     page_model = None
     page_list_url: str = None
     page_create_url: str = None
@@ -235,7 +237,7 @@ class PostEditContentView(DetailView):
                     "js": js_src_list,
                     "css": (),
                 },
-                "content_type":ct_type.model,
+                "content_type": ct_type.model,
                 "object_id": instance.pk,
                 "to_model_field_name": "content",
                 "value": instance.content,
@@ -353,16 +355,16 @@ class ActivityLogListView(BaseListView):
 # ########################################################
 class AssignmentListView(BaseListView):
     page_model = Assignment
-    page_list_url = reverse_lazy("my_dashboard:assignments-list")
+    page_list_url = reverse_lazy("my_dashboard:assignments-assignments-list")
     page_create_url = reverse_lazy("my_dashboard:assignments-add")
     page_update_url = reverse_lazy("my_dashboard:assignments-edit", pk=0)
-    page_list_api_url = reverse_lazy("my_dashboard-api:assignments-list-api")
+    page_list_api_url = reverse_lazy("my_dashboard-api:assignments-assignments-list-api")
 
 
 class AssignmentCreateView(BaseCreateView):
     model = Assignment
     form_class = AssignmentForm
-    page_list_url = reverse_lazy("my_dashboard:assignments-list")
+    page_list_url = reverse_lazy("my_dashboard:assignments-assignments-list")
 
     def get_success_message(self, obj):
         return get_default_add_success_message(obj.title, obj.id)
@@ -381,6 +383,41 @@ class AssignmentUpdateView(UpdateView):
 
     def get_success_url(self):
         return resolve_url("my_dashboard:assignments-edit", pk=self.object.pk)
+
+
+##########################################################
+# Quizzes
+# ########################################################
+class QuizListView(BaseListView):
+    page_model = Quiz
+    page_list_url = reverse_lazy("my_dashboard:quizzes-quizzes-list")
+    page_create_url = reverse_lazy("my_dashboard:quizzes-quizzes-add")
+    page_update_url = reverse_lazy("my_dashboard:quizzes-quizzes-edit", pk=0)
+    page_list_api_url = reverse_lazy("my_dashboard-api:quizzes-quizzes-list-api")
+
+
+class QuizCreateView(BaseCreateView):
+    model = Quiz
+    form_class = QuizForm
+    page_list_url = reverse_lazy("my_dashboard:quizzes-quizzes-list")
+
+    def get_success_message(self, obj):
+        return get_default_add_success_message(obj.title, obj.id)
+
+    def get_success_url(self):
+        return resolve_url("my_dashboard:quizzes-quizzes-add", pk=self.object.pk)
+
+
+class QuizUpdateView(UpdateView):
+    model = Quiz
+    form_class = QuizForm
+    page_list_url = reverse_lazy("my_dashboard:quizzes-quizzes-edit")
+
+    def get_success_message(self, obj):
+        return get_default_update_success_message(obj.title, obj.id)
+
+    def get_success_url(self):
+        return resolve_url("my_dashboard:quizzes-quizzes-edit", pk=self.object.pk)
 
 
 # ########################################################

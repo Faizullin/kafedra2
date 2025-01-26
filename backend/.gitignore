@@ -160,3 +160,6 @@ dump.rdb
 
 gmail_client_secret.json
 gmail_client_token.pickle
+
+node_modules/
+.idea/

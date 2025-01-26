@@ -1,14 +1,10 @@
-{% load static %}
-{% load i18n %}
-
-<!-- [ navigation menu ] start -->
-<nav class="pc-sidebar ">
+<!-- [ Sidebar Menu ] start -->
+<nav class="pc-sidebar">
     <div class="navbar-wrapper">
         <div class="m-header">
-            <a href="index.html" class="b-brand">
-                <!-- ========  change your logo here ============ -->
-                <img src="{% static 'assets/images/logo.svg' %}" alt="" class="logo logo-lg">
-                <img src="{% static 'assets/images/logo-sm.svg' %}" alt="" class="logo logo-sm">
+            <a href="../dashboard/index.html" class="b-brand text-primary">
+                <!-- ========   Change your logo from here   ============ -->
+                <img src="../assets/images/logo-white.svg" alt="logo image" class="logo-lg"/>
             </a>
         </div>
         <div class="navbar-content">
@@ -17,201 +13,130 @@
                     <label>Navigation</label>
                 </li>
                 <li class="pc-item">
-                    <a href="/" class="pc-link "><span class="pc-micon"><i
-                            class="material-icons-two-tone">home</i></span><span class="pc-mtext">Dashboard</span></a>
+                    <a href="../dashboard/index.html" class="pc-link">
+                        <span class="pc-micon">
+                          <i class="material-icons-two-tone">home</i>
+                        </span>
+                        <span class="pc-mtext">Dashboard</span>
+                    </a>
+                </li>
+                <li class="pc-item pc-caption">
+                    <label>ELEMENTS</label>
+                    <i class="material-icons-two-tone">business_center</i>
+                    <span>UI Components</span>
+                </li>
+                <li class="pc-item">
+                    <a href="../elements/bc_typography.html" class="pc-link">
+                        <span class="pc-micon"><i class="material-icons-two-tone">text_fields</i></span>
+                        <span class="pc-mtext">Typography</span>
+                    </a>
+                </li>
+                <li class="pc-item">
+                    <a href="../elements/bc_color.html" class="pc-link">
+                        <span class="pc-micon"><i class="material-icons-two-tone">color_lens</i></span>
+                        <span class="pc-mtext">Color</span>
+                    </a>
+                </li>
+                <li class="pc-item pc-hasmenu">
+                    <a href="../elements/icon-material.html" class="pc-link">
+                        <span class="pc-micon"><i class="material-icons-two-tone">history_edu</i></span>
+                        <span class="pc-mtext">Icons</span>
+                    </a>
                 </li>
 
-
+                <li class="pc-item pc-caption">
+                    <label>Pages</label>
+                    <i class="material-icons-two-tone">desktop_windows</i>
+                    <span>15+ Redymade Pages</span>
+                </li>
+                <li class="pc-item">
+                    <a href="../pages/login-v1.html" class="pc-link" target="_blank">
+                        <span class="pc-micon"><i class="material-icons-two-tone">verified_user</i></span>
+                        <span class="pc-mtext">Login</span>
+                    </a>
+                </li>
+                <li class="pc-item">
+                    <a href="../pages/register-v1.html" class="pc-link" target="_blank">
+                        <span class="pc-micon"><i class="material-icons-two-tone">person_add_alt_1</i></span>
+                        <span class="pc-mtext">Register</span>
+                    </a>
+                </li>
+                <li class="pc-item pc-caption">
+                    <label>Other</label>
+                    <i class="material-icons-two-tone">list_alt</i>
+                    <span>Extra More Things</span>
+                </li>
                 <li class="pc-item pc-hasmenu">
-                    <a href="#" class="pc-link">
-                        <span class="pc-micon">
-                            <i class="material-icons-two-tone">import_contacts</i>
-                        </span>
-                        <span class="pc-mtext" data-i18n="Resources">
-                            {% trans 'Resources' %}
-                        </span>
-                        <span class="pc-arrow">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                 viewBox="0 0 24 24" fill="none"
-                                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 class="feather feather-chevron-right"><polyline
-                                    points="9 18 15 12 9 6"></polyline>
-                            </svg>
-                        </span>
+                    <a href="#!" class="pc-link">
+                        <span class="pc-micon"><i class="material-icons-two-tone">list_alt</i></span>
+                        <span class="pc-mtext">Menu levels</span>
+                        <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
                     </a>
                     <ul class="pc-submenu">
+                        <li class="pc-item"><a class="pc-link" href="#!">Level 2.1</a></li>
                         <li class="pc-item pc-hasmenu">
-                            <a class="pc-link" href="#!">
-                                <span data-i18n="Post">
-                                    {% trans 'Posts' %}
-                                </span>
-                                <span class="pc-arrow">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                         viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                         stroke-linejoin="round" class="feather feather-chevron-right"><polyline
-                                            points="9 18 15 12 9 6"></polyline>
-                                    </svg>
-                                </span>
+                            <a href="#!" class="pc-link">
+                                Level 2.2
+                                <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
                             </a>
-                            <ul class="pc-submenu" style="display: none;">
-                                <li class="pc-item">
-                                    <a class="pc-link" href="{% url 'my_dashboard:resources-posts-list' %}"
-                                       data-i18n="List">
-                                        {% trans 'List' %}
-                                    </a>
-                                </li>
-                                <li class="pc-item">
-                                    <a class="pc-link" href="{% url 'my_dashboard:posts-add' %}"
-                                       data-i18n="Add">
-                                        {% trans 'Add' %}
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="pc-item pc-hasmenu">
-                    <a href="#" class="pc-link">
-                        <span class="pc-micon">
-                            <i class="material-icons-two-tone">import_contacts</i>
-                        </span>
-                        <span class="pc-mtext" data-i18n="Online Courses">
-                            {% trans 'Online Courses' %}
-                        </span>
-                        <span class="pc-arrow">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                 viewBox="0 0 24 24" fill="none"
-                                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 class="feather feather-chevron-right"><polyline
-                                    points="9 18 15 12 9 6"></polyline>
-                            </svg>
-                        </span>
-                    </a>
-                    <ul class="pc-submenu">
-                        <li class="pc-item">
-                            <a class="pc-link" href="../admins/course-dashboard.html"
-                               data-i18n="Dashboard">
-                                {% trans 'Dashboard' %}
-                            </a>
-                        </li>
-                        <li class="pc-item pc-hasmenu">
-                            <a class="pc-link" href="#!">
-                                <span
-                                        data-i18n="Courses">
-                                {% trans 'Courses' %}
-                                </span>
-                                <span class="pc-arrow">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                         viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                         stroke-linejoin="round" class="feather feather-chevron-right"><polyline
-                                            points="9 18 15 12 9 6"></polyline>
-                                    </svg>
-                                </span>
-                            </a>
-                            <ul class="pc-submenu" style="display: none;">
-                                <li class="pc-item">
-                                    <a class="pc-link" href="{% url 'my_dashboard:courses-list' %}"
-                                       data-i18n="List">
-                                        {% trans 'List' %}
-                                    </a>
-                                </li>
-                                <li class="pc-item">
-                                    <a class="pc-link" href="{% url 'my_dashboard:courses-add' %}"
-                                       data-i18n="Add">
-                                        {% trans 'Add' %}
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="pc-item pc-hasmenu">
-                            <a class="pc-link" href="#!">
-                                <span data-i18n="Students">
-                                {% trans 'Students' %}
-                                </span>
-                                <span class="pc-arrow">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                         viewBox="0 0 24 24"
-                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                         stroke-linejoin="round" class="feather feather-chevron-right"><polyline
-                                            points="9 18 15 12 9 6"></polyline>
-                                    </svg>
-                                </span>
-                            </a>
-                            <ul class="pc-submenu" style="display: none;">
-                                <li class="pc-item">
-                                    <a class="pc-link" href="{% url 'my_dashboard:students-list' %}"
-                                       data-i18n="List">
-                                        {% trans 'List' %}
-                                    </a>
-                                </li>
-                                <li class="pc-item">
-                                    <a class="pc-link" href="{% url 'my_dashboard:students-list' %}"
-                                       data-i18n="Apply">
-                                        {% trans 'Apply' %}
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="pc-item pc-hasmenu">
-                    <a href="#" class="pc-link"><span class="pc-micon"><i
-                            class="material-icons-two-tone">list_alt</i></span><span
-                            class="pc-mtext">Menu levels</span><span class="pc-arrow"><i
-                            data-feather="chevron-right"></i></span></a>
-                    <ul class="pc-submenu">
-                        <li class="pc-item"><a class="pc-link" href="#!">Menu Level 2.1</a></li>
-                        <li class="pc-item pc-hasmenu">
-                            <a href="#!" class="pc-link">Menu level 2.2<span class="pc-arrow"><i
-                                    data-feather="chevron-right"></i></span></a>
                             <ul class="pc-submenu">
-                                <li class="pc-item"><a class="pc-link" href="#!">Menu level 3.1</a></li>
-                                <li class="pc-item"><a class="pc-link" href="#!">Menu level 3.2</a></li>
+                                <li class="pc-item"><a class="pc-link" href="#!">Level 3.1</a></li>
+                                <li class="pc-item"><a class="pc-link" href="#!">Level 3.2</a></li>
                                 <li class="pc-item pc-hasmenu">
-                                    <a href="#!" class="pc-link">Menu level 3.3<span class="pc-arrow"><i
-                                            data-feather="chevron-right"></i></span></a>
+                                    <a href="#!" class="pc-link">
+                                        Level 3.3
+                                        <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
+                                    </a>
                                     <ul class="pc-submenu">
-                                        <li class="pc-item"><a class="pc-link" href="#!">Menu level 4.1</a></li>
-                                        <li class="pc-item"><a class="pc-link" href="#!">Menu level 4.2</a></li>
+                                        <li class="pc-item"><a class="pc-link" href="#!">Level 4.1</a></li>
+                                        <li class="pc-item"><a class="pc-link" href="#!">Level 4.2</a></li>
                                     </ul>
                                 </li>
                             </ul>
                         </li>
                         <li class="pc-item pc-hasmenu">
-                            <a href="#!" class="pc-link">Menu level 2.3<span class="pc-arrow"><i
-                                    data-feather="chevron-right"></i></span></a>
+                            <a href="#!" class="pc-link">
+                                Level 2.3
+                                <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
+                            </a>
                             <ul class="pc-submenu">
-                                <li class="pc-item"><a class="pc-link" href="#!">Menu level 3.1</a></li>
-                                <li class="pc-item"><a class="pc-link" href="#!">Menu level 3.2</a></li>
+                                <li class="pc-item"><a class="pc-link" href="#!">Level 3.1</a></li>
+                                <li class="pc-item"><a class="pc-link" href="#!">Level 3.2</a></li>
                                 <li class="pc-item pc-hasmenu">
-                                    <a href="#!" class="pc-link">Menu level 3.3<span class="pc-arrow"><i
-                                            data-feather="chevron-right"></i></span></a>
+                                    <a href="#!" class="pc-link">
+                                        Level 3.3
+                                        <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
+                                    </a>
                                     <ul class="pc-submenu">
-                                        <li class="pc-item"><a class="pc-link" href="#!">Menu level 4.1</a></li>
-                                        <li class="pc-item"><a class="pc-link" href="#!">Menu level 4.2</a></li>
+                                        <li class="pc-item"><a class="pc-link" href="#!">Level 4.1</a></li>
+                                        <li class="pc-item"><a class="pc-link" href="#!">Level 4.2</a></li>
                                     </ul>
                                 </li>
                             </ul>
                         </li>
                     </ul>
                 </li>
+                <li class="pc-item">
+                    <a href="../other/sample-page.html" class="pc-link">
+                        <span class="pc-micon">
+                          <i class="material-icons-two-tone">storefront</i>
+                        </span>
+                        <span class="pc-mtext">Sample page</span>
+                    </a>
+                </li>
+
             </ul>
-            <div class="card text-center">
+            <div class="card nav-action-card">
                 <div class="card-body">
-                    <i class="feather icon-rocket f-40"></i>
-                    <h6 class="mt-3">Need More?</h6>
-                    <a href="https://appseed.us/product/django-dashboard-kit-pro"
-                       target="_blank" class="btn btn-primary btn-sm text-white m-0">PRO Version</a>
-                    <p>For more features and components</p>
+                    <h5 class="text-white">Upgrade To Pro</h5>
+                    <p class="text-white text-opacity-75">To get more features and components</p>
+                    <a target="_blank" href="https://codedthemes.com/item/dashboardkit-bootstrap-5-admin-template/"
+                       class="btn btn-primary">
+                        Buy Now
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </nav>
-<!-- [ navigation menu ] end -->
+<!-- [ Sidebar Menu ] end -->

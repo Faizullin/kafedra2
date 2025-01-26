@@ -13,7 +13,7 @@ from .utils import *
 from ..accounts.models import Professor
 from ..activities.models import ActivityLog
 from ..attachments.models import Attachment
-from ..posts.models import Category
+from ..posts.models import Category, PublicationStatus
 
 YEARS = (
     (1, "1"),
@@ -85,6 +85,8 @@ class Course(AbstractTimestampedModel, AbstractSlugModel):
     owner = models.ForeignKey(UserModel, null=True, blank=True, related_name='courses', on_delete=models.SET_NULL)
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
 
+    publication_status = models.IntegerField(
+        choices=PublicationStatus.choices, default=PublicationStatus.DRAFT)
     attachments = GenericRelation(Attachment)
     thumbnail = models.ForeignKey(
         Attachment, null=True, blank=True, on_delete=models.SET_NULL,

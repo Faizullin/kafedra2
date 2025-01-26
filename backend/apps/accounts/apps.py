@@ -1,11 +1,4 @@
-from django.apps import AppConfig
+from lms.apps.accounts import apps
 
-
-class AccountsConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
+class AccountsConfig(apps.AccountsConfig):
     name = "apps.accounts"
-
-    def ready(self) -> None:
-        # noinspection PyUnresolvedReferences
-        import apps.accounts.signals
-        return super().ready()
