@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import Field
 from django.forms import Textarea
 
-from .config import DEBUG, EMBED_HOSTNAME_ALLOWED
+from .config import EMBED_HOSTNAME_ALLOWED
 from .utils import get_hostname_from_url
 from .widgets import EditorJsWidget
 

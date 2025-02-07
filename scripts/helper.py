@@ -58,7 +58,7 @@ def main():
         ),
 
         "remove_migrations_and_db": lambda: run_command(
-            f"docker exec -it {container_name} python3 manage.py shell -c \"from seeding.remove_migrations_and_db import *;from seeding.seed import *;remove_migrations_and_db();seed(False)\" --settings=backend.settings.{settings_extension}"
+            f"docker exec -it {container_name} python3 manage.py shell -c \"from seeding.remove_migrations_and_db import *;remove_migrations_and_db();\" --settings=backend.settings.{settings_extension}"
         ),
 
         "shell": lambda: run_command(f"docker exec -it {container_name} sh"),
@@ -76,7 +76,7 @@ def main():
 
         "run": lambda: (
             run_command(f"docker-compose -f {compose_file} down {join_additional_args(additional_args)}"),
-            run_command(f"docker-compose -f {compose_file} up --build {join_additional_args(additional_args)}"),
+            run_command(f"docker-compose -f {compose_file} up {join_additional_args(additional_args)}"),
             print("Run complete!"),
         ),
 

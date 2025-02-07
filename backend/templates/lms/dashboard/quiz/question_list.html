@@ -1,0 +1,80 @@
+{% extends "lms/dashboard/pages/items/items-list.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    {{ block.super }}
+    <div id="add-new-question-form-modal" class="modal fade" tabindex="-1" role="dialog"
+         aria-labelledby="myAddFormModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title h4" id="myAddFormModalLabel">Large Modal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {% crispy form %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    {% include 'lms/dashboard/includes/items-list/scripts.html' %}
+    <script>
+        window.server_conf.items_list = {
+            tableId: "{{ table.table_id }}",
+            currentQuestionGroupId: "{{ group.id }}",
+            add: {
+                apiUrl: "{% url 'dashboard:quiz-question-create-api' %}",
+            }
+        };
+        $(document).ready(function () {
+            const question_group_param_key = "question_group_id";
+
+            {#class QuestionItemListTable extends ItemListTable {#}
+            {#    formatUrl(url, record_data) {#}
+            {#        return super.formatUrl(url, record_data) + `?${question_group_param_key}=${itemsListData.currentQuestionGroupId}`;#}
+            {#    }#}
+            {##}
+            {#    getListUrlParams(data) {#}
+            {#        const new_data = super.getListUrlParams(data);#}
+            {#        new_data[question_group_param_key] = itemsListData.currentQuestionGroupId;#}
+            {#        return new_data;#}
+            {#    }#}
+            {#}#}
+
+                window.managers.itemsListTable.init();
+                const addFormModalEl = $("#add-new-question-form-modal");
+                $('.add-new-item-btn').click(function () {
+                    addFormModalEl.modal("show");
+                });
+                addFormModalEl.find("form").on("submit", function (e) {
+                    e.preventDefault();
+                    const formData = $(this).serialize();
+                    $.ajax({
+                        type: "POST",
+                        url: itemsListData.add.apiUrl,
+                        data: formData,
+                        success: function (response) {
+                            if (response) {
+                                const editAction = window.managers.items_list.actionsData.default.find(function (action) {
+                                    return action.name === "edit";
+                                });
+                                if (!editAction) {
+                                    return;
+                                }
+                                window.location.href = window.managers.items_list.formatUrl(editAction.url, response);
+                            }
+                        },
+                        error: function (xhr) {
+                        },
+                    });
+                });
+
+            }
+        )
+            ;
+    </script>
+{% endblock %}

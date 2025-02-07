@@ -287,16 +287,35 @@ LOGGING = {
     }
 }
 
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+DJANGO_APPS = [
+    # "modeltranslation",
+    # "jet.dashboard",
+    # "jet",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
     'django.contrib.sites',
     'django.contrib.flatpages',
+    'django.contrib.sitemaps',
+]
 
+THIRD_PARTY_APPS = [
+    'django_celery_beat',
+    'django_celery_results',
+    "crispy_forms",
+    "crispy_bootstrap5",
+    # 'widget_tweaks',
+    'haystack',
+    'treebeard',
+    'sorl.thumbnail',
+    'easy_thumbnails',
+    'django_tables2',
+]
+
+PROJECT_APPS = [
     'lms.config.LmsPortal',
     # 'lms.apps.analytics.apps.AnalyticsConfig',
     # 'lms.apps.checkout.apps.CheckoutConfig',
@@ -310,17 +329,23 @@ INSTALLED_APPS = [
     # 'lms.apps.payment.apps.PaymentConfig',
     # 'lms.apps.offer.apps.OfferConfig',
     # 'lms.apps.order.apps.OrderConfig',
+    # 'lms.apps.voucher.apps.VoucherConfig',
+    # 'lms.apps.wishlists.apps.WishlistsConfig',
 
-    # 'lms.apps.accounts.apps.AccountsConfig',
-    'apps.accounts.apps.AccountsConfig',
+    'lms.apps.accounts.apps.AccountsConfig',
     'lms.apps.attachments.apps.AttachmentConfig',
     'lms.apps.posts.apps.PostsConfig',
     'lms.apps.pages.apps.PagesConfig',
-    # 'lms.apps.voucher.apps.VoucherConfig',
-    # 'lms.apps.wishlists.apps.WishlistsConfig',
-    'lms.apps.dashboard.apps.DashboardConfig',
+    'lms.apps.courses.apps.CoursesConfig',
+    'lms.apps.assignments.apps.AssignmentsConfig',
+    # 'lms.apps.dashboard.apps.DashboardConfig',
+    'apps.dashboard.apps.DashboardConfig',
     'lms.apps.dashboard.resources.apps.ResourcesDashboardConfig',
     'lms.apps.dashboard.attachments.apps.AttachmentsDashboardConfig',
+    'apps.quiz.apps.QuizConfig',
+    'apps.dashboard.quiz.apps.QuizDashboardConfig',
+    # 'lms.apps.datatables.apps.DatatablesConfig',
+
     # 'lms.apps.dashboard.reports.apps.ReportsDashboardConfig',
     # 'lms.apps.dashboard.users.apps.UsersDashboardConfig',
     # 'lms.apps.dashboard.orders.apps.OrdersDashboardConfig',
@@ -333,26 +358,11 @@ INSTALLED_APPS = [
     # 'lms.apps.dashboard.vouchers.apps.VouchersDashboardConfig',
     # 'lms.apps.dashboard.communications.apps.CommunicationsDashboardConfig',
     # 'lms.apps.dashboard.shipping.apps.ShippingDashboardConfig',
-
-    # 3rd-party apps that Lms depends on
-    # 'widget_tweaks',
-    'haystack',
-    'treebeard',
-    'sorl.thumbnail',
-    'easy_thumbnails',
-    'django_tables2',
-
-    # Django apps that the sandbox depends on
-    'django.contrib.sitemaps',
-
     # 'apps.shipping.apps.ShippingConfig',
     # 'apps.search.apps.SearchConfig',
-
-    'django_celery_beat',
-    'django_celery_results',
-    "crispy_forms",
-    "crispy_bootstrap5",
 ]
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
 # Add Lms's custom auth backend so users can sign in using their email
 # address.
@@ -464,8 +474,6 @@ THUMBNAIL_DEFAULT_STORAGE_ALIAS = "default"
 # django/core/serializers/json.Serializer to have the `dumps` function. Also
 # in tests/config.py
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
-
-
 
 
 AUTH_USER_MODEL = "accounts.CustomUser"

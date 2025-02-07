@@ -2,14 +2,16 @@ from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext as _
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, TemplateView
 
 
 def get_default_add_success_message(name, id):
     return "\"{}\"[{}] has been created".format(name, id)
 
+
 def get_default_update_success_message(name, id):
     return "\"{}\"[{}] has been updated".format(name, id)
+
 
 class BaseBreadcrumbsViewMixin(object):
     def get_breadcrumbs(self, context):
@@ -19,9 +21,38 @@ class BaseBreadcrumbsViewMixin(object):
             {"label": context['title'], "current": True},
         ]
 
+
 class UseContextUrlsMixin(object):
     def get_urls(self):
-        raise []
+        raise Exception("Not implemented")
+
+
+class BaseListView(BaseBreadcrumbsViewMixin, UseContextUrlsMixin, TemplateView):
+    template_name = "lms/dashboard/pages/items/items-list.html"
+    table = None
+    page_list_url: str = None
+
+    def __init__(self):
+        super().__init__()
+        self.page_model_name = self.model._meta.verbose_name
+        self.page_model_name_plural = self.model._meta.verbose_name_plural
+
+    def get_initial_super_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = self.get_initial_super_context_data(**kwargs)
+        title = self.page_model_name_plural
+        context.update({
+            'title': title,
+            'page_header_title': title,
+            'card_header_title': self.page_model_name_plural,
+            "table": self.table,
+        })
+        context["breadcrumbs"] = self.get_breadcrumbs(context)
+        context["urls"] = self.get_urls()
+        return context
+
 
 
 class BaseCreateView(BaseBreadcrumbsViewMixin, UseContextUrlsMixin, CreateView):
@@ -55,6 +86,9 @@ class BaseCreateView(BaseBreadcrumbsViewMixin, UseContextUrlsMixin, CreateView):
         response = super().form_valid(form)
         messages.success(self.request, self.get_success_message(form.instance))
         return response
+
+    def get_urls(self):
+        return {}
 
 
 class BaseUpdateView(BaseBreadcrumbsViewMixin, UseContextUrlsMixin, UpdateView):
@@ -95,5 +129,8 @@ class BaseUpdateView(BaseBreadcrumbsViewMixin, UseContextUrlsMixin, UpdateView):
         messages.success(self.request, self.get_success_message(form.instance))
         return response
 
+    def get_urls(self):
+        return {}
 
-__ALL__ = [ "BaseCreateView", "BaseUpdateView" ,]
+
+__ALL__ = ["BaseCreateView", "BaseUpdateView", "BaseListView"]

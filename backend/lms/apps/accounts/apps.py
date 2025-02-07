@@ -1,7 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.urls import path, re_path
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
-from django.views import generic
 
 from lms.core.application import LmsConfig
 from lms.core.loading import get_class
@@ -16,7 +15,7 @@ class AccountsConfig(LmsConfig):
 
     # pylint: disable=attribute-defined-outside-init, reimported, unused-import
     def ready(self):
-        import lms.apps.accounts.signals # noqa
+        import lms.apps.accounts.signals  # noqa
         # from . import receivers
         # from .alerts import receivers
 

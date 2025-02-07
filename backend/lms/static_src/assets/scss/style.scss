@@ -81,7 +81,9 @@ File: style.css
 // pages
 @import "themes/pages/authentication";
 @import "themes/pages/icon-pages";
+@import "themes/pages/admin";
 
 
 // MY:
 @import "themes/plugins/data-tables";
+@import "themes/plugins/wizard";

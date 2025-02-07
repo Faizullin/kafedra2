@@ -1,10 +1,9 @@
 class AttachmentModalManager {
-    constructor(modalElement, attachmentsApi) {
-        this.modalElement = $(modalElement);
+    constructor() {
+        this.modalElement = $(".attachments-list-modal");
         this.attachmentsGrid = this.modalElement.find(".attachments-list-grid");
         this.selectionConfirmButton = this.modalElement.find(".selection-confirm-btn");
         this.uploadButton = this.modalElement.find(".upload-btn");
-        this.api = attachmentsApi;
         this.state = {
             attachmentsList: {
                 data: [],
@@ -25,6 +24,7 @@ class AttachmentModalManager {
                 uploadAttachmentFile: null,
             }
         };
+        this.api = window.server_conf.items_edit;
         this.initialize();
     }
 
@@ -285,3 +285,6 @@ class AttachmentModalManager {
         });
     }
 }
+
+window.managers.checkManager("");
+window.managers.attachmentModal = new AttachmentModalManager();

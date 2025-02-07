@@ -1,9 +1,10 @@
 from django.forms import ModelChoiceField
 
-from .widgets import ThumbnailAttachmentWidget
 from lms.core.loading import get_model
+from .widgets import ThumbnailAttachmentWidget
 
 Attachment = get_model("attachments", "Attachment")
+
 
 class ThumbnailAttachmentField(ModelChoiceField):
     widget = ThumbnailAttachmentWidget

@@ -1,21 +1,10 @@
-# from django import forms
-# from django.contrib import admin
-# from django.contrib.admin.widgets import FilteredSelectMultiple
-# from django.utils.translation import gettext_lazy as _
-# from modeltranslation.admin import TranslationAdmin
-# from modeltranslation.forms import TranslationModelForm
-#
-# from .models import (
-#     Quiz,
-#     Progress,
-#     Question,
-#     MCQuestion,
-#     Choice,
-#     EssayQuestion,
-#     Sitting,
-# )
-#
-#
+from utils.admin import BaseAdmin
+from utils.admin import admin
+from .models import (
+    Quiz,
+)
+
+
 # class ChoiceInline(admin.TabularInline):
 #     model = Choice
 #
@@ -93,3 +82,7 @@
 # admin.site.register(Progress, ProgressAdmin)
 # admin.site.register(EssayQuestion, EssayQuestionAdmin)
 # admin.site.register(Sitting)
+
+@admin.register(Quiz)
+class QuizAdmin(BaseAdmin):
+    pass

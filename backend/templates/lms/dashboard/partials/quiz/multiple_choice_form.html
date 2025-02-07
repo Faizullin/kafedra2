@@ -1,0 +1,64 @@
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load crispy_forms_filters %}
+<div class="multichoice-form-container">
+    <div class="accordion accordion-flush formset-container" id="accordionFlushExample">
+        {% for form in formset %}
+            <div class="accordion-item formset-item" id="form-{{ forloop.counter0 }}">
+                <h2 class="accordion-header" id="flush-heading-{{ forloop.counter0 }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapse-{{ forloop.counter0 }}" aria-expanded="false"
+                            aria-controls="flush-collapse-{{ forloop.counter0 }}">
+                        <div class="d-flex align-items-center justify-content-between w-100">
+                            <span class="answer-header-text">
+                            </span>
+                            <div class="ms-5 me-3">
+                                <a href="#" class="btn btn-sm btn-outline-danger m-0 remove-form-btn">
+                                    {% trans "Remove" %}
+                                </a>
+                            </div>
+                        </div>
+                    </button>
+                </h2>
+                <div id="flush-collapse-{{ forloop.counter0 }}" class="accordion-collapse collapse"
+                     aria-labelledby="flush-heading-{{ forloop.counter0 }}" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">
+                        {% crispy form %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+    <button type="button" class="add-form-btn btn btn-primary mt-3">
+        {% trans "Add" %}
+    </button>
+
+    <div style="display: none;" class="empty-form-template">
+        <div class="accordion-item formset-item" id="form-{{ forloop.counter0 }}">
+            <h2 class="accordion-header" id="flush-heading-{{ forloop.counter0 }}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#flush-collapse-{{ forloop.counter0 }}" aria-expanded="false"
+                        aria-controls="flush-collapse-{{ forloop.counter0 }}">
+                    <div class="d-flex align-items-center justify-content-between w-100">
+                        <span class="answer-header-text">
+                        </span>
+                        <div class="ms-5 me-3">
+                            <a href="#" class="btn btn-sm btn-outline-danger m-0 remove-form-btn">
+                                {% trans "Remove" %}
+                            </a>
+                        </div>
+                    </div>
+                </button>
+            </h2>
+            <div id="flush-collapse-{{ forloop.counter0 }}" class="accordion-collapse collapse"
+                 aria-labelledby="flush-heading-{{ forloop.counter0 }}" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">
+                    {% crispy formset.empty_form %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

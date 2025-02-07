@@ -1,0 +1,177 @@
+{% extends "lms/dashboard/pages/items/items-edit.html" %}
+{% load static %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+
+{% block main_form_content %}
+    <div id="wizard-form" class="form-wizard row justify-content-center">
+        <ul class="nav nav-pills justify-content-center course-wizard" role="tablist">
+            <li class="nav-item" data-target-form="#mainStepForm" role="presentation">
+                <a href="#mainStep" data-bs-toggle="tab" data-toggle="tab"
+                   class="nav-link active" aria-selected="true" role="tab">
+                    <div class="course-wizard-num"><span>1</span></div>
+                    <span class="d-none d-sm-inline">
+                        {% trans 'Main' %}
+                    </span></a>
+            </li>
+            <li class="nav-item" data-target-form="#qtypeStepForm" role="presentation">
+                <a href="#qtypeStep" data-bs-toggle="tab" data-toggle="tab"
+                   class="nav-link icon-btn" aria-selected="false" tabindex="-1"
+                   role="tab">
+                    <div class="course-wizard-num"><span>2</span></div>
+                    <span class="d-none d-sm-inline">
+                        {% trans 'Detail' %}
+                    </span></a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane show active" id="mainStep" role="tabpanel">
+                {% crispy form %}
+            </div>
+            <div class="tab-pane" id="qtypeStep" role="tabpanel">
+                <div id="qtypeForm"></div>
+            </div>
+            <div class="d-sm-flex wizard justify-content-between mt-3">
+                <div class="previous me-2">
+                    <a href="javascript:void(0);"
+                       class="btn btn-primary mt-3 mt-md-0 disabled previous-btn">
+                        Back</a>
+                </div>
+                <div class="next">
+                    <a href="javascript:void(0);"
+                       class="btn btn-primary mt-3 mt-md-0 next-btn">
+                        Next
+                    </a>
+                </div>
+                <div class="last">
+                    <a href="javascript:void(0);"
+                       class="btn btn-secondary mt-3 mt-md-0 submit-btn">
+                        Finish
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ super.block }}
+    <script src="{% static 'my-plugins/wizard-steps/wizard-steps.js' %}"></script>
+    <script>
+        const formDetailData = {
+            question: {
+                id: "{{ instance.id }}",
+            }
+        };
+        const formUrl = "{% url 'dashboard:quiz-question-qtype-detail' %}";
+        $(document).ready(function () {
+            const mainForm = $('#mainStep form');
+            const qtypeFormContainer = $('#qtypeForm');
+
+            function prepareSecondForm() {
+                const formValue = mainForm.serializeArray();
+                const questionTypeField = formValue.find((field) => field.name === 'question_type');
+                if (!questionTypeField || !questionTypeField.value) {
+                    alert('Please select a question type');
+                    return false;
+                }
+
+                const targetIndex = 1;
+                wizard.selectedIndex = targetIndex;
+                wizard.enableTab(targetIndex);
+                wizard.showTab(targetIndex);
+
+                $.ajax({
+                    url: formUrl, // Make sure this URL exists in your Django views
+                    data: {question_type: questionTypeField.value, question_id: formDetailData.question.id,},
+                    dataType: "json",
+                    beforeSend: function () {
+                        qtypeFormContainer.html('<p>Loading...</p>'); // Show loading text
+                    },
+                    success: function (response) {
+                        qtypeFormContainer.html(response.form_html);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error loading form:", error);
+                        qtypeFormContainer.html('<p>Error loading form. Try again.</p>');
+                    }
+                });
+                return true;
+            }
+
+            mainForm.on("submit", function (e) {
+                e.preventDefault();
+                prepareSecondForm();
+            });
+            const wizard = new Wizard('#wizard-form', {
+                validate: true,
+                progress: false,
+                onStepChange: (currentIndex, targetIndex, callback) => {
+                    console.log(`Attempting to change from step ${currentIndex + 1} to step ${targetIndex + 1}`);
+
+                    // Add custom validation logic
+                    const isValid = prepareSecondForm();
+                    callback(isValid);
+
+                    if (!isValid) {
+                        alert("You cannot proceed to the next step yet.");
+                    }
+                },
+            });
+            $(document).on('click', '.multichoice-form-container .add-form-btn', function (e) {
+                let parentContainer = $(this).closest('.multichoice-form-container');
+                let formsetContainer = parentContainer.find('.formset-container');
+                let formIndex = formsetContainer.find('.formset-item').length;
+                let emptyFormTemplate = parentContainer.find('.empty-form-template').html();
+                formsetContainer.append(emptyFormTemplate);
+                const newFormId = 'form-' + formIndex;
+                $('#' + newFormId).find('.accordion-button').attr('data-bs-target', '#flush-collapse-' + formIndex);
+                $('#' + newFormId).find('.accordion-collapse').attr('id', 'flush-collapse-' + formIndex);
+
+            });
+            $(document).on('click', '.multichoice-form-container .remove-form-btn', function (e) {
+                e.preventDefault();
+                $(this).closest('.formset-item').remove();
+            });
+            $(document).on('click', '.multichoice-form-container .toggle-accordion', function () {
+                let parentForm = $(this).closest('.formset-item');
+                let accordionContent = parentForm.find('.accordion');
+                accordionContent.toggleClass('show');
+            });
+            $(document).on("input", ".multichoice-form-container .answer-answer-text-field-container input", function () {
+                let parentForm = $(this).closest('.formset-item');
+                let newValue = $(this).val();
+                newValue = newValue.length > 50 ? newValue.substring(0, 50) + "..." : newValue;
+                parentForm.find('.answer-header-text').html(newValue);
+            });
+            $(".submit-btn").on("click", function (e) {
+                e.preventDefault();
+                let form1 = $('#mainStep form');
+                let form2 = $('#qtypeStep form');
+                let form1Data = form1.serializeArray();
+                let form2Data = form2.serializeArray();
+                let formData = form1Data.concat(form2Data);
+                const params_str = "question_type=" + form1.find('select[name="question_type"]').val() + "&question_id=" + formDetailData.question.id;
+                $.ajax({
+                    url: `${formUrl}?${params_str}`,
+                    method: "POST",
+                    data: formData,
+                    success: function (response) {
+                        console.log(response);
+                        if (response.success) {
+                            window.location.href = response.redirect_url;
+                        } else {
+                            alert("Error creating question. Try again.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error creating question:", error);
+                        alert("Error creating question. Try again.");
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
+

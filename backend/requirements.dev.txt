@@ -41,3 +41,4 @@ django-haystack
 Whoosh
 pycountry
 django-treebeard
+django-tables2

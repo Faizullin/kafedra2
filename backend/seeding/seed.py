@@ -1,6 +1,10 @@
 from django.contrib.auth.models import Group
 
-from apps.accounts.groups import AdminGroup, DeveloperGroup, StaffGroup
+from apps.quiz.models import Quiz, PublicationStatus, QuestionGroup, Question, QuestionType, \
+    QUESTION_CATEGORY_TERM, QuestionAnswer
+from apps.quiz.question.type.choice.models import MultipleChoiceOptions
+from lms.apps.accounts.groups import AdminGroup, DeveloperGroup, StaffGroup
+from lms.apps.posts.models import Category
 from lms.core.compat import get_user_model
 
 User = get_user_model()
@@ -10,7 +14,7 @@ def seed(use_allauth):
     # academic_config = AcademicConfig.objects.create(
     #     email_enabled=False
     # )
-    if use_allauth: 
+    if use_allauth:
         from allauth.account.models import EmailAddress
     groupAdmin = Group.objects.create(
         name=AdminGroup.name,
@@ -62,6 +66,53 @@ def seed(use_allauth):
             email=user3.email,
             verified=True,
         )
+
+    def generate_quiz_app_models():
+        quiz = Quiz.objects.create(
+            title="Quiz 1",
+            publication_status=PublicationStatus.PUBLISH,
+            author=user1,
+        )
+        q_group = QuestionGroup.objects.create(
+            title="Question Group 1",
+            quiz=quiz,
+        )
+        q_category = Category.objects.create(
+            title="Category 1",
+            description="Category 1 description",
+            term=QUESTION_CATEGORY_TERM,
+        )
+        q1 = Question.objects.create(
+            title="Question 1",
+            text="What is the capital of France?",
+            group=q_group,
+            category=q_category,
+            question_type=QuestionType.MULTIPLE_CHOICE,
+        )
+        q1_options = MultipleChoiceOptions.objects.create(
+            question=q1,
+            single=True,
+            shuffle_answers=True,
+            correct_feedback="Correct answer",
+            partially_correct_feedback="Partially correct answer",
+            incorrect_feedback="Incorrect answer",
+            answer_numbering="abc",
+            show_num_correct=False,
+        )
+        q1_answer = QuestionAnswer.objects.create(
+            question=q1,
+            answer="Paris",
+            fraction=100,
+            feedback="Correct answer",
+        )
+        a2_answer = QuestionAnswer.objects.create(
+            question=q1,
+            answer="London",
+            fraction=0,
+            feedback="Incorrect answer",
+        )
+
+    generate_quiz_app_models()
 
     prefix_path = 'seeding/data'
     # with open(f'{prefix_path}/tour_periods.json', "r") as f:

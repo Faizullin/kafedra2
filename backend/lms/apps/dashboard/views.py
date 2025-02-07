@@ -3,11 +3,11 @@ from datetime import timedelta
 from decimal import Decimal as D
 from decimal import ROUND_UP
 
+from django import forms
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import Avg, Count, Sum
-from django.shortcuts import resolve_url
 from django.template.response import TemplateResponse
 from django.urls import reverse_lazy
 from django.utils.timezone import now
@@ -328,9 +328,24 @@ class PopUpWindowDeleteMixin(PopUpWindowMixin):
         return self.delete(request, *args, **kwargs)
 
 
+class CustomLoginForm(AuthenticationForm):
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': _('Username')
+        })
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': _('Password')
+        })
+    )
+
+
 class LoginView(auth_views.LoginView):
     template_name = "lms/dashboard/login.html"
-    authentication_form = AuthenticationForm
+    authentication_form = CustomLoginForm
     login_redirect_url = reverse_lazy("dashboard:index")
 
     def get_success_url(self):

@@ -5,7 +5,7 @@ from utils.models import models, AbstractTimestampedModel
 
 class ShortAnswerOptions(AbstractTimestampedModel):
     question = models.OneToOneField(
-        'assignments.Question',
+        'quiz.Question',
         on_delete=models.CASCADE,
         related_name='short_answer_option',
         verbose_name=_("Question"),

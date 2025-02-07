@@ -1,8 +1,9 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.fields import CharField, DecimalField
 from django.utils.translation import gettext_lazy as _
-from phonenumber_field.modelfields import PhoneNumberField
+from phonenumber_field.modelfields import PhoneNumberField  # noqa
 
+from .author_field import AuthorField  # noqa
 from ...core import validators
 from ...forms import fields
 from ...models.fields.autoslugfield import AutoSlugField

@@ -1,0 +1,55 @@
+{% extends "lms/dashboard/layouts/layout.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} {% trans 'Sign IN' %} {% endblock %}
+
+{% block content %}
+<div class="auth-main v1">
+    <div class="bg-overlay bg-primary"></div>
+    <div class="auth-wrapper">
+        <div class="auth-form">
+            <div class="card my-5">
+                <div class="card-body">
+                    <img src="{% static 'assets/images/logo-dark.svg' %}" alt="" class="img-fluid mb-4 img-logo"/>
+                    <h4 class="mb-3 f-w-400">{% trans 'Login' %}</h4>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i data-feather="user"></i></span>
+                            {{ form.username }}
+                        </div>
+                        <div class="input-group mb-4">
+                            <span class="input-group-text"><i data-feather="lock"></i></span>
+                            {{ form.password }}
+                        </div>
+
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                        {% endif %}
+
+                        <div class="mb-3 mt-2">
+                            <div class="form-check text-start">
+                                <input class="form-check-input" type="checkbox" name="remember_me" id="remember_me"/>
+                                <label class="form-check-label" for="remember_me">
+                                    {% trans 'Remember me' %}
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block mb-4">{% trans 'Login' %}</button>
+
+                        <p class="mb-2">
+                            {% trans "Don’t have an account?" %}
+                            <a href="{% url 'register' %}" class="f-w-400">{% trans 'Register' %}</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

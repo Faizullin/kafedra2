@@ -1,0 +1,44 @@
+{% extends "lms/dashboard/pages/items/items-list.html" %}
+
+{% block javascript %}
+    {% include 'lms/dashboard/includes/items-list/scripts.html' %}
+    <script>
+        var itemsListData = {
+            tableId: "{{ table.table_id }}",
+            currentQuizId: "{{ quiz.id }}",
+        }
+        $(document).ready(function () {
+            class QGroupItemListTable extends ItemListTable {
+                formatUrl(url, record_data) {
+                    return super.formatUrl(url, record_data) + `?quiz_id=${itemsListData.currentQuizId}`;
+                }
+
+                getListUrlParams(data) {
+                    const new_data = super.getListUrlParams(data);
+                    new_data.quiz_id = itemsListData.currentQuizId;
+                    return new_data;
+                }
+            }
+
+            const itemsList = new QGroupItemListTable({
+                tableId: itemsListData.tableId,
+            });
+            itemsList.init();
+            $('.add-new-item-btn').click(function () {
+                window.location.href = $(this).data('url') + `?quiz_id=${itemsListData.currentQuizId}`;
+            });
+            $(document).on("click", ".open-questions-action-btn", function () {
+                const tr_el = $(this).closest("tr");
+                const record_data = itemsList.tableDatatable.row(tr_el).data();
+                const action = itemsList.actionsData.extra.find(function (action) {
+                    return action.name === "open-questions";
+                });
+                if (!action) {
+                    return;
+                }
+                window.location.href = action.url + `?question_group_id=${record_data.id}`;
+
+            });
+        });
+    </script>
+{% endblock %}

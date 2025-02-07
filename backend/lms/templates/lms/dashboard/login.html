@@ -1,11 +1,11 @@
-{% extends 'lms/dashboard/layouts/layout.html' %}
+{% extends "lms/dashboard/layouts/layout.html" %}
 {% load i18n %}
 {% load static %}
-{% load widget_tweaks %}
+
+{% block title %} {% trans 'Sign IN' %} {% endblock %}
 
 {% block content %}
     {% include 'lms/dashboard/includes/loader.html' %}
-
     <div class="auth-main v1">
         <div class="bg-overlay bg-primary"></div>
         <div class="auth-wrapper">
@@ -13,38 +13,42 @@
                 <div class="card my-5">
                     <div class="card-body">
                         <img src="{% static 'assets/images/logo-dark.svg' %}" alt="" class="img-fluid mb-4 img-logo"/>
-                        <h4 class="mb-3 f-w-400">{{ shop_name }}</h4>
+                        <h4 class="mb-3 f-w-400">{% trans 'Login' %}</h4>
 
-                        <form method="post" novalidate id="dashboard_login_form">
+                        <form method="post">
                             {% csrf_token %}
-                            {% if form.errors %}
+
+                            <!-- Username Field -->
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><i data-feather="user"></i></span>
+                                {{ form.username }}
+                            </div>
+                            {% if form.username.errors %}
+                                <div class="text-danger">{{ form.username.errors.0 }}</div>
+                            {% endif %}
+
+                            <!-- Password Field -->
+                            <div class="input-group mb-4">
+                                <span class="input-group-text"><i data-feather="lock"></i></span>
+                                {{ form.password }}
+                            </div>
+                            {% if form.password.errors %}
+                                <div class="text-danger">{{ form.password.errors.0 }}</div>
+                            {% endif %}
+
+                            <!-- Non-field Errors (e.g., invalid credentials) -->
+                            {% if form.non_field_errors %}
                                 <div class="alert alert-danger">
-                                    {% trans "Please enter a correct username and password. Note that both fields may be case-sensitive." %}
+                                    {{ form.non_field_errors.0 }}
                                 </div>
                             {% endif %}
 
-                            <div class="input-group mb-3">
-                                <span class="input-group-text"><i data-feather="user"></i></span>
-                                {% render_field form.username class="form-control" placeholder="Username" %}
-                            </div>
-                            <div class="input-group mb-4">
-                                <span class="input-group-text"><i data-feather="lock"></i></span>
-                                {% render_field form.password class="form-control" placeholder="Password" %}
-                            </div>
+                            <button type="submit" class="btn btn-primary btn-block mb-4">{% trans 'Login' %}</button>
 
-                            <div class="mb-3 mt-2">
-                                <div class="form-check text-start">
-                                    <input class="form-check-input" type="checkbox" id="flexCheckChecked"
-                                           name="newsletter" checked>
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        {% trans "Send me the" %} <a
-                                            href="#!">{% trans "Newsletter" %}</a> {% trans "weekly." %}
-                                    </label>
-                                </div>
-                            </div>
-
-                            <input type="hidden" name="next" value="{{ next }}">
-                            <button type="submit" class="btn btn-primary btn-block mb-4">{% trans "Login" %}</button>
+                            {#                        <p class="mb-2">#}
+                            {#                            {% trans "Don’t have an account?" %}#}
+                            {#                            <a href="{% url 'register' %}" class="f-w-400">{% trans 'Register' %}</a>#}
+                            {#                        </p>#}
                         </form>
                     </div>
                 </div>
@@ -52,3 +56,4 @@
         </div>
     </div>
 {% endblock %}
+

@@ -176,8 +176,8 @@ class ThumbnailImageWidget {
 
 class ThumbnailImageWidgetManager {
     constructor(containers, api, attachmentsManager) {
-        this.api = api;
-        this.attachmentsManager = attachmentsManager;
+        this.api = window.server_conf.thumbnail_image_widget;
+        this.attachmentsManager = window.managers.attachmentModal;
         this.widgets = [];
 
         // Create a `ThumbnailImageWidget` instance for each container
@@ -186,8 +186,7 @@ class ThumbnailImageWidgetManager {
             this.widgets.push(widget);
         });
     }
-
-    getWidgets() {
-        return this.widgets;
-    }
 }
+
+window.managers.checkManager("thumbnailImageWidget");
+window.managers.thumbnailImageWidget = new ThumbnailImageWidgetManager();

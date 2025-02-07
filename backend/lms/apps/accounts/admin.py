@@ -1,28 +1,30 @@
-from django.contrib import admin
-
 from lms.core.compat import get_user_model
+from lms.core.loading import get_model
+from utils.admin import BaseAdmin, admin
+
+UserModel = get_user_model()
+Student = get_model("accounts", "Student")
+Professor = get_model("accounts", "Professor")
+UserProfile = get_model("accounts", "UserProfile")
+
+# admin.site.unregister(UserModel)
 
 
-class UserAdmin(admin.ModelAdmin):
-    list_display = [
-        "get_full_name",
-        "username",
-        "email",
-        "is_active",
-        "is_student",
-        "is_staff",
-    ]
-    search_fields = [
-        "username",
-        "first_name",
-        "last_name",
-        "email",
-        "is_active",
-        "is_staff",
-    ]
-
-    class Meta:
-        managed = True
+@admin.register(UserModel)
+class UpdatedUserAdmin(BaseAdmin):
+    pass
 
 
-admin.site.register(get_user_model(), UserAdmin)
+@admin.register(Student)
+class StudentAdmin(BaseAdmin):
+    pass
+
+
+@admin.register(Professor)
+class ProfessorAdmin(BaseAdmin):
+    pass
+
+
+@admin.register(UserProfile)
+class UserProfileAdmin(BaseAdmin):
+    pass

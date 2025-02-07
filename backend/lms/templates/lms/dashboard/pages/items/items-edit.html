@@ -22,7 +22,9 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            {% crispy form %}
+                            {% block main_form_content %}
+                                {% crispy form %}
+                            {% endblock %}
                         </div>
                     </div>
                 </div>
@@ -32,13 +34,13 @@
     <!-- [ Main Content ] start -->
 
 
-    <div id="attachments-list-modal"
-         class="modal fade" tabindex="-1" role="dialog" aria-labelledby="attachments-list-modal-title"
+    <div class="modal fade attachments-list-modal" tabindex="-1" role="dialog"
+         aria-labelledby="attachments-list-modal-title"
          aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title h4" id="attachments-list-modal-title">Attachments</h5>
+                    <h5 class="modal-title h4 attachments-list-modal-title">Attachments</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -87,11 +89,9 @@
                 crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script>
         </script>
-        <script src="{% static 'my-plugins/attachments/AttachmentModalManager.js' %}"></script>
-        <script src="{% static 'my-plugins/attachments/ThumbnailImageWidgetManager.js' %}"></script>
         <script>
             Dropzone.autoDiscover = false;
-            const attachmentsData = {
+            window.server_conf.items_edit = {
                 content_type: "{{ attachments.content_type }}",
                 object_id: "{{ attachments.object_id }}",
                 listApiUrl: "{% url 'dashboard:attachments-list-api' %}",
@@ -102,11 +102,9 @@
                     apiUrl: "{% url 'dashboard:attachments-action-api' %}",
                 },
             }
-            $(document).ready(function () {
-                const attachmentsManager = new AttachmentModalManager($("#attachments-list-modal"), attachmentsData);
-                new ThumbnailImageWidgetManager($(".thumbnail-attachment-container"), attachmentsData, attachmentsManager);
-            });
         </script>
+        <script src="{% static 'my-plugins/attachments/AttachmentModalManager.js' %}"></script>
+        <script src="{% static 'my-plugins/attachments/ThumbnailImageWidgetManager.js' %}"></script>
 
     {% endif %}
 {% endblock %}
