@@ -28,6 +28,8 @@ if DEBUG:
 
     DEBUG_TOOLBAR_CONFIG = {
         "SHOW_TOOLBAR_CALLBACK": show_toolbar,
+        'RESULTS_CACHE_SIZE': 100,
+        'SQL_WARNING_THRESHOLD': 2000
     }
 
 # if DEBUG:

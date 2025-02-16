@@ -36,9 +36,6 @@ RUN groupadd -r django && useradd -r -g django django
 RUN pip install --trusted-host pypi.python.org --upgrade pip
 COPY requirements.dev.txt $HOME/requirements.txt
 RUN pip install -r $HOME/requirements.txt
-RUN pip install Babel
-RUN pip install django-phonenumber-field[phonenumbers]
-RUN pip install django-tables2
 
 COPY . $HOME
 RUN chown -R django $HOME

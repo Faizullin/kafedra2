@@ -1,7 +1,5 @@
-from django.urls import path
 from django.utils.translation import gettext_lazy as _
 
-from apps.dashboard.quiz.url_reverses import url_reverses_dict
 from lms.core.application import LmsDashboardConfig
 from lms.core.loading import get_class
 
@@ -109,7 +107,3 @@ class QuizDashboardConfig(LmsDashboardConfig):
         ]
 
         return self.post_process_urls(urls)
-
-    def get_path_with_reverses(self, view, path_name):
-        url = url_reverses_dict.get(path_name)
-        return path(url, view, name=path_name)

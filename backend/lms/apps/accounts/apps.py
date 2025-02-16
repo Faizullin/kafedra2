@@ -98,6 +98,7 @@ class AccountsConfig(LmsConfig):
         # self.wishlists_move_product_to_another_view = get_class(
         #     "customer.wishlists.views", "WishListMoveProductToAnotherWishList"
         # )
+        super().ready()
 
     def get_urls(self):
         urls = [

@@ -111,7 +111,7 @@ def default_class_loader(module_label, classnames, module_prefix):
     # depending on what is set in INSTALLED_APPS
     app_name = _find_registered_app_name(module_label)
     if app_name.startswith("%s." % module_prefix):
-        # The entry is obviously an Lms one, we don't import again
+        # The entry is obviously a Lms one, we don't import again
         local_module = None
     else:
         # Attempt to import the classes from the local module

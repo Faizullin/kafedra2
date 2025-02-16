@@ -1,6 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import status
 
+
 class BaseActionException(Exception):
     status = status.HTTP_400_BAD_REQUEST
 
@@ -14,9 +15,13 @@ class BaseAction:
     def apply(self, request):
         raise BaseActionException("Incorrect action")
 
-    def get_content_type_obj_from_request(self, request):
+    def get_content_obj_data_raw_from_request(self, request):
         content_type = request.data.get('content_type', None)
         object_id = request.data.get('object_id', None)
+        return content_type, object_id
+
+    def get_content_type_obj_from_request(self, request):
+        content_type, object_id = self.get_content_obj_data_raw_from_request(request)
         if not (content_type and object_id):
             raise BaseActionException("Incorrect params for this action.")
         try:

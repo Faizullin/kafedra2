@@ -285,6 +285,3 @@ class AttachmentModalManager {
         });
     }
 }
-
-window.managers.checkManager("");
-window.managers.attachmentModal = new AttachmentModalManager();

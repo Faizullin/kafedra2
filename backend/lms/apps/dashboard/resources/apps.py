@@ -55,6 +55,9 @@ class ResourcesDashboardConfig(LmsDashboardConfig):
         self.resources_post_delete_view = get_class(
             "dashboard.resources.views", "ResourcesPostDeleteView"
         )
+        self.resources_tag_list_api_view = get_class(
+            "dashboard.resources.api.views", "TagListAPIView"
+        )
         self.configure_permissions()
 
     def get_urls(self):
@@ -85,5 +88,10 @@ class ResourcesDashboardConfig(LmsDashboardConfig):
                 self.resources_post_delete_view.as_view(),
                 name="resources-post-delete",
             ),
+            path(
+                "api/v1/dashboard/resources/tags",
+                self.resources_tag_list_api_view.as_view(),
+                name="resources-tag-list-api",
+            )
         ]
         return self.post_process_urls(urls)

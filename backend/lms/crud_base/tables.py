@@ -79,14 +79,38 @@ class Table:
         return ordered_columns
 
     def validate_model_fields(self):
-        model_fields = [field.name for field in self.Meta.model._meta.fields]
+        # model_fields = [field.name for field in self.Meta.model._meta.fields]
+        # for column in self.columns:
+        #     if not isinstance(column, ActionsColumn):
+        #         if column.field_name and column.field_name not in model_fields:
+        #             raise ValueError(
+        #                 f"Field '{column.field_name}' does not exist in model '{self.Meta.model.__name__}'.")
+        #         if column.header is None:
+        #             column.header = self.Meta.model._meta.get_field(column.field_name).verbose_name.title()
+
+        model = self.Meta.model
+        initial_model_fields = {field.name: field for field in model._meta.fields}
+
         for column in self.columns:
+            model_fields = initial_model_fields
             if not isinstance(column, ActionsColumn):
-                if column.field_name and column.field_name not in model_fields:
-                    raise ValueError(
-                        f"Field '{column.field_name}' does not exist in model '{self.Meta.model.__name__}'.")
+                field_path = column.field_name.split('.')
+
+                current_field = None
+                current_model = model
+
+                for field_name in field_path:
+                    if field_name in model_fields:
+                        current_field = model_fields[field_name]
+                        if hasattr(current_field,
+                                   'related_model') and current_field.related_model:  # It's a ForeignKey or OneToOneField4
+                            current_model = current_field.related_model
+                            model_fields = {field.name: field for field in current_model._meta.fields}
+                    else:
+                        raise ValueError(f"Field '{column.field_name}' does not exist in model '{model.__name__}'.")
+
                 if column.header is None:
-                    column.header = self.Meta.model._meta.get_field(column.field_name).verbose_name.title()
+                    column.header = field_name.replace('_', ' ').title()
 
     def validate_column(self, column):
         if not isinstance(column, Column):

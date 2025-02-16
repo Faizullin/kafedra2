@@ -17,8 +17,10 @@
     "graceful-fs": "^4.2.11"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.9",
-    "@babel/preset-env": "^7.23.9",
+    "@babel/core": "^7.26.9",
+    "@babel/preset-env": "^7.26.9",
+    "@babel/preset-react": "^7.26.3",
+    "babel-loader": "^9.2.1",
     "del": "^6.1.1",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^6.1.0",
@@ -28,12 +30,20 @@
     "gulp-htmlmin": "^5.0.1",
     "gulp-inject": "^5.0.5",
     "gulp-minify": "^3.1.0",
+    "gulp-react": "^3.1.0",
     "gulp-sass": "^5.1.0",
     "gulp-smushit": "^1.2.0",
     "gulp-uglify": "^3.0.2",
+    "gulp-util": "^3.0.8",
+    "gulp-webpack": "^1.5.0",
     "merge-stream": "^2.0.0",
     "prettier": "3.3.3",
-    "sass": "1.77.6"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sass": "1.77.6",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1",
+    "webpack-stream": "^7.0.0"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",

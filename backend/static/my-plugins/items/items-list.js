@@ -1,6 +1,5 @@
 class ItemListTable {
     constructor() {
-        console.log(window.server_conf.items_list)
         this.itemsListData = window.server_conf.items_list;
         this.actionsData = {
             default: [],
@@ -130,8 +129,7 @@ class ItemListTable {
             if (!editAction) {
                 return;
             }
-            const url = window.managers.urlFormatter.formatUrlById(editAction.apiUrl, record_data);
-            window.location.href = url.replace("{id}", record_data.id);
+            window.location.href = window.managers.urlFormatter.formatUrlById(editAction.url, record_data);
         });
 
         // Delete a record
@@ -157,6 +155,3 @@ class ItemListTable {
         });
     }
 }
-
-window.managers.checkManager("itemsListTable");
-window.managers.itemsListTable = new ItemListTable();

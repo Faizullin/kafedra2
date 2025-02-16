@@ -42,3 +42,7 @@ Whoosh
 pycountry
 django-treebeard
 django-tables2
+django-autocomplete-light
+django-phonenumber-field[phonenumbers]
+Babel
+django-guardian

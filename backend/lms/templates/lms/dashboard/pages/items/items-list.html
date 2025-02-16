@@ -48,6 +48,8 @@
     {% include 'lms/dashboard/includes/items-list/scripts.html' %}
     <script>
         $(document).ready(function () {
+            window.managers.checkManager("itemsListTable");
+            window.managers.itemsListTable = new ItemListTable();
             window.managers.itemsListTable.init();
             $('.add-new-item-btn').click(function () {
                 window.location.href = $(this).data('url');

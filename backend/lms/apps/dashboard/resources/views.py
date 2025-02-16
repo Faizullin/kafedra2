@@ -7,9 +7,11 @@ from django.views import generic
 from django.views.generic import DetailView
 from rest_framework.reverse import reverse_lazy
 
+from lms.apps.dashboard.resources.url_reverses import url_reverses_dict
 from lms.core.loading import get_model, get_classes
+from lms.crud_base.tables import Table, Column, ActionsColumn, DefaultEditAction
 from lms.crud_base.views import BaseCreateView, BaseUpdateView, get_default_add_success_message, \
-    get_default_update_success_message
+    get_default_update_success_message, BaseListView
 
 Post = get_model("posts", "Post")
 PostForm, = get_classes(
@@ -17,19 +19,35 @@ PostForm, = get_classes(
 )
 
 
-class ResourcesPostListView(generic.TemplateView):
-    template_name = "lms/dashboard/resources/post_list.html"
+class ResourcesPostListView(BaseListView):
+    model = Post
+    page_list_url = reverse_lazy("dashboard:resources-post-list")
 
-    def get_context_data(self, **kwargs):
-        context = super(ResourcesPostListView, self).get_context_data(**kwargs)
-        context.update({
-            "urls": {
-                "listApi": reverse("dashboard:resources-post-list-api"),
-                'add': reverse('dashboard:resources-post-create'),
-                'edit': reverse('dashboard:resources-post-update', kwargs={'pk': 0}),
-            }
-        })
-        return context
+    class PostTable(Table):
+        id = Column(field_name="id", header="#", orderable=True)
+        title = Column(field_name="title")
+        question_type = Column(field_name="question_type")
+        category = Column(field_name="category.title", header=_("Category"), orderable=False, searchable=False)
+        author = Column(field_name="author.username", header=_("Author"), orderable=False, searchable=False)
+        actions = ActionsColumn(
+            actions=[
+                DefaultEditAction(
+                    redirect_url_name=url_reverses_dict["resources-post-update"],
+                ),
+            ],
+        )
+
+        class Meta:
+            model = Post
+            source_url = reverse_lazy('dashboard:resources-post-list-api')
+            fields = ['id', 'title', 'category', 'author', 'actions']
+
+    table = PostTable()
+
+    def get_urls(self):
+        return {
+            'add': reverse('dashboard:resources-post-create'),
+        }
 
 
 class ResourcesPostCreateView(BaseCreateView):
@@ -49,11 +67,7 @@ class ResourcesPostCreateView(BaseCreateView):
         return resolve_url("dashboard:resources-post-update", pk=self.object.pk)
 
     def get_urls(self):
-        return {
-            "listApi": reverse("dashboard:resources-post-list-api"),
-            'add': reverse('dashboard:resources-post-create'),
-            'edit': reverse('dashboard:resources-post-update', kwargs={'pk': 0}),
-        }
+        return {}
 
 
 class ResourcesPostUpdateView(BaseUpdateView):
@@ -68,11 +82,7 @@ class ResourcesPostUpdateView(BaseUpdateView):
         return resolve_url("dashboard:resources-post-update", pk=self.object.pk)
 
     def get_urls(self):
-        return {
-            "listApi": reverse("dashboard:resources-post-list-api"),
-            'add': reverse('dashboard:resources-post-create'),
-            'edit': reverse('dashboard:resources-post-update', kwargs={'pk': 0}),
-        }
+        return {}
 
 
 class ResourcesPostEditContentView(DetailView):
@@ -105,7 +115,6 @@ class ResourcesPostEditContentView(DetailView):
         for i in PLUGINS:
             js_src_list.append("https://cdn.jsdelivr.net/npm/{}@latest".format(i))
 
-        print(context)
         instance = context["object"]
         title = "{} {} [{}]".format(_("Edit"), _("Post"), str(instance.pk))
         ct_type = ContentType.objects.get_for_model(instance)

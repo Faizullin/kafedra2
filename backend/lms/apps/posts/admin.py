@@ -5,6 +5,7 @@ from utils.admin import BaseAdmin
 
 Post = get_model("posts", "Post")
 Category = get_model("posts", "Category")
+Tag = get_model("posts", "Tag")
 
 
 @admin.register(Post)
@@ -25,4 +26,10 @@ class PostAdmin(BaseAdmin):
 @admin.register(Category)
 class CategoryAdmin(BaseAdmin):
     list_display = ('title', 'slug',)
+    search_fields = ['title', ]
+
+
+@admin.register(Tag)
+class TagAdmin(BaseAdmin):
+    list_display = ('title',)
     search_fields = ['title', ]

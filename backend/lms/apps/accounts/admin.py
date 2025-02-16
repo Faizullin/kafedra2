@@ -12,6 +12,10 @@ UserProfile = get_model("accounts", "UserProfile")
 
 @admin.register(UserModel)
 class UpdatedUserAdmin(BaseAdmin):
+    filter_horizontal = (
+        'groups',
+        'user_permissions',
+    )
     pass
 
 

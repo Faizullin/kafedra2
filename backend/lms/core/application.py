@@ -1,6 +1,8 @@
+from importlib import import_module
+
 from django.apps import AppConfig
 from django.core.exceptions import ImproperlyConfigured
-from django.urls import URLPattern, reverse_lazy
+from django.urls import URLPattern, reverse_lazy, path
 
 from .loading import feature_hidden
 
@@ -147,6 +149,17 @@ class LmsConfig(LmsConfigMixin, AppConfig):
     This is subclassed by each app to provide a customisable container for its
     configuration, URL configurations, and permissions.
     """
+
+    # MY:
+
+    url_reverses_dict = None
+
+    def get_path_with_reverses(self, view, path_name):
+        if self.url_reverses_dict is None:
+            u = import_module(self.name + ".url_reverses")
+            self.url_reverses_dict = u.url_reverses_dict
+        url = self.url_reverses_dict.get(path_name)
+        return path(url, view, name=path_name)
 
 
 class LmsDashboardConfig(LmsConfig):

@@ -45,14 +45,17 @@
 <body data-pc-preset="preset-1" data-pc-sidebar-theme="dark" data-pc-header-theme="light" data-pc-sidebar-caption="true"
       data-pc-direction="ltr" data-pc-theme="light">
 
-{% block content %}{% endblock %}
+
+{% block content %}
+
+{% endblock %}
 
 {#{% include 'lms/dashboard/includes/promo-fixed-button.html' %}#}
 {% include 'lms/dashboard/includes/scripts.html' %}
 
 <!-- Specific Page JS goes HERE  -->
-<script src="{% static 'my-plugins/global/server_conf.js' %}"></script>
-<script src="{% static 'my-plugins/global/managers.js' %}"></script>
+{#<script src="{% static 'my-plugins/global/server_conf.js' %}"></script>#}
+{#<script src="{% static 'my-plugins/global/managers.js' %}"></script>#}
 {% block javascript %}{% endblock javascript %}
 
 

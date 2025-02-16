@@ -291,6 +291,7 @@ DJANGO_APPS = [
     # "modeltranslation",
     # "jet.dashboard",
     # "jet",
+
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -313,6 +314,7 @@ THIRD_PARTY_APPS = [
     'sorl.thumbnail',
     'easy_thumbnails',
     'django_tables2',
+    'guardian',
 ]
 
 PROJECT_APPS = [
@@ -337,14 +339,12 @@ PROJECT_APPS = [
     'lms.apps.posts.apps.PostsConfig',
     'lms.apps.pages.apps.PagesConfig',
     'lms.apps.courses.apps.CoursesConfig',
-    'lms.apps.assignments.apps.AssignmentsConfig',
-    # 'lms.apps.dashboard.apps.DashboardConfig',
     'apps.dashboard.apps.DashboardConfig',
     'lms.apps.dashboard.resources.apps.ResourcesDashboardConfig',
     'lms.apps.dashboard.attachments.apps.AttachmentsDashboardConfig',
     'apps.quiz.apps.QuizConfig',
     'apps.dashboard.quiz.apps.QuizDashboardConfig',
-    # 'lms.apps.datatables.apps.DatatablesConfig',
+    'lms.apps.dashboard.share_access.apps.ShareAccessDashboardConfig',
 
     # 'lms.apps.dashboard.reports.apps.ReportsDashboardConfig',
     # 'lms.apps.dashboard.users.apps.UsersDashboardConfig',
@@ -369,6 +369,8 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 AUTHENTICATION_BACKENDS = (
     'lms.apps.accounts.auth_backends.EmailBackend',
     'django.contrib.auth.backends.ModelBackend',
+
+    'guardian.backends.ObjectPermissionBackend',
 )
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -474,7 +476,6 @@ THUMBNAIL_DEFAULT_STORAGE_ALIAS = "default"
 # django/core/serializers/json.Serializer to have the `dumps` function. Also
 # in tests/config.py
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
-
 
 AUTH_USER_MODEL = "accounts.CustomUser"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

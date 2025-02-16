@@ -4,9 +4,8 @@ from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 
-from lms.apps.customer.signals import user_registered
+from lms.apps.accounts.signals import user_registered
 from lms.core.compat import get_user_model
-from lms.core.loading import get_class, get_model
 
 User = get_user_model()
 # CommunicationEventType = get_model("communication", "CommunicationEventType")

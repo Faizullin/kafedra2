@@ -1,25 +1,14 @@
 from django_filters import CharFilter
-from django_filters.rest_framework import DjangoFilterBackend, FilterSet
+from django_filters.rest_framework import FilterSet
 from rest_framework import generics
-from rest_framework.filters import SearchFilter, OrderingFilter
 
+from apps.dashboard.quiz.api.views import BaseListApiView
 from lms.apps.dashboard.editor.api.views import BaseContentEditorActionAPIView
 from lms.core.loading import get_model
-from .filters import CustomPagination
-from .serializers import PostSerializer
+from .serializers import PostSerializer, TagSerializer
 
 Post = get_model("posts", "Post")
-
-
-class BaseListApiView(generics.ListAPIView):
-    pagination_class = CustomPagination
-    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
-    ordering_fields = ['id', 'created_at', 'updated_at']
-    filterset_class = None
-
-
-class BaseDestroyApiView(generics.DestroyAPIView):
-    lookup_field = "id"
+Tag = get_model("posts", "Tag")
 
 
 ##########################################################
@@ -45,3 +34,12 @@ class ResourcesPostListAPIView(BaseListApiView):
 
 class ResourcesPostEditContentActionAPIView(BaseContentEditorActionAPIView):
     pass
+
+
+class TagListAPIView(BaseListApiView):
+    serializer_class = TagSerializer
+    search_fields = ['title']
+
+    def get_queryset(self):
+        queryset = Tag.objects.all()
+        return queryset

@@ -49,6 +49,7 @@ class Post(AbstractTimestampedModel, AbstractMetaModel, AbstractSlugModel, SoftD
     title = models.CharField(_("Title"), max_length=200)
     author = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='posts')
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
+    tags = models.ManyToManyField(Tag, blank=True)
     content = models.TextField()
     publication_status = models.IntegerField(
         choices=PublicationStatus.choices, default=PublicationStatus.DRAFT)

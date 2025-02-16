@@ -51,13 +51,13 @@
     <!-- [ Main Content ] start -->
 
 
-    <div id="attachments-list-modal"
-         class="modal fade" tabindex="-1" role="dialog" aria-labelledby="attachments-list-modal-title"
+    <div class="modal fade attachments-list-modal" tabindex="-1" role="dialog"
+         aria-labelledby="attachments-list-modal-title"
          aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title h4" id="attachments-list-modal-title">Attachments</h5>
+                    <h5 class="modal-title h4 attachments-list-modal-title">Attachments</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -111,7 +111,7 @@
         <script src="{% static 'my-plugins/attachments/ThumbnailImageWidgetManager.js' %}"></script>
         <script>
             Dropzone.autoDiscover = false;
-            const attachmentsData = {
+            window.server_conf.items_edit = {
                 content_type: "{{ attachments.content_type }}",
                 object_id: "{{ attachments.object_id }}",
                 listApiUrl: "{% url 'dashboard:attachments-list-api' %}",
@@ -122,23 +122,30 @@
                     apiUrl: "{% url 'dashboard:attachments-action-api' %}",
                 },
             }
-            const editorData = {
+            window.server_conf.editor_data = {
                 baseApiUrl: "{% url 'dashboard:resources-post-edit-content-action-api' %}",
                 content_type: "{{ editor.content_type }}",
                 object_id: "{{ editor.object_id }}",
                 to_model_field_name: "{{ editor.to_model_field_name }}",
             }
+
             $(document).ready(function () {
-                const attachmentsManager = new AttachmentModalManager($("#attachments-list-modal"), attachmentsData);
-                new ThumbnailImageWidgetManager($(".thumbnail-attachment-container"), attachmentsData, attachmentsManager);
-                window.attachmentsManager = attachmentsManager;
+                window.managers.checkManager("attachmentModal");
+                window.managers.attachmentModal = new AttachmentModalManager();
+                window.managers.checkManager("thumbnailImageWidget");
+                window.managers.thumbnailImageWidget = new ThumbnailImageWidgetManager(
+                    $(".thumbnail-attachment-container"),
+                    {
+                        ...window.server_conf.items_edit,
+                    }
+                );
             });
         </script>
 
     {% endif %}
 
 
-      {% for source in editor.media.js %}
+    {% for source in editor.media.js %}
         <script src="{{ source }}"></script>
     {% endfor %}
 
@@ -200,14 +207,13 @@
                              */
                             uploadByFile(file) {
                                 const formData = new FormData();
-                                console.log(editorData);
                                 formData.append('file', file);
-                                formData.append('content_type', editorData.content_type);
-                                formData.append('object_id', editorData.object_id);
-                                formData.append('to_model_field_name', editorData.to_model_field_name);
+                                formData.append('content_type', window.server_conf.editor_data.content_type);
+                                formData.append('object_id', window.server_conf.editor_data.object_id);
+                                formData.append('to_model_field_name', window.server_conf.editor_data.to_model_field_name);
                                 formData.append('action', "image-upload-by-file");
                                 return $.ajax({
-                                    url: editorData.baseApiUrl,
+                                    url: window.server_conf.editor_data.baseApiUrl,
                                     type: 'POST',
                                     data: formData,
                                     dataType: 'JSON',
@@ -355,13 +361,13 @@
                     console.log('Saved data:', outputData);
 
                     $.ajax({
-                        url: editorData.baseApiUrl,
+                        url: window.server_conf.editor_data.baseApiUrl,
                         type: 'POST',
                         data: JSON.stringify({
                             action: "save-content",
                             content: JSON.stringify(outputData),
-                            content_type: editorData.content_type,
-                            object_id: editorData.object_id,
+                            content_type: window.server_conf.editor_data.content_type,
+                            object_id: window.server_conf.editor_data.object_id,
                             to_model_field_name: "content",
                         }),
                         dataType: "json",
@@ -386,8 +392,8 @@
             $(".ce-popover-item[item-name=Image]");
 
             $(".attachments-modal-open-btn").click(function () {
-                window.attachmentsManager.openModal();
-                window.attachmentsManager.loadAttachments();
+                window.managers.attachmentModal.openModal();
+                window.managers.attachmentModal.loadAttachments();
             })
         });
     </script>

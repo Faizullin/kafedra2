@@ -12,112 +12,42 @@ var autoprefixer = require('gulp-autoprefixer');
 var fileinclude = require('gulp-file-include');
 var browsersync = require('browser-sync');
 var htmlmin = require('gulp-htmlmin');
-const {parallel} = require('gulp');
+const { parallel } = require('gulp');
 
-// =======================================================
-// ----------- START: Dashboardkit Theme Configuration -----------
-// =======================================================
+// Define multiple static sources
+const static_src_paths = [
+    'lms/static_src',  // Original source
+    'static_src' // Additional static source
+];
 
-const caption_show = 'true'; // [ false , true ]
-const dark_navbar = 'true'; // [ false , true ]
-const dark_header = 'false'; // [ false , true ]
-const preset_theme = 'preset-1'; // [ preset-1 to preset-10 ]
-const dark_layout = 'false'; // [ false , true , default ]
-const rtl_layout = 'false'; // [ false , true ]
-const box_container = 'false'; // [ false , true ]
-const version = 'v3.1.0';
-
-if (rtl_layout == 'true') {
-    var rtltemp = 'rtl';
-} else {
-    var rtltemp = 'ltr';
-}
-
-if (dark_layout == 'true') {
-    var darklayouttemp = 'dark';
-} else {
-    var darklayouttemp = 'light';
-}
-if (dark_navbar == 'true') {
-    var darknavbartemp = 'dark';
-} else {
-    var darknavbartemp = 'light';
-}
-if (dark_header == 'true') {
-    var darkheadertemp = 'dark';
-} else {
-    var darkheadertemp = 'light';
-}
-
-const layout = {
-    pc_caption_show: caption_show,
-    pc_preset_theme: preset_theme,
-    pc_dark_navbar: dark_navbar,
-    pc_dark_header: dark_header,
-    pc_dark_layout: dark_layout,
-    pc_rtl_layout: rtl_layout,
-    pc_box_container: box_container,
-    pc_theme_version: version,
-    bodySetup:
-        'data-pc-preset="' +
-        preset_theme +
-        '" data-pc-sidebar-theme="' +
-        darknavbartemp +
-        '" data-pc-header-theme="' +
-        darkheadertemp +
-        '" data-pc-sidebar-caption="' +
-        caption_show +
-        '" data-pc-direction="' +
-        rtltemp +
-        '" data-pc-theme="' +
-        darklayouttemp +
-        '"'
-};
-// =======================================================
-// ----------- END: Dashboardkit Theme Configuration -----------
-// =======================================================
-
-const lms_root_path = 'lms/static_src';
 const dest_path = 'static';
 
-// all paths setup
-const path = {
-    src: {
-        // html: `${lms_root_path}/html/**/*.html`,
-        css: `${lms_root_path}/assets/scss/*.scss`,
-        layoutjs: `${lms_root_path}/assets/js/*.js`,
-        pagesjs: `${lms_root_path}/assets/js/pages/*.js`,
-        images: `${lms_root_path}/assets/images/**/*.{jpg,png}`,
-    },
-    destination: {
-        // html: 'dist',
-        css: `${dest_path}/assets/css`,
-        layoutjs: `${dest_path}/assets/js`,
-        pagesjs: `${dest_path}/assets/js/pages`,
-        images: `${dest_path}/assets/images`
-    }
+// Function to create paths dynamically for multiple sources
+const generatePaths = (srcPaths) => {
+    return {
+        src: {
+            css: srcPaths.map(src => `${src}/assets/scss/*.scss`),
+            layoutjs: srcPaths.map(src => `${src}/assets/js/*.js`),
+            pagesjs: srcPaths.map(src => `${src}/assets/js/pages/*.js`),
+            images: srcPaths.map(src => `${src}/assets/images/**/*.{jpg,png}`)
+        },
+        destination: {
+            css: `${dest_path}/assets/css`,
+            layoutjs: `${dest_path}/assets/js`,
+            pagesjs: `${dest_path}/assets/js/pages`,
+            images: `${dest_path}/assets/images`
+        }
+    };
 };
-// //  [ common ] task start
-// //  [ browser reload ] start
-// gulp.task('browserSync', function () {
-//     browsersync.init({
-//         server: 'dist/'
-//     });
-// });
-// //  [ browser reload ] end
+
+const path = generatePaths(static_src_paths);
 
 gulp.task('cleandist', function (callback) {
     del.sync([`${dest_path}/assets/*/`]);
     callback();
 });
-//  [ common ] task end
 
-// =======================================================
-// ----------- START: Development tasks -----------
-// =======================================================
-//  [ scss compiler ] start
 gulp.task('sass', function () {
-    // main style css
     return gulp
         .src(path.src.css)
         .pipe(sourcemaps.init())
@@ -126,9 +56,7 @@ gulp.task('sass', function () {
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(path.destination.css));
 });
-//  [ scss compiler ] end
 
-//  [ Copy assets ] start
 gulp.task('build-node-modules', function () {
     var required_libs = {
         js: [
@@ -143,6 +71,7 @@ gulp.task('build-node-modules', function () {
             'node_modules/bootstrap/dist/css/bootstrap.min.css',
         ]
     };
+
     npmlodash(required_libs).forEach(function (assets, type) {
         if (type === 'css') {
             gulp.src(assets).pipe(gulp.dest(`${dest_path}/assets/css/plugins`));
@@ -151,115 +80,55 @@ gulp.task('build-node-modules', function () {
         }
     });
 
-    var cpyassets = gulp.src([`${lms_root_path}/assets/**/*.*`, `!${lms_root_path}/assets/scss/**/*.*`]).pipe(gulp.dest(`${dest_path}/assets`));
-    return merge(cpyassets);
+    var cpyassets = merge(
+        ...static_src_paths.map(src =>
+            gulp.src([`${src}/assets/**/*.*`, `!${src}/assets/scss/**/*.*`]).pipe(gulp.dest(`${dest_path}/assets`))
+        )
+    );
+
+    return cpyassets;
 });
-//  [ Copy assets ] end
 
-// //  [ build html ] start
-// gulp.task('build-html', function () {
-//     return gulp
-//         .src(path.src.html)
-//         .pipe(
-//             fileinclude({
-//                 context: layout,
-//                 prefix: '@@',
-//                 basepath: '@file',
-//                 indent: true
-//             })
-//         )
-//         .pipe(gulp.dest(path.destination.html));
-// });
-// //  [ build html ] end
-
-//  [ build js ] start
 gulp.task('build-js', function () {
-    var layoutjs = gulp.src(path.src.layoutjs).pipe(gulp.dest(path.destination.layoutjs));
-
-    var pagesjs = gulp.src(path.src.pagesjs).pipe(gulp.dest(path.destination.pagesjs));
-
+    var layoutjs = merge(...path.src.layoutjs.map(src => gulp.src(src).pipe(gulp.dest(path.destination.layoutjs))));
+    var pagesjs = merge(...path.src.pagesjs.map(src => gulp.src(src).pipe(gulp.dest(path.destination.pagesjs))));
     return merge(layoutjs, pagesjs);
 });
-//  [ build js ] end
 
-//  [ watch ] start
 gulp.task('watch', function () {
-    gulp.watch(`${lms_root_path}/assets/scss/**/*.scss`, gulp.series('sass')).on('change', browsersync.reload);
-    gulp.watch(`${lms_root_path}/assets/js/**/*.js`, gulp.series('build-js')).on('change', browsersync.reload);
-    // gulp.watch(`${lms_root_path}/html/**/*.html`, gulp.series('build-html')).on('change', browsersync.reload);
+    static_src_paths.forEach(src => {
+        gulp.watch(`${src}/assets/scss/**/*.scss`, gulp.series('sass')).on('change', browsersync.reload);
+        gulp.watch(`${src}/assets/js/**/*.js`, gulp.series('build-js')).on('change', browsersync.reload);
+    });
 });
-// //  [ watch ] start
-// const compile = parallel('browserSync', 'watch');
-// //  [ Default task ] start
-// gulp.task('default', gulp.series('cleandist', 'build-node-modules', 'sass', 'build-js', 'build-html', compile));
-// //  [ Default task ] end
 
-// =======================================================
-// ----------- END: Development tasks -----------
-// =======================================================
-
-// =======================================================
-// ----------- START: Production mode tasks -----------
-// =======================================================
-
-//  [ css minify ] start
 gulp.task('min-css', function () {
-    // main style css
-    return gulp.src(path.src.css).pipe(sass()).pipe(autoprefixer()).pipe(cssmin()).pipe(gulp.dest(path.destination.css));
+    return gulp
+        .src(path.src.css)
+        .pipe(sass())
+        .pipe(autoprefixer())
+        .pipe(cssmin())
+        .pipe(gulp.dest(path.destination.css));
 });
-//  [ css minify ] end
 
-//  [ min-js ] start
 gulp.task('min-js', function () {
-    var layoutjs = gulp.src(path.src.layoutjs).pipe(uglify()).pipe(gulp.dest(path.destination.layoutjs));
-
-    var pagesjs = gulp.src(path.src.pagesjs).pipe(babel()).pipe(uglify()).pipe(gulp.dest(path.destination.pagesjs));
-
+    var layoutjs = merge(...path.src.layoutjs.map(src => gulp.src(src).pipe(uglify()).pipe(gulp.dest(path.destination.layoutjs))));
+    var pagesjs = merge(...path.src.pagesjs.map(src => gulp.src(src).pipe(babel()).pipe(uglify()).pipe(gulp.dest(path.destination.pagesjs))));
     return merge(layoutjs, pagesjs);
 });
-//  [ min-js ] end
 
-// //  [ minify html ] start
-// gulp.task('min-html', function () {
-//     return gulp
-//         .src([path.src.html, `!${lms_root_path}/html/elements/*.html`])
-//         .pipe(
-//             fileinclude({
-//                 context: layout,
-//                 prefix: '@@',
-//                 basepath: '@file',
-//                 indent: true
-//             })
-//         )
-//         .pipe(
-//             htmlmin({
-//                 collapseWhitespace: true
-//             })
-//         )
-//         .pipe(gulp.dest(path.destination.html));
-// });
-// //  [ minify html ] end
-
-//  [ image optimizer ] start
-// Function to compress images with retry mechanism
 function compressImagesWithRetry(src, dest, retries = 40) {
     return new Promise((resolve, reject) => {
         const stream = gulp
             .src(src)
-            .pipe(
-                smushit({
-                    verbose: true // Enable verbose logging for debugging
-                })
-            )
+            .pipe(smushit({ verbose: true }))
             .on('error', function (err) {
                 console.error('Error during image compression:', err.toString());
                 if (retries > 0) {
-                    // Retry by recursively calling the function with reduced number of retries
                     compressImagesWithRetry(src, dest, retries - 1)
                         .then(resolve)
                         .catch(reject);
                 } else {
-                    // No more retries left, reject the promise
                     reject(new Error('Max retries exceeded. Unable to compress image.'));
                 }
             });
@@ -272,22 +141,12 @@ function compressImagesWithRetry(src, dest, retries = 40) {
 gulp.task('min-image', function () {
     return compressImagesWithRetry(path.src.images, path.destination.images);
 });
-//  [ image optimizer ] end
 
-//  [ watch minify ] start
 gulp.task('watch-minify', function () {
-    gulp.watch(`${lms_root_path}/assets/scss/**/*.scss`, gulp.series('min-css'));
-    gulp.watch(`${lms_root_path}/assets/js/**/*.js`, gulp.series('min-js'));
-    // gulp.watch('src/html/**/*.html', gulp.series('min-html'));
+    static_src_paths.forEach(src => {
+        gulp.watch(`${src}/assets/scss/**/*.scss`, gulp.series('min-css'));
+        gulp.watch(`${src}/assets/js/**/*.js`, gulp.series('min-js'));
+    });
 });
-//  [ watch minify ] start
 
-// build in production mode
-gulp.task('build-prod', gulp.series('cleandist', 'build-node-modules', 'min-css', 'min-js',
-// 'build-html', 'min-html'
-));
-// gulp.task('build-prod', gulp.series('cleandist', 'build-node-modules', 'min-css', 'min-js', 'build-html'));
-
-// =======================================================
-// ----------- END: Production mode tasks -----------
-// =======================================================
+gulp.task('build-prod', gulp.series('cleandist', 'build-node-modules', 'min-css', 'min-js'));

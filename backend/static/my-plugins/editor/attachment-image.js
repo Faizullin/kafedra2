@@ -106,14 +106,14 @@ class MyAttachmentImage {
         }
 
         const self = this;
-        window.attachmentsManager.openModal({
+        window.managers.attachmentModal.openModal({
             useSelectAttachment: true,
             onSelect: function(attachment_obj) {
                 self._createImage(attachment_obj.file);
                 window.attachmentsManager.closeModal();
             }
         });
-        window.attachmentsManager.loadAttachments()
+        window.managers.attachmentModal.loadAttachments();
         // const input = document.createElement('input');
         //
         // input.placeholder = this.config.placeholder || 'Paste an image URL...';
