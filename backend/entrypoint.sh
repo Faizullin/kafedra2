@@ -15,5 +15,4 @@ echo "Migrations complete"
 # python3 manage.py migrate --settings=backend.settings.local
 # echo "Migrate complete"
 
-
 exec "$@"

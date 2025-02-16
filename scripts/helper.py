@@ -4,6 +4,7 @@ import sys
 def run_command(command):
     """Helper function to run a shell command."""
     try:
+        print(f"Running command: {command}")
         result = subprocess.run(command, shell=True, check=True)
         return result.returncode
     except subprocess.CalledProcessError as e:
@@ -11,16 +12,22 @@ def run_command(command):
         sys.exit(1)
 
 def validate_environment(env):
+    """Validate the given environment argument."""
     if env not in ["dev", "prod"]:
         print("Error: Environment must be 'dev' or 'prod'.")
         sys.exit(1)
 
 def get_compose_file(env):
+    """Returns the appropriate docker-compose file based on the environment."""
     return f"../docker-compose.{env}.yml"
+
+def join_additional_args(args):
+    """Helper to join additional arguments for commands."""
+    return " ".join(args) if args else ""
 
 def main():
     if len(sys.argv) < 3:
-        print("Usage: helper.py [dev|prod] [action] [additional_args]")
+        print("Usage: helper.py [dev|prod] [action] [additional_args...]")
         sys.exit(1)
 
     # Get arguments
@@ -36,70 +43,56 @@ def main():
     container_name = "kafedra-backend-1"
     settings_extension = "local" if env == "dev" else "prod"
 
-    # Supported actions
+    # Define available actions
     actions = {
-        "build": lambda: run_command(f"docker-compose -f {compose_file} build {join_additional_args(additional_args)}"),
+        "build": f"docker-compose -f {compose_file} build {join_additional_args(additional_args)}",
 
-        "collectstatic": lambda: run_command(
-            f"docker exec -it {container_name} python3 manage.py collectstatic --noinput --settings=backend.settings.{settings_extension}"
-        ),
+        "collectstatic": f"docker exec -it {container_name} python3 manage.py collectstatic --noinput --settings=backend.settings.{settings_extension}",
 
-        "migrate": lambda: (
-            run_command(
-                f"docker exec -it {container_name} python3 manage.py makemigrations --settings=backend.settings.{settings_extension}"
-            ),
-            run_command(
-                f"docker exec -it {container_name} python3 manage.py migrate --settings=backend.settings.{settings_extension}"
-            ),
-        ),
+        "migrate": [
+            f"docker exec -it {container_name} python3 manage.py makemigrations --settings=backend.settings.{settings_extension}",
+            f"docker exec -it {container_name} python3 manage.py migrate --settings=backend.settings.{settings_extension}"
+        ],
 
-        "seed": lambda: run_command(
-            f"docker exec -it {container_name} python3 manage.py shell -c \"from seeding.seed import *;seed(False)\" --settings=backend.settings.{settings_extension}"
-        ),
+        "seed": f"docker exec -it {container_name} python3 manage.py shell -c \"from seeding.seed import *; seed(False)\" --settings=backend.settings.{settings_extension}",
 
-        "remove_migrations_and_db": lambda: run_command(
-            f"docker exec -it {container_name} python3 manage.py shell -c \"from seeding.remove_migrations_and_db import *;remove_migrations_and_db();\" --settings=backend.settings.{settings_extension}"
-        ),
+        "remove_migrations_and_db": f"docker exec -it {container_name} python3 manage.py shell -c \"from seeding.remove_migrations_and_db import *; remove_migrations_and_db();\" --settings=backend.settings.{settings_extension}",
 
-        "shell": lambda: run_command(f"docker exec -it {container_name} sh"),
+        "shell": f"docker exec -it {container_name} sh",
 
-        "django-shell": lambda: run_command(
-            f"docker exec -it {container_name} sh -c \"python3 manage.py shell --settings=backend.settings.{settings_extension}\""
-        ),
+        "django-shell": f"docker exec -it {container_name} sh -c \"python3 manage.py shell --settings=backend.settings.{settings_extension}\"",
 
-        "deploy": lambda: (
-            run_command(f"docker-compose -f {compose_file} down {join_additional_args(additional_args)}"),
-            run_command(f"docker-compose -f {compose_file} pull {join_additional_args(additional_args)}"),
-            run_command(f"docker-compose -f {compose_file} up -d --build {join_additional_args(additional_args)}"),
-            print("Deployment complete!"),
-        ),
+        "deploy": [
+            f"docker-compose -f {compose_file} down {join_additional_args(additional_args)}",
+            f"docker-compose -f {compose_file} pull {join_additional_args(additional_args)}",
+            f"docker-compose -f {compose_file} up -d --build {join_additional_args(additional_args)}"
+        ],
 
-        "run": lambda: (
-            run_command(f"docker-compose -f {compose_file} down {join_additional_args(additional_args)}"),
-            run_command(f"docker-compose -f {compose_file} up {join_additional_args(additional_args)}"),
-            print("Run complete!"),
-        ),
+        "run": [
+            f"docker-compose -f {compose_file} up {join_additional_args(additional_args)}"
+        ],
 
-        "logs": lambda: run_command(f"docker-compose -f {compose_file} logs {join_additional_args(additional_args)}"),
+        "logs": f"docker-compose -f {compose_file} logs {join_additional_args(additional_args)}",
 
-        "down": lambda: (
-            run_command(f"docker-compose -f {compose_file} down {join_additional_args(additional_args)}"),
-            print("Containers stopped!"),
-        ),
+        "down": f"docker-compose -f {compose_file} down {join_additional_args(additional_args)}"
     }
 
     # Validate action
     if action not in actions:
-        print(f"Error: Invalid action. Available actions: {', '.join(actions.keys())}")
+        print(f"Error: Invalid action '{action}'. Available actions: {', '.join(actions.keys())}")
         sys.exit(1)
 
-    # Execute the action
+    # Execute the action(s)
     print(f"Executing '{action}' for {env} environment...")
-    actions[action]()
 
-def join_additional_args(args):
-    """Helper to join additional arguments for commands."""
-    return " ".join(args)
+    commands = actions[action]
+    if isinstance(commands, list):  # Handle multiple commands
+        for cmd in commands:
+            run_command(cmd)
+    else:
+        run_command(commands)
+
+    print(f"'{action}' execution completed successfully!")
 
 if __name__ == "__main__":
     main()

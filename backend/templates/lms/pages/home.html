@@ -8,19 +8,28 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{% static 'assets/css/landing.css' %}"/>
+
 {% endblock %}
 
 {% block content %}
-    <header id="home"><!-- [ Nav ] start -->
+
+    <div class="page-header-wrapper">
+        <div class="page-header-bg-pattern-holder">
+            <div class="bg-pattern-top"></div>
+            <div class="bg-pattern-bottom"></div>
+        </div><!--//page-header-bg-pattern-holder-->
+
         <nav class="navbar navbar-expand-lg navbar-dark top-nav-collapse">
-            <div class="container"><a class="navbar-brand" href="index.html"><img src="{% static 'assets/images/logo-white.svg' %}"
-                                                                                  alt="logo" class="logo-lg"> </a>
+            <div class="container"><a class="navbar-brand" href="index.html"><img
+                    src="{% static 'assets/images/logo-white.svg' %}"
+                    alt="logo" class="logo-lg"> </a>
                 <button class="navbar-toggler rounded" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="true"
                         aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="navbar-collapse collapse show" id="navbarTogglerDemo01" style="">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-start">
-                        <li class="nav-item px-1"><a class="nav-link" target="_blank" href="dashboard/index.html">Dashboard</a>
+                        <li class="nav-item px-1"><a class="nav-link" target="_blank"
+                                                     href="dashboard/index.html">Dashboard</a>
                         </li>
                         <li class="nav-item px-1"><a class="nav-link" target="_blank" href="elements/bc_alert.html">Components</a>
                         </li>
@@ -32,11 +41,13 @@
                                 data-bs-toggle="dropdown" href="#">Live Preview <i class="ti ti-chevron-down"></i></a>
                             <div class="dropdown-menu drp-technology nav-drp-tech-scrollble"><a
                                     class="dropdown-item gap-2" href="dashboard/index.html" target="_blank"><img
-                                    src="{% static 'assets/images/landing/tech-bootstrap.svg' %}" class="img-fluid wid-30">
+                                    src="{% static 'assets/images/landing/tech-bootstrap.svg' %}"
+                                    class="img-fluid wid-30">
                                 Bootstrap</a> <a class="dropdown-item gap-2"
                                                  href="https://dashboardkit.io/react/default/dashboard/sales"
-                                                 target="_blank"><img src="{% static 'assets/images/landing/tech-react.svg' %}"
-                                                                      class="img-fluid wid-30"> React</a></div>
+                                                 target="_blank"><img
+                                    src="{% static 'assets/images/landing/tech-react.svg' %}"
+                                    class="img-fluid wid-30"> React</a></div>
                         </li>
                     </ul>
                     <ul class="navbar-nav mb-2 mb-lg-0 align-items-start">
@@ -48,6 +59,91 @@
                 </div>
             </div>
         </nav><!-- [ Nav ] start -->
+        <div class="page-heading-holder">
+            <div class="container text-center">
+                <h1 class="page-heading mb-3">Welcome to Our Knowledge Base</h1>
+
+                <div class="page-heading-sub single-col-max mx-auto">
+                    <div class="help-search-intro">
+                        Find articles and resources to help with your questions.
+                    </div>
+                </div>
+            </div>
+
+        </div><!--//page-heading-holder-->
+    </div><!--//page-header-wrapper-->
+    <section class="bg-white">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-6 col-md-9 title"><h2>Top <span>Features</span></h2>
+                    <p class="m-0">Quickly create your stunning backend project with DashboardKit</p></div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="card border-0 shadow-none">
+                        <div class="card-body">
+                            <div class="avtar bg-primary bg-opacity-10"><i
+                                    class="material-icons-two-tone text-primary f-24">file_copy</i></div>
+                            <h4 class="my-2 my-md-4 fw-bold">200+ Pages</h4>
+                            <p class="mb-0 text-muted">Cover almost all possible page which required for any backend
+                                application.</p></div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card border-0 shadow-none">
+                        <div class="card-body">
+                            <div class="avtar bg-primary bg-opacity-10"><i
+                                    class="material-icons-two-tone text-primary f-24">palette</i></div>
+                            <h4 class="my-2 my-md-4 fw-bold">Professional Design</h4>
+                            <p class="mb-0 text-muted">DashboardKit design gives your user better UI experience throught
+                                out the project.</p></div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card border-0 shadow-none">
+                        <div class="card-body">
+                            <div class="avtar bg-primary bg-opacity-10"><i
+                                    class="material-icons-two-tone text-primary f-24">speed</i></div>
+                            <h4 class="my-2 my-md-4 fw-bold">High Performance</h4>
+                            <p class="mb-0 text-muted">High optimized tested code which gives faster loading
+                                experience.</p></div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card border-0 shadow-none">
+                        <div class="card-body">
+                            <div class="avtar bg-primary bg-opacity-10"><i
+                                    class="material-icons-two-tone text-primary f-24">update</i></div>
+                            <h4 class="my-2 my-md-4 fw-bold">Regular Updates</h4>
+                            <p class="mb-0 text-muted">Promise to always updated with latest tech. Check out future
+                                roadmap.</p></div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card border-0 shadow-none">
+                        <div class="card-body">
+                            <div class="avtar bg-primary bg-opacity-10"><i
+                                    class="material-icons-two-tone text-primary f-24">support_agent</i></div>
+                            <h4 class="my-2 my-md-4 fw-bold">Support</h4>
+                            <p class="mb-0 text-muted">Support first. Low turn around time to get resolve your techincal
+                                query.</p></div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="card border-0 shadow-none">
+                        <div class="card-body">
+                            <div class="avtar bg-primary bg-opacity-10"><i
+                                    class="material-icons-two-tone text-primary f-24">menu_book</i></div>
+                            <h4 class="my-2 my-md-4 fw-bold">Easy Documentation</h4>
+                            <p class="mb-0 text-muted">Installation, Configuration settings, How-to documentation
+                                guide.</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="dashboard-info-section"><!-- [ Nav ] start -->
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-xl-4 col-lg-5 header-content">
@@ -73,365 +169,27 @@
                 </div>
                 <div class="col-xl-8 col-lg-7">
                     <div>
-                        <img src="{% static 'assets/images/landing/dashboardkit-bootstrap-admin-template.jpg' %}" alt="img"
-                              class="img-fluid img-header">
+                        <img src="{% static 'assets/images/landing/dashboardkit-bootstrap-admin-template.jpg' %}"
+                             alt="img"
+                             class="img-fluid img-header">
                     </div>
                 </div>
             </div>
         </div>
-    </header>
+    </div>
 
-    <section>
+    <section id="countries-map" class="">
         <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-xl-6 col-md-9 title"><h2>Awesome <span>Layouts</span></h2>
-                    <p class="m-0">Each Layout is identical to its way. We have a plan to release more layouts in future
-                        updates</p></div>
-            </div>
             <div class="row">
-                <div class="col-12">
-                    <ul class="nav nav-tabs justify-content-center admin-panels-tabs" id="myTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
-                                    data-bs-target="#home-tab-pane" type="button" role="tab"
-                                    aria-controls="home-tab-pane" aria-selected="true"><img
-                                    src="{% static 'assets/images/landing/tech-bootstrap.svg' %}" class="img-fluid wid-30 me-2">
-                                Bootstrap
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
-                                    data-bs-target="#profile-tab-pane" type="button" role="tab"
-                                    aria-controls="profile-tab-pane" aria-selected="false" tabindex="-1"><img
-                                    src="{% static 'assets/images/landing/tech-react.svg' %}" class="img-fluid wid-30 me-2"> React
-                            </button>
-                        </li>
+                <div class="col-md-4">
+                    <ul class="list-group countries-list">
                     </ul>
-                    <div class="tab-content mt-5" id="myTabContent">
-                        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel"
-                             aria-labelledby="home-tab" tabindex="0">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img
-                                                src="{% static 'assets/images/landing/img-lay-vartical.png' %}" alt="img"
-                                                class="img-fluid">
-                                            <div class="hover-data"><a href="demo/layout-vertical.html" target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><p class="mb-1 text-muted text-sm">Vartical Layout</p><a
-                                                href="demo/layout-vertical.html" target="_blank"
-                                                class="h4 mb-0"><strong>Default Layout</strong></a></div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img src="{% static 'assets/images/landing/img-lay-compact.png' %}"
-                                                                         alt="img" class="img-fluid">
-                                            <div class="hover-data"><a href="demo/layout-compact.html" target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><p class="mb-1 text-muted text-sm">Compact sidebar</p><a
-                                                href="demo/layout-compact.html" target="_blank" class="h4 mb-0"><strong>Compact</strong></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img
-                                                src="{% static 'assets/images/landing/img-lay-horizontal-1.png' %}" alt="img"
-                                                class="img-fluid">
-                                            <div class="hover-data"><a href="demo/layout-horizontal.html"
-                                                                       target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><p class="mb-1 text-muted text-sm">Advance Horizontal
-                                            Menu</p><a href="demo/layout-horizontal.html" target="_blank"
-                                                       class="h4 mb-0"><strong>Horizontal</strong></a></div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img
-                                                src="{% static 'assets/images/landing/img-lay-horizontal-2.png' %}" alt="img"
-                                                class="img-fluid">
-                                            <div class="hover-data"><a href="demo/layout-horizontal-2.html"
-                                                                       target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><p class="mb-1 text-muted text-sm">Horizontal Layout
-                                            2</p><a href="demo/layout-horizontal-2.html" target="_blank"
-                                                    class="h4 mb-0"><strong>Horizontal Version 2</strong></a></div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img src="{% static 'assets/images/landing/img-lay-modern.png' %}"
-                                                                         alt="img" class="img-fluid">
-                                            <div class="hover-data"><a href="demo/layout-modern.html" target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><p class="mb-1 text-muted text-sm">Modern Look</p><a
-                                                href="demo/layout-modern.html" target="_blank" class="h4 mb-0"><strong>Modern</strong></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img src="{% static 'assets/images/landing/img-lay-advance.png' %}"
-                                                                         alt="img" class="img-fluid">
-                                            <div class="hover-data"><a href="demo/layout-advance.html" target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><p class="mb-1 text-muted text-sm">Background color</p><a
-                                                href="demo/layout-advance.html" target="_blank" class="h4 mb-0"><strong>Advance</strong></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img src="{% static 'assets/images/landing/img-lay-tab.png' %}"
-                                                                         alt="img" class="img-fluid">
-                                            <div class="hover-data"><a href="demo/layout-tab.html" target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><p class="mb-1 text-muted text-sm">Tab style Sidebar</p>
-                                            <a href="demo/layout-tab.html" target="_blank"
-                                               class="h4 mb-0"><strong>Tab</strong></a></div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img
-                                                src="{% static 'assets/images/landing/img-lay-layout-2.png' %}" alt="img"
-                                                class="img-fluid">
-                                            <div class="hover-data"><a href="demo/layout-tab.html" target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><p class="mb-1 text-muted text-sm">Advance background
-                                            color</p><a href="demo/layout-tab.html" target="_blank"
-                                                        class="h4 mb-0"><strong>Layout 2</strong></a></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row justify-content-center">
-                                <div class="col-xl-6 col-md-9 admin-panels-tabs mb-4"><h2 class="text-center mb-0">Admin
-                                    panel</h2></div>
-                            </div>
-                            <div class="row justify-content-center mt-3">
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img src="{% static 'assets/images/landing/online-courses.png' %}"
-                                                                         alt="img" class="img-fluid">
-                                            <div class="hover-data"><a href="admins/course-dashboard.html"
-                                                                       target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><a href="admins/course-dashboard.html" target="_blank"
-                                                                  class="h4 mb-0"><strong>Online Courses</strong></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img src="{% static 'assets/images/landing/membership.png' %}"
-                                                                         alt="img" class="img-fluid">
-                                            <div class="hover-data"><a href="admins/membership-dashboard.html"
-                                                                       target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><a href="admins/membership-dashboard.html"
-                                                                  target="_blank"
-                                                                  class="h4 mb-0"><strong>Membership</strong></a></div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img src="{% static 'assets/images/landing/helpdesk.png' %}"
-                                                                         alt="img" class="img-fluid">
-                                            <div class="hover-data"><a href="admins/helpdesk-dashboard.html"
-                                                                       target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><a href="admins/helpdesk-dashboard.html" target="_blank"
-                                                                  class="h4 mb-0"><strong>helpdesk</strong></a></div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img src="{% static 'assets/images/landing/invoice.png' %}"
-                                                                         alt="img" class="img-fluid">
-                                            <div class="hover-data"><a href="admins/invoice-dashboard.html"
-                                                                       target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><a href="admins/invoice-dashboard.html" target="_blank"
-                                                                  class="h4 mb-0"><strong>Invoice</strong></a></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab"
-                             tabindex="0">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img
-                                                src="{% static 'assets/images/landing/img-lay-vartical.png' %}" alt="img"
-                                                class="img-fluid">
-                                            <div class="hover-data"><a href="demo/layout-vertical.html" target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><p class="mb-1 text-muted text-sm">Vartical Layout</p><a
-                                                href="demo/layout-vertical.html" target="_blank"
-                                                class="h4 mb-0"><strong>Default Layout</strong></a></div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img src="{% static 'assets/images/landing/img-lay-compact.png' %}"
-                                                                         alt="img" class="img-fluid">
-                                            <div class="hover-data"><a href="demo/layout-compact.html" target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><p class="mb-1 text-muted text-sm">Compact sidebar</p><a
-                                                href="demo/layout-compact.html" target="_blank" class="h4 mb-0"><strong>Compact</strong></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img
-                                                src="{% static 'assets/images/landing/img-lay-horizontal-1.png' %}" alt="img"
-                                                class="img-fluid">
-                                            <div class="hover-data"><a href="demo/layout-horizontal.html"
-                                                                       target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><p class="mb-1 text-muted text-sm">Advance Horizontal
-                                            Menu</p><a href="demo/layout-horizontal.html" target="_blank"
-                                                       class="h4 mb-0"><strong>Horizontal</strong></a></div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img
-                                                src="{% static 'assets/images/landing/img-lay-horizontal-2.png' %}" alt="img"
-                                                class="img-fluid">
-                                            <div class="hover-data"><a href="demo/layout-horizontal-2.html"
-                                                                       target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><p class="mb-1 text-muted text-sm">Horizontal Layout
-                                            2</p><a href="demo/layout-horizontal-2.html" target="_blank"
-                                                    class="h4 mb-0"><strong>Horizontal Version 2</strong></a></div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img src="{% static 'assets/images/landing/img-lay-modern.png' %}"
-                                                                         alt="img" class="img-fluid">
-                                            <div class="hover-data"><a href="demo/layout-modern.html" target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><p class="mb-1 text-muted text-sm">Modern Look</p><a
-                                                href="demo/layout-modern.html" target="_blank" class="h4 mb-0"><strong>Modern</strong></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img src="{% static 'assets/images/landing/img-lay-advance.png' %}"
-                                                                         alt="img" class="img-fluid">
-                                            <div class="hover-data"><a href="demo/layout-advance.html" target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><p class="mb-1 text-muted text-sm">Background color</p><a
-                                                href="demo/layout-advance.html" target="_blank" class="h4 mb-0"><strong>Advance</strong></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img src="{% static 'assets/images/landing/img-lay-tab.png' %}"
-                                                                         alt="img" class="img-fluid">
-                                            <div class="hover-data"><a href="demo/layout-tab.html" target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><p class="mb-1 text-muted text-sm">Tab style Sidebar</p>
-                                            <a href="demo/layout-tab.html" target="_blank"
-                                               class="h4 mb-0"><strong>Tab</strong></a></div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img
-                                                src="{% static 'assets/images/landing/img-lay-layout-2.png' %}" alt="img"
-                                                class="img-fluid">
-                                            <div class="hover-data"><a href="demo/layout-tab.html" target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><p class="mb-1 text-muted text-sm">Advance background
-                                            color</p><a href="demo/layout-tab.html" target="_blank"
-                                                        class="h4 mb-0"><strong>Layout 2</strong></a></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row justify-content-center">
-                                <div class="col-xl-6 col-md-9 admin-panels-tabs mb-4"><h2 class="text-center mb-0">Admin
-                                    panel</h2></div>
-                            </div>
-                            <div class="row justify-content-center mt-3">
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img src="{% static 'assets/images/landing/online-courses.png' %}"
-                                                                         alt="img" class="img-fluid">
-                                            <div class="hover-data"><a href="admins/course-dashboard.html"
-                                                                       target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><a href="admins/course-dashboard.html" target="_blank"
-                                                                  class="h4 mb-0"><strong>Online Courses</strong></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img src="{% static 'assets/images/landing/membership.png' %}"
-                                                                         alt="img" class="img-fluid">
-                                            <div class="hover-data"><a href="admins/membership-dashboard.html"
-                                                                       target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><a href="admins/membership-dashboard.html"
-                                                                  target="_blank"
-                                                                  class="h4 mb-0"><strong>Membership</strong></a></div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img src="{% static 'assets/images/landing/helpdesk.png' %}"
-                                                                         alt="img" class="img-fluid">
-                                            <div class="hover-data"><a href="admins/helpdesk-dashboard.html"
-                                                                       target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><a href="admins/helpdesk-dashboard.html" target="_blank"
-                                                                  class="h4 mb-0"><strong>helpdesk</strong></a></div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="card layout-block">
-                                        <div class="layout-preview"><img src="{% static 'assets/images/landing/invoice.png' %}"
-                                                                         alt="img" class="img-fluid">
-                                            <div class="hover-data"><a href="admins/invoice-dashboard.html"
-                                                                       target="_blank"
-                                                                       class="btn btn-success">Preview</a></div>
-                                        </div>
-                                        <div class="card-body"><a href="admins/invoice-dashboard.html" target="_blank"
-                                                                  class="h4 mb-0"><strong>Invoice</strong></a></div>
-                                    </div>
-                                </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="container">
+                        <div id="map-container">
+                            <div class="map-wrapper">
+                                <svg></svg>
                             </div>
                         </div>
                     </div>
@@ -439,4 +197,85 @@
             </div>
         </div>
     </section>
+
+    {#     seciton for main progrms#}
+    <section class="bg-white">
+        <div class="container">
+            <div class="row justify-content-center">
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascript %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            const countriesListEl = $(".countries-list");
+            const selectedCountriesKeys = [
+                "RUS",
+                "UKR",
+                "KAZ",
+            ];
+            let currentSelectedCountriesKeys = [];
+
+            const width = 800, height = 400;
+            const svg = d3.select("#map-container .map-wrapper svg").attr("width", width).attr("height", height);
+            const projection = d3.geoMercator().scale(280).translate([width / 2 - 300, height / 2 + 200]);
+            const path = d3.geoPath().projection(projection);
+            const geoUrl = "/static/assets/js/custom.geo.json";
+
+            d3.json(geoUrl).then(data => {
+                const selectedCountriesProps = [];
+                data.features.forEach(d => {
+                    {#const countyName = d.properties.name || "Unknown";#}
+                    {#countyList.append(`<li data-county="${countyName}">${countyName}</li>`);#}
+                    if (selectedCountriesKeys.includes(d.properties.adm0_a3)) {
+                        selectedCountriesProps.push(d.properties);
+                    }
+                });
+                selectedCountriesProps.forEach(d => {
+                    countriesListEl.append(`<li class="list-group-item" data-country-target-key="${d.adm0_a3}" >${d.name}</li>`);
+                });
+                console.log(selectedCountriesProps)
+                svg.selectAll(".region")
+                    .data(data.features)
+                    .enter().append("path")
+                    .attr("class", function (d) {
+                        let className = "region";
+                        if (selectedCountriesKeys.includes(d.properties.adm0_a3)) {
+                            className += " selected";
+                        }
+                        return className;
+                    })
+                    .attr("d", path)
+                    .attr("data-country-key", d => d.properties.adm0_a3)
+                    .on("mouseover", function () {
+                        const el = $(this);
+                        const countryKey = el.data("country-key");
+                        currentSelectedCountriesKeys.push(countryKey);
+                        currentSelectedCountriesKeys.forEach(key => {
+                            countriesListEl.find(`[data-country-target-key="${key}"]`).addClass("highlighted");
+                        });
+                    })
+                    .on("mouseout", function () {
+                        const el = $(this);
+                        const countryKey = el.data("country-key");
+                        countriesListEl.find(`[data-country-target-key="${countryKey}"]`).removeClass("highlighted");
+                        currentSelectedCountriesKeys = currentSelectedCountriesKeys.filter(key => key !== countryKey);
+
+                    })
+                    .on("click", function (event, d) {
+                        {#$("#region-name").text(d.properties.name || "Unknown");#}
+                        {#$("#region-info").show();#}
+                    });
+            });
+        });
+    </script>
+    <style>
+    </style>
 {% endblock %}

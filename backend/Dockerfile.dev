@@ -38,7 +38,7 @@ COPY requirements.dev.txt $HOME/requirements.txt
 RUN pip install -r $HOME/requirements.txt
 
 COPY . $HOME
-RUN chown -R django $HOME
+# RUN chown -R django $HOME
 
 # USER django
 

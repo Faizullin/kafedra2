@@ -10,6 +10,7 @@
   },
   "scripts": {
     "start": "gulp",
+    "watch": "gulp watch",
     "build-prod": "gulp build-prod",
     "format": "prettier --write ./src"
   },

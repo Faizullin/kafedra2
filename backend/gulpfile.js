@@ -12,7 +12,7 @@ var autoprefixer = require('gulp-autoprefixer');
 var fileinclude = require('gulp-file-include');
 var browsersync = require('browser-sync');
 var htmlmin = require('gulp-htmlmin');
-const { parallel } = require('gulp');
+const {parallel} = require('gulp');
 
 // Define multiple static sources
 const static_src_paths = [
@@ -29,7 +29,8 @@ const generatePaths = (srcPaths) => {
             css: srcPaths.map(src => `${src}/assets/scss/*.scss`),
             layoutjs: srcPaths.map(src => `${src}/assets/js/*.js`),
             pagesjs: srcPaths.map(src => `${src}/assets/js/pages/*.js`),
-            images: srcPaths.map(src => `${src}/assets/images/**/*.{jpg,png}`)
+            images: srcPaths.map(src => `${src}/assets/images/**/*.{jpg,png}`),
+            dj_html: ['templates/**/*.html'] // Watch Django template changes
         },
         destination: {
             css: `${dest_path}/assets/css`,
@@ -95,11 +96,20 @@ gulp.task('build-js', function () {
     return merge(layoutjs, pagesjs);
 });
 
+// Start BrowserSync and watch files
 gulp.task('watch', function () {
+    browsersync.init({
+        proxy: "localhost:8000", // Change if your Django dev server runs on a different port
+        notify: false,
+        open: false
+    });
+
     static_src_paths.forEach(src => {
-        gulp.watch(`${src}/assets/scss/**/*.scss`, gulp.series('sass')).on('change', browsersync.reload);
+        gulp.watch(`${src}/assets/scss/**/*.scss`, gulp.series('sass'));
         gulp.watch(`${src}/assets/js/**/*.js`, gulp.series('build-js')).on('change', browsersync.reload);
     });
+
+    gulp.watch(path.src.dj_html).on('change', browsersync.reload);
 });
 
 gulp.task('min-css', function () {
@@ -121,7 +131,7 @@ function compressImagesWithRetry(src, dest, retries = 40) {
     return new Promise((resolve, reject) => {
         const stream = gulp
             .src(src)
-            .pipe(smushit({ verbose: true }))
+            .pipe(smushit({verbose: true}))
             .on('error', function (err) {
                 console.error('Error during image compression:', err.toString());
                 if (retries > 0) {
@@ -150,3 +160,4 @@ gulp.task('watch-minify', function () {
 });
 
 gulp.task('build-prod', gulp.series('cleandist', 'build-node-modules', 'min-css', 'min-js'));
+gulp.task('watch', gulp.series('cleandist',"build-node-modules", 'watch'));
