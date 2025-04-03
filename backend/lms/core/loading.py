@@ -3,11 +3,13 @@ import traceback
 import warnings
 from functools import lru_cache
 from importlib import import_module
+from typing import Type
 
 from django.apps import apps
 from django.apps.config import MODELS_MODULE_NAME
 from django.conf import settings
 from django.core.exceptions import AppRegistryNotReady
+from django.db.models import Model
 from django.utils.module_loading import import_string
 
 from ..core.exceptions import (
@@ -222,7 +224,7 @@ def feature_hidden(feature_name):
     return feature_name is not None and feature_name in settings.LMS_HIDDEN_FEATURES
 
 
-def get_model(app_label, model_name):
+def get_model(app_label: str, model_name: Type[Model] | str):
     """
     Fetches a Django model using the app registry.
 

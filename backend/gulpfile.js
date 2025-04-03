@@ -98,18 +98,17 @@ gulp.task('build-js', function () {
 
 // Start BrowserSync and watch files
 gulp.task('watch', function () {
-    browsersync.init({
-        proxy: "localhost:8000", // Change if your Django dev server runs on a different port
+     browsersync.init({
         notify: false,
-        open: false
+        proxy: "localhost:8000",
     });
 
     static_src_paths.forEach(src => {
-        gulp.watch(`${src}/assets/scss/**/*.scss`, gulp.series('sass'));
+        gulp.watch(`${src}/assets/scss/**/*.scss`, gulp.series('sass')).on('change', browsersync.reload);
         gulp.watch(`${src}/assets/js/**/*.js`, gulp.series('build-js')).on('change', browsersync.reload);
     });
 
-    gulp.watch(path.src.dj_html).on('change', browsersync.reload);
+    // gulp.watch(path.src.dj_html).on('change', browsersync.reload);
 });
 
 gulp.task('min-css', function () {
@@ -160,4 +159,4 @@ gulp.task('watch-minify', function () {
 });
 
 gulp.task('build-prod', gulp.series('cleandist', 'build-node-modules', 'min-css', 'min-js'));
-gulp.task('watch', gulp.series('cleandist',"build-node-modules", 'watch'));
+gulp.task('watch', gulp.series('cleandist',parallel('sass', 'build-js', 'watch')));

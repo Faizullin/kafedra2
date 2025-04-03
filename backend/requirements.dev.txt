@@ -1,5 +1,6 @@
 anyio
 Django~=4.2.13
+Pillow
 psycopg
 psycopg2-binary
 celery~=5.4.0
@@ -12,9 +13,7 @@ django-polymorphic
 redis
 django-redis
 djangorestframework
-drf-standardized-errors
-numpy
-Pillow
+# drf-standardized-errors
 PyJWT
 # django-notifications-hq
 django-debug-toolbar
@@ -25,8 +24,6 @@ requests
 django-debug-toolbar
 django-gmailapi-backend
 # django-modeltranslation
-django-parler
-django-rest-framework
 
 stripe==2.55.0
 django-crispy-forms
@@ -46,3 +43,4 @@ django-autocomplete-light
 django-phonenumber-field[phonenumbers]
 Babel
 django-guardian
+django-parler

@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
 from apps.dashboard.quiz.forms import QuizForm, QuestionForm, QuestionGroupForm, MultipleChoiceFormSet
-from apps.quiz.models import Quiz, Question, QuestionGroup, QuestionType
+from apps.quizzes.models import Quiz, QuizQuestion, QuestionGroup, QuestionType
 from lms.crud_base.tables import Table, Column, ActionsColumn, DefaultDeleteAction, DefaultEditAction, ButtonAction
 from lms.crud_base.views import BaseCreateView, BaseUpdateView, get_default_add_success_message, \
     get_default_update_success_message, BaseListView
@@ -45,7 +45,7 @@ class QuizQuizListView(BaseListView):
         )
 
         class Meta:
-            model = Question
+            model = QuizQuestion
             source_url = reverse_lazy("dashboard:quiz-quiz-list-api")
             fields = ['id', 'title', 'actions']
 
@@ -283,7 +283,7 @@ class QuizQuestionGroupUpdateView(UseQuizNestedMixin, BaseUpdateView):
 ########################################################################################################################
 
 class QuizQuestionListView(UseQuizAndGroupNestedMixin, BaseListView):
-    model = Question
+    model = QuizQuestion
     page_list_url = reverse_lazy("dashboard:quiz-question-list")
     template_name = "lms/dashboard/quiz/question_list.html"
 
@@ -303,7 +303,7 @@ class QuizQuestionListView(UseQuizAndGroupNestedMixin, BaseListView):
         )
 
         class Meta:
-            model = Question
+            model = QuizQuestion
             source_url = reverse_lazy('dashboard:quiz-question-list-api')
             fields = ['id', 'title', 'question_type', 'actions']
 
@@ -339,8 +339,8 @@ class QuizQuestionFormView(generic.View):
             return HttpResponseBadRequest("question_id is required")
 
         try:
-            question_obj = Question.objects.get(pk=question_id)
-        except Question.DoesNotExist:
+            question_obj = QuizQuestion.objects.get(pk=question_id)
+        except QuizQuestion.DoesNotExist:
             return HttpResponseBadRequest("Question does not exist")
         if question_type == QuestionType.MULTIPLE_CHOICE:
             form_html = render_to_string("lms/dashboard/partials/quiz/multiple_choice_form.html", {
@@ -353,7 +353,7 @@ class QuizQuestionFormView(generic.View):
 
 
 class QuizQuestionUpdateView(UseQuizAndGroupNestedMixin, BaseUpdateView):
-    model = Question
+    model = QuizQuestion
     form_class = QuestionForm
     page_list_url = reverse_lazy("dashboard:quiz-question-list")
     template_name = "lms/dashboard/quiz/question_form.html"

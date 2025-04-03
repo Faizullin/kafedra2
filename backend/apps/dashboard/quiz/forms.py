@@ -3,8 +3,7 @@ from django.forms import inlineformset_factory
 from django.shortcuts import resolve_url
 from django.utils.translation import gettext as _
 
-from apps.quiz.models import Quiz, Question, QuestionGroup, QuestionAnswer
-from apps.quiz.question.type.choice.models import MultipleChoiceOptions
+from apps.quizzes.models import Quiz, QuizQuestion, QuestionGroup, QuestionAnswer, MultipleChoiceOptions
 from lms.crud_base.forms import BaseForm, forms
 
 
@@ -62,7 +61,7 @@ class QuestionGroupForm(BaseForm):
 
 class QuestionForm(BaseForm):
     class Meta:
-        model = Question
+        model = QuizQuestion
         fields = (
             "title",
             "text",
@@ -152,7 +151,7 @@ class MultipleChoiceOptionsForm(BaseForm):
 
 
 MultipleChoiceFormSet = inlineformset_factory(
-    Question, QuestionAnswer,
+    QuizQuestion, QuestionAnswer,
     form=MultipleChoiceAnswerForm,
     extra=2,
     can_delete=True

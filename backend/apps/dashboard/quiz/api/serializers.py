@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from apps.quiz.models import Quiz, QuestionGroup, Question, QuestionAnswer
-from apps.quiz.question.type.choice.models import MultipleChoiceOptions
+from apps.quizzes.models import Quiz, QuestionGroup, QuizQuestion, QuestionAnswer
+from apps.quizzes.question.type.choice.models import MultipleChoiceOptions
 from lms.core.compat import get_user_model
 
 User = get_user_model()
@@ -29,7 +29,7 @@ class QuestionGroupSerializer(serializers.ModelSerializer):
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Question
+        model = QuizQuestion
         fields = "__all__"
 
 

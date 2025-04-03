@@ -126,5 +126,3 @@ class QuestionFormManager {
         this.updateActiveTab();
     }
 }
-
-window.managers.addInstance("questionEditor", QuestionFormManager());

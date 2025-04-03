@@ -462,27 +462,32 @@ section {
 
 
 #countries-map {
+  $map-region-highlight-color: blue;
+  $map-li-item-highlight-color: orange;
   overflow-y: clip;
+  margin-top: 40px;
+  margin-bottom: 20px;
 
   .countries-list {
     & > li {
       transition: all 0.3s ease;
 
       &.highlighted {
-        background: orange;
+        background: $map-li-item-highlight-color;
+      }
 
+      &:hover {
+        background: $map-li-item-highlight-color;
       }
     }
   }
 
   #map-container {
-    position: absolute;
     width: 100%;
 
     .map-wrapper {
       padding-top: 4rem;
       position: relative;
-      overflow: hidden;
 
       & > svg {
         width: 100%;
@@ -490,29 +495,132 @@ section {
         overflow: visible;
       }
 
-      &:before {
-        content: "";
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 3rem;
-        /* set transiito from top whitet to bottom transaprent */
-        background: linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+      //&:before {
+      //  content: "";
+      //  display: block;
+      //  position: absolute;
+      //  top: 0;
+      //  left: 0;
+      //  width: 100%;
+      //  height: 3rem;
+      //  /* set transiito from top whitet to bottom transaprent */
+      //  background: linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+      //}
+
+      .connector-line {
+        color: #fff;
+        stroke: #fff;
       }
 
       .region {
-        transition: fill 0.3s ease;
-        cursor: pointer;
+        outline: none;
+        fill: transparent;
+        stroke: #0552B5;
+        transition: all 0.3s ease-in-out;
 
         &.selected {
-          fill: orange;
+          fill: #7BC4E2;
+          cursor: pointer;
+        }
+
+        &:hover {
+          fill: $map-region-highlight-color;
+        }
+
+        &.highlighted {
+          fill: $map-region-highlight-color;
         }
       }
     }
 
   }
 
+}
 
+
+#programs-list .single-topic {
+  position: relative;
+}
+
+#programs-list .single-topic::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  content: "";
+  background-color: rgba(66, 85, 164, 0.7);
+  opacity: 0;
+  z-index: 1;
+  -webkit-transition: .4s;
+  -moz-transition: .4s;
+  -o-transition: .4s;
+  transition: .4s;
+  border-radius: 12px
+}
+
+#programs-list .single-topic:hover::before {
+  opacity: 1;
+  visibility: visible
+}
+
+#programs-list .single-topic .topic-img {
+  border-radius: 12px
+}
+
+#programs-list .single-topic .topic-img img {
+  width: 100%
+}
+
+#programs-list .single-topic .topic-content-box {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  transform: translateY(-50%);
+  height: 100%;
+  width: 100%;
+  transition: .4s;
+  z-index: 2
+}
+
+#programs-list .single-topic .topic-content-box .topic-content {
+  position: absolute;
+  top: 53%;
+  transform: translateY(-47%);
+  left: 0;
+  right: 0;
+  text-align: center
+}
+
+#programs-list .single-topic .topic-content-box .topic-content h3 a {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 0;
+  text-transform: uppercase;
+  text-decoration: underline #fff;
+  -webkit-transition: .4s;
+  -moz-transition: .4s;
+  -o-transition: .4s;
+  transition: .4s
+}
+
+#programs-list .single-topic .topic-content-box .topic-content h3 a:hover {
+  text-decoration: underline
+}
+
+#programs-list .single-topic .topic-content-box .topic-content p {
+  font-size: 16px;
+  color: #ffff;
+  padding: 0 82px;
+  line-height: 1.6
+}
+
+@media (max-width: 575px) {
+  #programs-list .single-topic .topic-content-box .topic-content p {
+    padding: 0 18px
+  }
 }

@@ -13,7 +13,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    {% crispy form %}
+                    {#                    {% crispy form %}#}
                 </div>
             </div>
         </div>
@@ -21,7 +21,6 @@
 {% endblock %}
 
 {% block javascript %}
-    {% include 'lms/dashboard/includes/items-list/scripts.html' %}
     <script>
         window.server_conf.items_list = {
             tableId: "{{ table.table_id }}",
@@ -30,51 +29,48 @@
                 apiUrl: "{% url 'dashboard:quiz-question-create-api' %}",
             }
         };
+    </script>
+    {% include 'lms/dashboard/includes/items-list/scripts.html' %}
+    <script>
         $(document).ready(function () {
             const question_group_param_key = "question_group_id";
-
-            {#class QuestionItemListTable extends ItemListTable {#}
-            {#    formatUrl(url, record_data) {#}
-            {#        return super.formatUrl(url, record_data) + `?${question_group_param_key}=${itemsListData.currentQuestionGroupId}`;#}
-            {#    }#}
-            {##}
-            {#    getListUrlParams(data) {#}
-            {#        const new_data = super.getListUrlParams(data);#}
-            {#        new_data[question_group_param_key] = itemsListData.currentQuestionGroupId;#}
-            {#        return new_data;#}
-            {#    }#}
-            {#}#}
-
-                window.managers.itemsListTable.init();
-                const addFormModalEl = $("#add-new-question-form-modal");
-                $('.add-new-item-btn').click(function () {
-                    addFormModalEl.modal("show");
-                });
-                addFormModalEl.find("form").on("submit", function (e) {
-                    e.preventDefault();
-                    const formData = $(this).serialize();
-                    $.ajax({
-                        type: "POST",
-                        url: itemsListData.add.apiUrl,
-                        data: formData,
-                        success: function (response) {
-                            if (response) {
-                                const editAction = window.managers.items_list.actionsData.default.find(function (action) {
-                                    return action.name === "edit";
-                                });
-                                if (!editAction) {
-                                    return;
-                                }
-                                window.location.href = window.managers.items_list.formatUrl(editAction.url, response);
+            window.managers.checkManager("itemsListTable");
+            window.managers.itemsListTable = new ItemListTable();
+            window.managers.itemsListTable.init();
+            const addFormModalEl = $("#add-new-question-form-modal");
+            $('.add-new-item-btn').click(function () {
+                addFormModalEl.modal("show");
+            });
+            window.managers.checkManager("questionEditor");
+            window.managers.questionEditor = new QuestionFormManager({
+                holder: $("#add-new-question-form-modal"),
+                question: {
+                    id: window.server_conf.
+                }
+            });
+            addFormModalEl.find("form").on("submit", function (e) {
+                e.preventDefault();
+                const formData = $(this).serialize();
+                $.ajax({
+                    type: "POST",
+                    url: window.server_conf.items_list.add.apiUrl,
+                    data: formData,
+                    success: function (response) {
+                        if (response) {
+                            const editAction = window.managers.itemsListTable.actionsData.default.find(function (action) {
+                                return action.name === "edit";
+                            });
+                            if (!editAction) {
+                                return;
                             }
-                        },
-                        error: function (xhr) {
-                        },
-                    });
+                            window.location.href = window.location.href = window.managers.urlFormatter.formatNotReadyUrl(editAction.url, response);
+                        }
+                    },
+                    error: function (xhr) {
+                    },
                 });
+            });
 
-            }
-        )
-            ;
+        });
     </script>
 {% endblock %}

@@ -9,8 +9,3 @@ class CoursesConfig(LmsConfig):
     verbose_name = _("Courses")
 
     namespace = "courses"
-
-    def ready(self):
-        import lms.apps.accounts.signals  # noqa
-
-        super(CoursesConfig, self).ready()

@@ -1,43 +1,40 @@
 {% extends "lms/dashboard/pages/items/items-list.html" %}
 
 {% block javascript %}
-    {% include 'lms/dashboard/includes/items-list/scripts.html' %}
     <script>
-        var itemsListData = {
+        window.server_conf.items_list = {
             tableId: "{{ table.table_id }}",
             currentQuizId: "{{ quiz.id }}",
         }
+    </script>
+    {% include 'lms/dashboard/includes/items-list/scripts.html' %}
+    <script>
         $(document).ready(function () {
             class QGroupItemListTable extends ItemListTable {
-                formatUrl(url, record_data) {
-                    return super.formatUrl(url, record_data) + `?quiz_id=${itemsListData.currentQuizId}`;
-                }
-
                 getListUrlParams(data) {
                     const new_data = super.getListUrlParams(data);
-                    new_data.quiz_id = itemsListData.currentQuizId;
+                    new_data.quiz_id = window.server_conf.items_list.currentQuizId;
                     return new_data;
                 }
             }
 
-            const itemsList = new QGroupItemListTable({
-                tableId: itemsListData.tableId,
-            });
-            itemsList.init();
+            window.managers.checkManager("itemsListTable");
+            window.managers.itemsListTable = new QGroupItemListTable();
+            window.managers.itemsListTable.init();
             $('.add-new-item-btn').click(function () {
                 window.location.href = $(this).data('url') + `?quiz_id=${itemsListData.currentQuizId}`;
             });
             $(document).on("click", ".open-questions-action-btn", function () {
                 const tr_el = $(this).closest("tr");
-                const record_data = itemsList.tableDatatable.row(tr_el).data();
-                const action = itemsList.actionsData.extra.find(function (action) {
+                const record_data = window.managers.itemsListTable.tableDatatable.row(tr_el).data();
+                const action = window.managers.itemsListTable.actionsData.extra.find(function (action) {
                     return action.name === "open-questions";
                 });
                 if (!action) {
                     return;
                 }
-                window.location.href = action.url + `?question_group_id=${record_data.id}`;
 
+                window.location.href = window.managers.urlFormatter.formatNotReadyUrl(action.url, null, {question_group_id: record_data.id});
             });
         });
     </script>

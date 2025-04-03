@@ -4,21 +4,20 @@
     <script>
         window.server_conf.items_list = {
             tableId: "{{ table.table_id }}",
-            currentQuizId: "{{ quiz.id }}",
         }
     </script>
     {% include 'lms/dashboard/includes/items-list/scripts.html' %}
     <script>
         $(document).ready(function () {
-            console.log(window.server_conf, window.managers)
+            window.managers.itemsListTable = new ItemListTable();
             window.managers.itemsListTable.init();
             $('.add-new-item-btn').click(function () {
                 window.location.href = $(this).data('url');
             });
             $(document).on("click", ".open-question-groups-action-btn", function () {
                 const tr_el = $(this).closest("tr");
-                const record_data = itemsList.tableDatatable.row(tr_el).data();
-                const action = window.managers.items_list.actionsData.extra.find(function (action) {
+                const record_data = window.managers.itemsListTable.tableDatatable.row(tr_el).data();
+                const action = window.managers.itemsListTable.actionsData.extra.find(function (action) {
                     return action.name === "open-question-groups";
                 });
                 if (!action) {

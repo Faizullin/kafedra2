@@ -13,16 +13,19 @@
 
 {% block content %}
 
+    {% include 'lms/dashboard/includes/loader.html' %}
+
     <div class="page-header-wrapper">
         <div class="page-header-bg-pattern-holder">
             <div class="bg-pattern-top"></div>
             <div class="bg-pattern-bottom"></div>
-        </div><!--//page-header-bg-pattern-holder-->
+        </div>
 
         <nav class="navbar navbar-expand-lg navbar-dark top-nav-collapse">
-            <div class="container"><a class="navbar-brand" href="index.html"><img
-                    src="{% static 'assets/images/logo-white.svg' %}"
-                    alt="logo" class="logo-lg"> </a>
+            <div class="container">
+                <a class="navbar-brand" href="/"><img
+                        src="{% static 'assets/images/logo-white.svg' %}"
+                        alt="logo" class="logo-lg"> </a>
                 <button class="navbar-toggler rounded" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="true"
                         aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
@@ -178,19 +181,20 @@
         </div>
     </div>
 
-    <section id="countries-map" class="">
+    <section id="countries-map" class="position-relative">
         <div class="container">
+
             <div class="row">
-                <div class="col-md-4">
-                    <ul class="list-group countries-list">
-                    </ul>
+                <div class="col-md-4 m-0 p-0">
+                    <div class="row">
+                        <ul class="list-group countries-list">
+                        </ul>
+                    </div>
                 </div>
-                <div class="col-md-8">
-                    <div class="container">
-                        <div id="map-container">
-                            <div class="map-wrapper">
-                                <svg></svg>
-                            </div>
+                <div class="col-md-8 m-0 p-0">
+                    <div id="map-container">
+                        <div class="map-wrapper">
+                            <svg></svg>
                         </div>
                     </div>
                 </div>
@@ -198,10 +202,119 @@
         </div>
     </section>
 
-    {#     seciton for main progrms#}
-    <section class="bg-white">
+    <section id="programs-list" class="bg-white">
         <div class="container">
             <div class="row justify-content-center">
+                <div class="row justify-content-center">
+                    <div class="col-xl-7 col-lg-8">
+                        <div class="section-tittle text-center mb-55">
+                            <h2>Explore our programs</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    {% for program in programs %}
+
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="single-topic text-center mb-30">
+                                <div class="topic-img">
+                                    <img src="{{ program.thumbnail.url }}"
+                                         alt="">
+                                    <div class="topic-content-box">
+                                        <div class="topic-content">
+                                            <h3><a href="#">{{ program.title }}</a></h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="single-topic text-center mb-30">
+                            <div class="topic-img">
+                                <img src="assets/img/gallery/topic2.png" alt="">
+                                <div class="topic-content-box">
+                                    <div class="topic-content">
+                                        <h3><a href="#">Programing</a></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="single-topic text-center mb-30">
+                            <div class="topic-img">
+                                <img src="assets/img/gallery/topic3.png" alt="">
+                                <div class="topic-content-box">
+                                    <div class="topic-content">
+                                        <h3><a href="#">Programing</a></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="single-topic text-center mb-30">
+                            <div class="topic-img">
+                                <img src="assets/img/gallery/topic4.png" alt="">
+                                <div class="topic-content-box">
+                                    <div class="topic-content">
+                                        <h3><a href="#">Programing</a></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="single-topic text-center mb-30">
+                            <div class="topic-img">
+                                <img src="assets/img/gallery/topic5.png" alt="">
+                                <div class="topic-content-box">
+                                    <div class="topic-content">
+                                        <h3><a href="#">Programing</a></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="single-topic text-center mb-30">
+                            <div class="topic-img">
+                                <img src="assets/img/gallery/topic6.png" alt="">
+                                <div class="topic-content-box">
+                                    <div class="topic-content">
+                                        <h3><a href="#">Programing</a></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="single-topic text-center mb-30">
+                            <div class="topic-img">
+                                <img src="assets/img/gallery/topic7.png" alt="">
+                                <div class="topic-content-box">
+                                    <div class="topic-content">
+                                        <h3><a href="#">Programing</a></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="single-topic text-center mb-30">
+                            <div class="topic-img">
+                                <img src="assets/img/gallery/topic8.png" alt="">
+                                <div class="topic-content-box">
+                                    <div class="topic-content">
+                                        <h3><a href="#">Programing</a></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -213,69 +326,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            const countriesListEl = $(".countries-list");
-            const selectedCountriesKeys = [
-                "RUS",
-                "UKR",
-                "KAZ",
-            ];
-            let currentSelectedCountriesKeys = [];
-
-            const width = 800, height = 400;
-            const svg = d3.select("#map-container .map-wrapper svg").attr("width", width).attr("height", height);
-            const projection = d3.geoMercator().scale(280).translate([width / 2 - 300, height / 2 + 200]);
-            const path = d3.geoPath().projection(projection);
-            const geoUrl = "/static/assets/js/custom.geo.json";
-
-            d3.json(geoUrl).then(data => {
-                const selectedCountriesProps = [];
-                data.features.forEach(d => {
-                    {#const countyName = d.properties.name || "Unknown";#}
-                    {#countyList.append(`<li data-county="${countyName}">${countyName}</li>`);#}
-                    if (selectedCountriesKeys.includes(d.properties.adm0_a3)) {
-                        selectedCountriesProps.push(d.properties);
-                    }
-                });
-                selectedCountriesProps.forEach(d => {
-                    countriesListEl.append(`<li class="list-group-item" data-country-target-key="${d.adm0_a3}" >${d.name}</li>`);
-                });
-                console.log(selectedCountriesProps)
-                svg.selectAll(".region")
-                    .data(data.features)
-                    .enter().append("path")
-                    .attr("class", function (d) {
-                        let className = "region";
-                        if (selectedCountriesKeys.includes(d.properties.adm0_a3)) {
-                            className += " selected";
-                        }
-                        return className;
-                    })
-                    .attr("d", path)
-                    .attr("data-country-key", d => d.properties.adm0_a3)
-                    .on("mouseover", function () {
-                        const el = $(this);
-                        const countryKey = el.data("country-key");
-                        currentSelectedCountriesKeys.push(countryKey);
-                        currentSelectedCountriesKeys.forEach(key => {
-                            countriesListEl.find(`[data-country-target-key="${key}"]`).addClass("highlighted");
-                        });
-                    })
-                    .on("mouseout", function () {
-                        const el = $(this);
-                        const countryKey = el.data("country-key");
-                        countriesListEl.find(`[data-country-target-key="${countryKey}"]`).removeClass("highlighted");
-                        currentSelectedCountriesKeys = currentSelectedCountriesKeys.filter(key => key !== countryKey);
-
-                    })
-                    .on("click", function (event, d) {
-                        {#$("#region-name").text(d.properties.name || "Unknown");#}
-                        {#$("#region-info").show();#}
-                    });
-            });
-        });
-    </script>
+    <div id="js-config-data" style="display: none;">
+        {{ countryZones|json_script:"zones" }}
+        {{ countryZonesPath|json_script:"zonesPath" }}
+    </div>
+    <script src="{% static 'js/landing.js' %}"></script>
     <style>
     </style>
 {% endblock %}

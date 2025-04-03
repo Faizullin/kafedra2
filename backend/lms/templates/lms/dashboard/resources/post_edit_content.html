@@ -109,6 +109,7 @@
         </script>
         <script src="{% static 'my-plugins/attachments/AttachmentModalManager.js' %}"></script>
         <script src="{% static 'my-plugins/attachments/ThumbnailImageWidgetManager.js' %}"></script>
+
         <script>
             Dropzone.autoDiscover = false;
             window.server_conf.items_edit = {
@@ -121,7 +122,7 @@
                 action: {
                     apiUrl: "{% url 'dashboard:attachments-action-api' %}",
                 },
-            }
+            };
             window.server_conf.editor_data = {
                 baseApiUrl: "{% url 'dashboard:resources-post-edit-content-action-api' %}",
                 content_type: "{{ editor.content_type }}",
@@ -150,6 +151,7 @@
     {% endfor %}
 
     <script src="{% static 'my-plugins/editor/attachment-image.js' %}"></script>
+    <script src="{% static 'my-plugins/editor/quiz/q-line-wrapper.js' %}"></script>
 
 
 
@@ -269,15 +271,6 @@
                     },
                 });
             }
-            if (!isDisabled(config, "MyAttachmentImage")) {
-                tools.MyAttachmentImage = extractToolConfig(config, "MyAttachmentImage", {
-                    class: MyAttachmentImage,
-                    inlineToolbar: true,
-                    config: {
-                        placeholder: 'Paste image URL'
-                    }
-                });
-            }
 
             if (!isDisabled(config, "Header")) {
                 tools.Header = extractToolConfig(config, "Header", {
@@ -334,6 +327,25 @@
                     inlineToolbar: true,
                 });
             }
+
+
+            if (!isDisabled(config, "MyAttachmentImage")) {
+                tools.MyAttachmentImage = extractToolConfig(config, "MyAttachmentImage", {
+                    class: MyAttachmentImage,
+                    inlineToolbar: true,
+                    config: {
+                        placeholder: 'Paste image URL'
+                    }
+                });
+            }
+            if(!isDisabled(config, "QLineWrapper")) {
+                tools.QLinesWrapper = extractToolConfig(config, "QLineWrapper", {
+                    class: QLineWrapper,
+                    inlineToolbar: true,
+                });
+            }
+
+
             var initial_data = input_el.value.trim()
 
             if (initial_data) {

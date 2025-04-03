@@ -1,5 +1,11 @@
 import subprocess
 import sys
+import os
+import json
+
+# Determine the directory of the script
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_FILE = os.path.join(SCRIPT_DIR, "config.json")
 
 def run_command(command):
     """Helper function to run a shell command."""
@@ -19,16 +25,43 @@ def validate_environment(env):
 
 def get_compose_file(env):
     """Returns the appropriate docker-compose file based on the environment."""
-    return f"../docker-compose.{env}.yml"
+    return f"../docker-compose.{env}.yml" if os.path.basename(os.getcwd()) == "scripts" else f"docker-compose.{env}.yml"
 
 def join_additional_args(args):
     """Helper to join additional arguments for commands."""
     return " ".join(args) if args else ""
 
+def load_config():
+    """Load configuration from the config file."""
+    if os.path.exists(CONFIG_FILE):
+        with open(CONFIG_FILE, "r") as file:
+            return json.load(file)
+    return {}
+
+def save_config(config):
+    """Save configuration to the config file."""
+    with open(CONFIG_FILE, "w") as file:
+        json.dump(config, file)
+
+def prompt_for_config():
+    """Prompt the user to input required configurations."""
+    config = {}
+    config["name_prefix"] = input("Enter container name prefix: ")
+    save_config(config)
+    return config
+
 def main():
     if len(sys.argv) < 3:
         print("Usage: helper.py [dev|prod] [action] [additional_args...]")
         sys.exit(1)
+
+    # Load configuration
+    config = load_config()
+
+    # Check if name prefix is set, if not prompt the user to set it
+    if "name_prefix" not in config:
+        print("Container name prefix is not set.")
+        config = prompt_for_config()
 
     # Get arguments
     env = sys.argv[1]
@@ -40,7 +73,8 @@ def main():
 
     # Set compose file and other configurations
     compose_file = get_compose_file(env)
-    container_name = "kafedra-backend-1"
+    name_prefix = config["name_prefix"]
+    container_name = f"{name_prefix}-backend-1"
     settings_extension = "local" if env == "dev" else "prod"
 
     # Define available actions

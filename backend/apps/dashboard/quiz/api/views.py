@@ -1,12 +1,13 @@
+from django.utils.timezone import override
 from django_filters import CharFilter
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from rest_framework import generics, status
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
 
-from apps.dashboard.quiz.api.filters import CustomPagination
-from apps.quiz.models import Quiz, QuestionGroup, Question, QuestionType
+from apps.quizzes.models import Quiz, QuestionGroup, QuizQuestion, QuestionType
 from utils.api_actions import BaseAction, BaseActionException
+from .filters import CustomPagination
 from .serializers import QuizSerializer, QuestionGroupSerializer, QuestionSerializer, MCQTypeOptionsSerializer, \
     MultiAnswerSerializer
 
@@ -79,13 +80,13 @@ class QuizQuestionListAPIView(BaseListApiView):
         category = CharFilter(field_name='category', lookup_expr='exact')
 
         class Meta:
-            model = Question
+            model = QuizQuestion
             fields = ['id', 'title', 'group', 'category']
 
     filterset_class = QuestionFilter
 
     def get_queryset(self):
-        queryset = Question.objects.all()
+        queryset = QuizQuestion.objects.all()
         return queryset
 
 
@@ -99,7 +100,8 @@ class QuizQuestionCreateAPIView(generics.CreateAPIView):
 class MCQTypeAction(BaseAction):
     name = f"{QuestionType.MULTIPLE_CHOICE.value}_action"
 
-    def apply(self, request, instance: Question):
+    @override
+    def apply(self, request, instance: QuizQuestion):
         step = self.get_step_from_request(request, instance)
         if step == "main":
             serializer = QuestionSerializer(instance, data=request.data, partial=True)
@@ -118,7 +120,7 @@ class MCQTypeAction(BaseAction):
             return {"success": 1, "message": "Answers updated successfully", "data": serializer.data}
         raise BaseActionException("Invalid step")
 
-    def get_step_from_request(self, request, instance: Question):
+    def get_step_from_request(self, request, instance: QuizQuestion):
         step = request.data.get('step', None)
         if step is None:
             raise BaseActionException("Step is required")

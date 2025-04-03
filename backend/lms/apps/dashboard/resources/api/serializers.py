@@ -22,8 +22,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    author = PostAuthorSerializer(read_only=True)
-    category = CategorySerializer(read_only=True)
+    author = PostAuthorSerializer()
+    category = CategorySerializer()
 
     class Meta:
         model = Post
